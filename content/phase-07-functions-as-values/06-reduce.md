@@ -110,6 +110,21 @@ The callback for reduce is a bit different from the ones you have met:
 
 The "result so far" has a name: the **accumulator**, the same word you learned in Phase 3. It is the snowball.
 
+::: quiz
+Using the `myReduce` function from this section, what does this print?
+
+```js
+console.log(myReduce(["a", "b", "c"], (soFar, letter) => letter + soFar, ""));
+```
+
+- [ ] `abc`
+- [x] `cba`
+- [ ] `a`
+- [ ] `c`
+
+The result starts as `""`. Each step puts the new letter **in front of** what you have so far: `"a"`, then `"b" + "a"` is `"ba"`, then `"c" + "ba"` is `"cba"`. If you picked `abc`, you assumed the combine step always adds to the end. Look at which side `soFar` is on.
+:::
+
 ## Step 2: meet `.reduce`
 
 ```js
@@ -134,6 +149,24 @@ Here is how to read `receipts.reduce((total, amount) => total + amount, 0)` in w
 > "Reduce the receipts. Start the total at 0. For each amount, the new total is the total plus the amount."
 
 The real `reduce` also passes the index and the array as third and fourth arguments to the callback, but you will very rarely need them.
+
+::: quiz
+What does this print?
+
+```js
+const scores = [4, 6, 10];
+const total = scores.reduce((sum, score) => sum + score, 100);
+const count = scores.reduce((n) => n + 1, 0);
+console.log(total, count);
+```
+
+- [ ] `20 3`
+- [ ] `120 20`
+- [x] `120 3`
+- [ ] `120 4`
+
+The starting value goes **after** the callback. The first `reduce` starts at `100`, so it gives 100 + 4 + 6 + 10 = 120. In the second, the callback only asks for the accumulator `n`, which starts at `0` and goes up by 1 for each of the three items: `3`. If you picked `120 20`, you thought `n` was the item. The accumulator always comes first.
+:::
 
 ## A trace table
 
@@ -184,6 +217,22 @@ The pattern to notice: **each row's "returns" becomes the next row's "comes in a
 6. Add a fifth receipt, `20`. How many lines does the callback print now? Predict, then run.
 :::
 
+::: quiz
+In this program, what is `acc` when the callback is called for the **third** time?
+
+```js
+const steps = [5, 2, 8, 1];
+const result = steps.reduce((acc, n) => acc - n, 20);
+```
+
+- [ ] `15`
+- [ ] `5`
+- [ ] `8`
+- [x] `13`
+
+Make a trace table. Call 1: `acc` is `20` (the starting value), returns `15`. Call 2: `acc` is `15`, returns `13`. Call 3: `acc` comes in as `13` (and returns `5`). If you picked `5`, that is what the third call **returns**, not what it receives. If you picked `8`, that is the third item, `n`, not `acc`.
+:::
+
 ## Always give a starting value
 
 The starting value is optional in JavaScript. If you leave it out, `reduce` uses the **first item** as the start and begins combining from the second. That sounds convenient, but it causes two nasty bugs.
@@ -226,6 +275,22 @@ Output:
 Without a starting value, `sum` starts as the whole **first object**, not a number. Then `object + 32` makes JavaScript turn the object into the text `"[object Object]"` and glue `32` on the end. With `, 0` at the end, `sum` starts as a number and everything works.
 
 **Rule: always give `reduce` a starting value.** Use `0` for totals and counts, `{}` for tallies, and `[]` if you are building a list.
+
+::: quiz
+What does this print?
+
+```js
+const words = ["hi", "there", "you"];
+console.log(words.reduce((len, word) => len + word.length));
+```
+
+- [ ] `10`
+- [ ] `8`
+- [x] `hi53`
+- [ ] `NaN`
+
+There is no starting value, so `reduce` starts `len` as the **first item**, the string `"hi"`, and begins at the second item. Then `"hi" + 5` joins as text to make `"hi5"`, and `"hi5" + 3` makes `"hi53"`. No error, only a wrong answer. If you picked `10`, you imagined a starting value of `0`. Add `, 0` after the callback and you do get `10`.
+:::
 
 ## reduce with real data
 
@@ -317,6 +382,26 @@ Only the starting value is different.
 0
 ```
 The first multiplies `1 × 2 × 3 × 4`, which is `24`. The second starts at `0`, and `0 × anything` is `0`, so it stays `0` the whole way. The starting value matters: for adding, start at `0`; for multiplying, start at `1`.
+:::
+
+::: quiz
+What does this print?
+
+```js
+const votes = ["yes", "no", "yes", "yes"];
+const tally = votes.reduce((counts, vote) => {
+  counts[vote] = (counts[vote] || 0) + 1;
+  return counts;
+}, {});
+console.log(tally.yes - tally.no, tally.maybe);
+```
+
+- [ ] `2 0`
+- [x] `2 undefined`
+- [ ] `3 undefined`
+- [ ] `NaN undefined`
+
+The tally ends as `{ yes: 3, no: 1 }`, so `3 - 1` is `2`. Nobody voted `"maybe"`, so that key was never created, and reading a missing key gives `undefined`. The `|| 0` only helps **inside** the callback while counting; it does not add keys for votes that never happened. If you picked `2 0`, you expected every possible key to exist.
 :::
 
 ## Honesty time: a loop is often clearer

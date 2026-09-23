@@ -151,6 +151,29 @@ Imagine a program with 200 functions, where every variable was shared. Every tim
 5. **Change it, predict, run.** Add a parameter, so the function becomes `makeSmoothie(fruit)`, and delete the `const fruit = "mango";` line. Call it with `makeSmoothie("banana")`. Predict both output lines, then run it.
 :::
 
+::: quiz
+What does this program print?
+
+```js
+function addPoints(points) {
+  let score = 10;
+  score = score + points;
+  return score;
+}
+
+const first = addPoints(5);
+const second = addPoints(first);
+console.log(first, second);
+```
+
+- [ ] `15 30`
+- [x] `15 25`
+- [ ] `15 20`
+- [ ] `15 15`
+
+Every call gets a fresh kitchen, so `score` starts at 10 each time. The first call returns `10 + 5`, which is 15. The second call gets 15 as `points` and returns `10 + 15`, which is 25. If you picked `15 30`, you expected `score` to still be 15 from the first call. Local variables are thrown away when the function finishes.
+:::
+
 ## Global variables: the house
 
 A variable declared at the top level of a file, outside every function and block, is a **global variable**. Every function in the file can see it, because the kitchen can see the house:
@@ -286,6 +309,36 @@ Now each function only touches what it is given, and you can see exactly where `
 No. A global `const` that never changes, like `const VAT_RATE = 0.15;` or `const shopName = "Bheki's Bikes";`, is perfectly fine and very common: it is a setting that the whole program shares, and nobody can change it by accident. The trouble comes from global **`let`** variables that many functions change. Keep those few, and keep them close to the code that uses them.
 :::
 
+::: quiz
+What does this program print?
+
+```js
+let count = 0;
+
+function addTwo() {
+  count = count + 2;
+}
+
+function reset() {
+  count = 0;
+}
+
+addTwo();
+addTwo();
+const saved = count;
+reset();
+addTwo();
+console.log(saved, count);
+```
+
+- [ ] `2 2`
+- [ ] `4 6`
+- [ ] `0 2`
+- [x] `4 2`
+
+Neither function declares its own `count`, so both change the global one. After two `addTwo()` calls it is 4, and `saved` stores that number, 4. `reset()` sets the global back to 0, and one more `addTwo()` makes it 2. `saved` does not follow `count` around: it kept the value it was given. If you picked `4 6`, you missed that `reset` changes the global too.
+:::
+
 ## Block scope: every `{ }` is a small room
 
 You got a preview of this in [if and else](#/phase-02-making-decisions/02-if-and-else): variables made with `let` or `const` inside **any** pair of curly braces (an `if`, an `else`, a loop body) only exist inside those braces. This is called **block scope**. A block is like a pantry inside the kitchen: it can see the kitchen and the house, but they cannot see into it.
@@ -352,6 +405,29 @@ Sorry, adults only.
 `message` now lives in the outer scope, and the `if` and `else` blocks can both reach out and fill it, because a room can see the space around it.
 
 This is also why, in the Phase 3 loop patterns, the accumulator (`let total = 0;`) always went **before** the loop. If you declare it inside the loop, you get a new, empty `total` every time round, and it disappears when the loop ends.
+
+::: quiz
+What happens when you run this?
+
+```js
+function sumTo(n) {
+  for (let i = 1; i <= n; i++) {
+    let total = 0;
+    total = total + i;
+  }
+  return total;
+}
+
+console.log(sumTo(3));
+```
+
+- [x] It crashes with `ReferenceError: total is not defined`
+- [ ] It prints `6`
+- [ ] It prints `3`
+- [ ] It prints `0`
+
+`total` is declared with `let` inside the loop's `{ }`, so it only lives inside that block. By the `return` line, the loop has ended and `total` no longer exists. If you picked `3`, you spotted that `total` is reset to 0 each time round, which is a second bug, but the missing variable crashes the program first. Moving `let total = 0;` above the loop fixes both, and then it prints 6.
+:::
 
 ## Shadowing: the same name inside and outside
 
@@ -625,6 +701,29 @@ Or, even shorter, return straight from each branch: `if (age < 12) { return 40; 
 **Adding `let` when you meant to change an outer variable.** `let status = "hot";` inside a block makes a *new* variable that shadows the old one. To change the outer one, write `status = "hot";`.
 
 **Lots of global `let` variables changed by many functions.** Pass values in as parameters and return results instead.
+:::
+
+::: quiz
+What does this program print?
+
+```js
+let tip = 20;
+
+function addTip(bill, tip) {
+  tip = tip + 5;
+  return bill + tip;
+}
+
+console.log(addTip(100, 10));
+console.log(tip);
+```
+
+- [ ] `125`, then `25`
+- [ ] `125`, then `20`
+- [ ] `115`, then `15`
+- [x] `115`, then `20`
+
+The parameter `tip` shadows the global `tip`. Inside the function, `tip` starts as the argument 10, becomes 15, and the function returns `100 + 15`, which is 115. The global `tip` was never touched, so it is still 20. If you picked 125, you used the global 20 inside the function, but JavaScript looks in the kitchen first and finds the parameter.
 :::
 
 ## Real-world uses

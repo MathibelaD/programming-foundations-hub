@@ -199,6 +199,23 @@ JSON is for **data** only. That is one reason Budget Buddy keeps its functions s
 And a bonus link to the last lesson: `JSON.parse(JSON.stringify(obj))` makes a brand-new copy of `obj`, **all the way down**, including nested objects. It is an old trick for a deep copy of plain data (it drops functions, as shown above).
 :::
 
+::: quiz
+What does this print?
+
+```js
+const text = JSON.stringify({ qty: 2, price: "15" });
+const order = JSON.parse(text);
+console.log(order.qty + order.price, text.qty);
+```
+
+- [ ] `17 undefined`
+- [ ] `215 2`
+- [x] `215 undefined`
+- [ ] `17 2`
+
+JSON keeps each value's type: `2` goes in as a number and comes back as a number, and `"15"` goes in as a string and comes back as a string. So `2 + "15"` joins them into `"215"`. And `text` is a **string**, so `text.qty` is `undefined`: only the parsed `order` has a `qty`. If you picked `17`, you expected JSON to turn everything into numbers. It does not.
+:::
+
 ## Files: the `fs` module
 
 Node comes with a set of built-in tools for working with files, called **`fs`** (short for *file system*). You load it with `require`, the same way you load `prompt-sync`, but there is nothing to install: it is part of Node.
@@ -319,6 +336,38 @@ false
    On Windows in Command Prompt, use `type shopping.json` instead. (In PowerShell, `cat` works too.)
 :::
 
+::: quiz
+You are inside `coding-practice`, and there is no `scores.json` anywhere yet. `phase-6/save.js` and `phase-6/check.js` contain:
+
+```js
+// save.js
+const fs = require("fs");
+fs.writeFileSync("scores.json", "[5, 9]");
+```
+
+```js
+// check.js
+const fs = require("fs");
+console.log(fs.existsSync("scores.json"), fs.existsSync("phase-6/scores.json"));
+```
+
+You run these four commands in order. What does the last one print?
+
+```bash
+cd phase-6
+node save.js
+cd ..
+node phase-6/check.js
+```
+
+- [ ] `true false`
+- [ ] `true true`
+- [x] `false true`
+- [ ] `false false`
+
+A file name like `"scores.json"` is saved in the folder your terminal is **in**, not the folder of the `.js` file. `save.js` ran while you were inside `phase-6`, so the file is `phase-6/scores.json`. `check.js` runs from `coding-practice`, where there is no `scores.json`, so the first check is `false` and the second is `true`. If you picked `true false`, you remembered the rule but mixed up which folder the terminal was in when you saved.
+:::
+
 ## The pattern: load, change, save
 
 Put the pieces together, and you get the pattern that every program with saved data follows:
@@ -433,6 +482,30 @@ New note (or press Enter to skip):
 ```
 
 `loadNotes` and `saveNotes` are worth copying into your own programs. Budget Buddy v6 uses exactly this shape, with `loadBudget` and `saveBudget`.
+
+::: quiz
+`tally.json` does not exist yet. You run this program **three times**. What does the third run print?
+
+```js
+const fs = require("fs");
+const FILE = "tally.json";
+
+let data = { count: 10 };
+if (fs.existsSync(FILE)) {
+  data = JSON.parse(fs.readFileSync(FILE, "utf8"));
+}
+data.count = data.count * 2;
+fs.writeFileSync(FILE, JSON.stringify(data));
+console.log(data.count);
+```
+
+- [ ] `20`
+- [ ] `60`
+- [ ] `40`
+- [x] `80`
+
+Run 1: no file, so the default `10` is used, doubled to `20`, and saved. Run 2: the file exists, so it loads `20`, doubles to `40`, saves. Run 3: loads `40`, prints `80`. The default is only used once. If you picked `20`, you forgot that each run starts from what the last run saved. If you picked `60`, you added 20 each time instead of doubling what was loaded.
+:::
 
 ## When the file is broken
 
@@ -690,6 +763,34 @@ if (fs.existsSync("scores.json")) {
 **Looking for the file in the wrong folder.** Files are saved in the folder your terminal is in when you run `node`, not next to the `.js` file.
 
 **Hand-editing JSON like JavaScript.** Single quotes, unquoted keys, trailing commas and comments are all fine in JavaScript and all **broken** in JSON.
+:::
+
+::: quiz
+`tally.json` exists and contains exactly this text: `{ count: 5 }`. What does the program print?
+
+```js
+const fs = require("fs");
+const FILE = "tally.json";
+
+let data = { count: 1 };
+if (fs.existsSync(FILE)) {
+  try {
+    data = JSON.parse(fs.readFileSync(FILE, "utf8"));
+    data.count = data.count + 100;
+  } catch (error) {
+    data.count = data.count + 10;
+  }
+}
+data.count = data.count * 2;
+console.log(data.count);
+```
+
+- [x] `22`
+- [ ] `210`
+- [ ] `30`
+- [ ] `SyntaxError`, and the program stops
+
+`count` has no double quotes around it, so this is not valid JSON and `JSON.parse` throws. JavaScript jumps straight to `catch`, skipping the `+ 100` line, and `data` is still the default `{ count: 1 }`. So `1 + 10 = 11`, then `11 * 2 = 22`. If you picked `210`, you missed that the file is broken. If you picked `30`, you thought the `5` was loaded before the error. The `try`/`catch` is what stops the crash.
 :::
 
 ## Real-world uses

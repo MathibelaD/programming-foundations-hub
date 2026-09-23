@@ -71,6 +71,17 @@ values -> variables -> types -> decisions -> loops -> functions -> arrays -> obj
 
 Do not worry if half of those words mean nothing to you yet. That is exactly what the course is for. The point for now is only this: **they come in a chain, and you will meet them one link at a time.**
 
+::: quiz
+You are keen to get to arrays, so you skip Phase 3 and jump straight into Phase 5. Going by the map, what will you be missing that Phase 5 relies on?
+
+- [ ] Nothing: each phase stands on its own
+- [ ] Objects, which you need before you can make a list
+- [ ] Array methods like `map`, which make lists usable
+- [x] Loops, which you use to go through a list one item at a time
+
+Every arrow on the map means "the next phase needs this one", and arrays need loops: adding up a list, or finding its biggest item, means going through it with a loop. Objects and array methods come **after** arrays, so Phase 5 cannot rely on them.
+:::
+
 ## Every program is made of five things
 
 Before looking at each phase, here is a small picture worth keeping in your head. Nearly every program you will ever write, from a tip calculator to a banking app, is made of the same five building blocks.
@@ -100,6 +111,17 @@ Now look at where each building block is taught:
 | Repeat | Phase 3 |
 
 By the end of Phase 3 you will have all five. Everything after that (functions, arrays, objects, array methods) is about **organising** those five things so that bigger programs stay manageable.
+
+::: quiz
+A program asks you to type in the price of an item, remembers it, and shows the price with 15% VAT added. What is the **earliest** phase after which you could build it?
+
+- [ ] Phase 0, because it only shows a result
+- [x] Phase 1
+- [ ] Phase 2
+- [ ] Phase 3, because that is when you have all five building blocks
+
+It needs **input** (the price you type), **store** (remember it) and **output** (show the answer), plus a little arithmetic. There is no choice to make and nothing to repeat, so it needs neither Phase 2 nor Phase 3. Input and store are both taught in Phase 1. The trap is thinking every program needs all five blocks: many useful ones need only three.
+:::
 
 ## Phase by phase
 
@@ -210,6 +232,17 @@ The same thinking runs through the whole course:
 - **Arrays before objects:** real data is usually a *list of objects*, so you need lists first.
 - **Everything before array methods:** array methods combine functions, arrays and objects at once.
 
+::: quiz
+In Phase 5 you will write a loop that goes through a list of learners' names and builds a **new** list with every name in capital letters. Which Phase 7 shortcut will that loop turn into?
+
+- [x] `map`, because it changes every item and collects the results
+- [ ] `filter`, because it goes through the list and picks names
+- [ ] `reduce`, because it ends up with one list
+- [ ] `find`, because it looks at each name in turn
+
+Every name goes in, and every name comes out changed: that is the "transform every item" pattern, which becomes `map`. `filter` is tempting, but it *keeps some items and drops others*, and here nothing is dropped. `reduce` boils a list down to a single value, like a total.
+:::
+
 ## Budget Buddy: the project that grows with you
 
 Learning ideas one at a time is good. Seeing them work together in something real is better. So alongside the lessons, you will build one program, **Budget Buddy**, from Phase 1 to Phase 8.
@@ -247,6 +280,17 @@ That is 32.0% of your income, or about R133 a day.
 By Phase 8 it has a menu, categories, reports, and remembers everything between runs. Every line of it will be yours.
 
 You can see each stage, what it adds, and tick them off as you finish them on the [Project page](#/project). To see every lesson in every phase on one screen, use the [Roadmap](#/roadmap).
+
+::: quiz
+You want Budget Buddy to still have last week's expenses when you close it and run it again today. Which stage adds that?
+
+- [ ] Phase 3, "keep going until I quit"
+- [ ] Phase 5, "remember every expense"
+- [x] Phase 6, "real records, saved"
+- [ ] Phase 8, "saved in Git"
+
+Phase 5 remembers every expense **while the program is running**, but when it stops, the list is gone. Phase 6 saves the records to a file, and files stay on your computer between runs. Git (Phase 8) saves versions of your *code*, not the expenses a user typed in.
+:::
 
 ## A sensible pace
 

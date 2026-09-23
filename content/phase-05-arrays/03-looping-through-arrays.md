@@ -92,6 +92,26 @@ Let's trace it, writing down every value at every step, the way you did in Phase
 
 Each time round the loop is called an **iteration** (you met the word in Phase 3). Going through a whole array, item by item, is called **iterating over** the array.
 
+::: quiz
+What does this program print?
+
+```js
+const temps = [18, 25, 31, 22];
+let total = 0;
+for (let i = 1; i < temps.length; i++) {
+  total = total + temps[i];
+}
+console.log(total);
+```
+
+- [ ] `96`
+- [x] `78`
+- [ ] `74`
+- [ ] `NaN`
+
+The loop starts at `i = 1`, so it skips index 0 (the 18). It adds indexes 1, 2 and 3: `25 + 31 + 22`, which is 78. It stops when `i` is 4, because `4 < 4` is false, so it never reads past the end. If you picked 96, you added all four, but the start value decides where the walk begins.
+:::
+
 ## Why `<` and not `<=`
 
 Look at the last row of that trace. The loop stopped when `i` became `3`, because `3 < 3` is false. That is exactly right: there is no `fruit[3]`. The indexes of a 3-item array are 0, 1 and 2.
@@ -159,6 +179,24 @@ Because indexes start at 0, the **length is always one more than the last index*
    - Change `${i + 1}` to `${i}`. What does the list look like now? Would a shopper like that?
 :::
 
+::: quiz
+Someone wants to print the towns in reverse order. What does this print?
+
+```js
+const towns = ["Durban", "Joburg", "Gqeberha"];
+for (let i = towns.length; i > 0; i--) {
+  console.log(towns[i]);
+}
+```
+
+- [ ] `Gqeberha`, `Joburg`, `Durban`
+- [ ] `Gqeberha`, `Joburg`
+- [x] `undefined`, `Gqeberha`, `Joburg`
+- [ ] `undefined`, `Gqeberha`, `Joburg`, `Durban`
+
+`i` starts at the length, 3, and there is no `towns[3]`, so the first line is `undefined`. Then `i` is 2 (`Gqeberha`) and 1 (`Joburg`). When `i` reaches 0, `0 > 0` is false, so `Durban` is never printed. Off by one at both ends. The fix is to start at `towns.length - 1` and keep going while `i >= 0`.
+:::
+
 ## `for...of`: when you only need the items
 
 Very often you do not care about the index at all. You only want "each item, one at a time". For that, JavaScript has a shorter loop, `for...of`:
@@ -223,6 +261,24 @@ This uses the **build-a-string** pattern from [Loop patterns](#/phase-03-loops/0
 Notice the extra `-` at the end. Getting rid of it takes a little more thought. You will see a neat way in [Strings and arrays](#/phase-05-arrays/05-strings-and-arrays).
 :::
 
+::: quiz
+What does this program print?
+
+```js
+const towns = ["Tzaneen", "Upington", "Ermelo"];
+for (const t of towns) {
+  console.log(towns[t]);
+}
+```
+
+- [x] `undefined`, three times
+- [ ] `Tzaneen`, `Upington`, `Ermelo`
+- [ ] `0`, `1`, `2`
+- [ ] An error, because `t` is not a number
+
+`for...of` hands you the **items**, not the indexes. So `t` is `"Tzaneen"`, then `"Upington"`, then `"Ermelo"`, and `towns["Tzaneen"]` is not a locker number. JavaScript quietly gives `undefined`, three times, with no error. If you picked the three names, you treated `t` like the `i` in an index loop. With `for...of`, print `t` itself.
+:::
+
 ## When you need the index
 
 Use the index loop, not `for...of`, in two situations.
@@ -275,6 +331,28 @@ Output:
 ```
 
 Changing each item where it stands like this is called changing the array **in place**. The original values are gone afterwards. In the next lesson you will see another approach: building a **new** array and leaving the original alone.
+
+::: quiz
+What does this program print?
+
+```js
+const stock = [5, 0, 12];
+for (let n of stock) {
+  n = n + 1;
+}
+for (let i = 0; i < stock.length; i++) {
+  stock[i] = stock[i] * 2;
+}
+console.log(stock);
+```
+
+- [ ] `[ 12, 2, 26 ]`
+- [ ] `[ 6, 1, 13 ]`
+- [ ] `[ 5, 0, 12 ]`
+- [x] `[ 10, 0, 24 ]`
+
+The first loop changes `n`, which is only a copy of each value, so the array is not touched. The second loop writes into the lockers with `stock[i] = ...`, so every item really is doubled: 10, 0, 24. If you picked `[ 12, 2, 26 ]`, you expected the `for...of` loop to add 1 to the array first.
+:::
 
 ## Loops over arrays inside functions
 
@@ -498,6 +576,31 @@ Player 4: Faf
 **Trying to change items with `for...of`.** Assigning to the loop variable changes a copy. Use the index loop and `arr[i] = ...`.
 
 **Changing the array's length while looping over it.** Using `push` or `splice` on the same array inside the loop makes the loop skip items or never end. If you need to remove things, you will learn a safer way in the next lesson: build a new array.
+:::
+
+::: quiz
+This function should count how many values are above `limit`. What does the program print?
+
+```js
+function countAbove(list, limit) {
+  let count = 0;
+  for (const value of list) {
+    if (value > limit) {
+      count++;
+    }
+    return count;
+  }
+}
+
+console.log(countAbove([80, 90, 40], 60), countAbove([], 60));
+```
+
+- [ ] `2 0`
+- [x] `1 undefined`
+- [ ] `1 0`
+- [ ] `2 undefined`
+
+The `return` is **inside** the loop, so the function ends after the first item. For `[80, 90, 40]`, 80 is above 60, so `count` becomes 1 and is returned straight away. For `[]`, the loop body never runs, so the `return` is never reached, and a function that ends without `return` gives `undefined`. If you picked `1 0`, you forgot that the only `return` is inside the loop. Moving it below the loop's closing `}` fixes both.
 :::
 
 ## Real-world uses

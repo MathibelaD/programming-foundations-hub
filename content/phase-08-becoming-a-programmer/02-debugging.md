@@ -164,6 +164,39 @@ Output:
 6. Create `phase-8/table.js` with the `console.table` example and run it.
 :::
 
+::: quiz
+This should add up all three prices and print `total: 80`. A labelled log inside the loop shows what happened:
+
+```js
+const prices = [15, 40, 25];
+let total = 0;
+
+for (let i = 1; i < prices.length; i++) {
+  console.log("i:", i, "total before:", total);
+  total = total + prices[i];
+}
+
+console.log("total:", total);
+```
+
+Output:
+
+```text
+i: 1 total before: 0
+i: 2 total before: 40
+total: 65
+```
+
+Which change fixes the bug?
+
+- [ ] Change `i < prices.length` to `i <= prices.length`
+- [ ] Change `prices[i]` to `prices[i - 1]`
+- [x] Change `let i = 1` to `let i = 0`
+- [ ] Change `i < prices.length` to `i <= prices.length - 1`
+
+The log shows `i` starting at 1, so `prices[0]` (the 15) is never added: 40 + 25 = 65. Starting at `0` gives 80. Changing to `<=` makes the loop run once more with `i` equal to 3, and `prices[3]` is `undefined`, so the total becomes `NaN`. `prices[i - 1]` adds 15 and 40 but skips 25, giving 55. `<= prices.length - 1` means exactly the same as `< prices.length`, so nothing changes.
+:::
+
 ## The VS Code debugger
 
 `console.log` means editing your code, running it, reading the output, and editing again. A **debugger** is a tool that lets you **pause** a running program at any line, look at every variable, and then move forward **one line at a time**. It is like watching a football replay in slow motion, with the ability to pause on any frame and check where every player is.
@@ -268,6 +301,31 @@ The fix is a special terminal that VS Code connects to its debugger, called the 
 
 Use this for Budget Buddy: open a JavaScript Debug Terminal inside your `budget-buddy` folder and run `node index.js`.
 
+::: quiz
+You set a breakpoint on line 8 and start the debugger.
+
+```js
+function addTip(bill) {
+  const tip = bill * 0.1;
+  return bill + tip;
+}
+
+let total = 0;
+total = total + addTip(200);
+total = total + addTip(50);
+console.log(total);
+```
+
+The program pauses on line 8. You press **Step Over** (F10) once. What does the Variables panel show for `total` now?
+
+- [ ] `220`
+- [x] `275`
+- [ ] `55`
+- [ ] `0`
+
+When the program pauses on line 8, that line has **not** run yet, so `total` is `220` (200 plus a R20 tip). Step Over then runs the whole of line 8, including the entire `addTip(50)` call, and pauses on line 9. So `total` is 220 + 55 = 275. If you picked `220`, that is what `total` was *before* you pressed Step Over. Step Over does not stop inside `addTip`; that is what Step Into is for.
+:::
+
 ## Reading a stack trace
 
 Back to the crash from `trace.js`. Here is what Node prints (your file path will be different, and a few lines about Node's own internal code have been left off the end):
@@ -294,6 +352,45 @@ The lines starting with `at` are the **stack trace**: the list of function calls
 The error message says `expense` was `undefined` when `describe` tried to read `.description`. The crash is in `describe`, but the **cause** is further down the stack: line 16 asked for item number `2`, which does not exist. This is very common: **the line that crashes is often not the line that is wrong**. The stack trace shows you the path to follow back to the cause.
 
 (The word **stack** comes from the way function calls pile up like a stack of plates: each call goes on top, and when a function finishes it comes off the top.)
+
+::: quiz
+This program prints one badge, then crashes:
+
+```js
+function initials(person) {
+  return person.first[0] + person.last[0];
+}
+
+function badge(people, index) {
+  return "Badge: " + initials(people[index]);
+}
+
+const team = [{ first: "Lerato", last: "Mokoena" }];
+console.log(badge(team, 0));
+console.log(badge(team, 1));
+```
+
+```text
+Badge: LM
+/Users/you/coding-practice/phase-8/badges.js:2
+  return person.first[0] + person.last[0];
+                ^
+
+TypeError: Cannot read properties of undefined (reading 'first')
+    at initials (/Users/you/coding-practice/phase-8/badges.js:2:17)
+    at badge (/Users/you/coding-practice/phase-8/badges.js:6:22)
+    at Object.<anonymous> (/Users/you/coding-practice/phase-8/badges.js:11:13)
+```
+
+Which line of the file asked for something that does not exist?
+
+- [ ] Line 2
+- [ ] Line 6
+- [ ] Line 10
+- [x] Line 11
+
+Follow the stack trace from the top down. It *broke* on line 2 inside `initials`, which was called from line 6 inside `badge`, which was called from line 11, the main part of the file. Line 11 asks for index `1` in a team that only has index `0`, so `people[index]` is `undefined`, and line 2 cannot read `.first` from it. Line 2 is where it crashed, not where it went wrong. Line 10 is the call that worked: it printed `Badge: LM`.
+:::
 
 ## Rubber duck debugging
 
@@ -474,6 +571,25 @@ This is the braces trap from [Arrow functions](#/phase-04-functions/05-arrow-fun
 **Using Run and Debug for a prompt-sync program.** The Debug Console cannot take typed input. Use the JavaScript Debug Terminal instead.
 
 **Forgetting to remove debug logs.** Search your file for `console.log(` before you call a job finished.
+:::
+
+::: quiz
+A learner types the sides of a rectangle as `3,4` and expects the program to print `12 14`. What does it actually print?
+
+```js
+const input = "3,4";
+const sides = input.split(",");
+const area = sides[0] * sides[1];
+const perimeter = 2 * (sides[0] + sides[1]);
+console.log(area, perimeter);
+```
+
+- [ ] `12 14`
+- [ ] `NaN NaN`
+- [x] `12 68`
+- [ ] `"34" 14`
+
+`split` gives strings: `"3"` and `"4"`. `*` only works on numbers, so JavaScript converts them and the area is a correct `12`. That makes the bug sneaky. But `+` with strings **joins** them: `"3" + "4"` is `"34"`, and `2 * "34"` is `68`. A half-right answer is a strong clue: log `typeof sides[0]`, then convert each side with `Number` straight after `split`.
 :::
 
 ## Real-world uses

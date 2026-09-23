@@ -136,6 +136,27 @@ Notice that the variable outside is called `customer`, but the parameter inside 
 
 This is a big deal. It means you can write a function without knowing anything about the code that will call it. The function only needs to know "I will be given a name".
 
+::: quiz
+What does this program print?
+
+```js
+function showTotal(amount) {
+  console.log("Total: R" + amount);
+}
+
+const price = 20;
+showTotal(price * 2 + 5);
+showTotal("5" + price);
+```
+
+- [ ] `Total: R45` and `Total: R25`
+- [x] `Total: R45` and `Total: R520`
+- [ ] `Total: R140` and `Total: R520`
+- [ ] `Total: Rprice * 2 + 5` and `Total: R5price`
+
+JavaScript works out each argument first, then hands the value over. `price * 2 + 5` is `40 + 5`, which is `45` (multiplication before addition). `"5" + price` has a string in it, so `+` glues instead of adding: `"520"`. If you picked `R25`, you added a string as if it were a number.
+:::
+
 ## Several parameters
 
 A function can have as many parameters as it needs. Separate them with commas, in the declaration and in the call.
@@ -199,6 +220,29 @@ One function, and it works for every bill and every tip percentage in the world.
 4. **Change it, predict, run.** What will `calculateTip(99.99, 12.5)` print? Work it out on paper (or with a calculator), then add the call and run it.
 :::
 
+::: quiz
+What does this program print?
+
+```js
+function repeatWord(word, times) {
+  let result = "";
+  for (let i = 0; i < times; i++) {
+    result += word + "-";
+  }
+  console.log(result);
+}
+
+repeatWord("ha", 3);
+```
+
+- [ ] `ha-ha-ha`
+- [ ] `ha-ha-`
+- [ ] `hahaha`
+- [x] `ha-ha-ha-`
+
+`word` gets `"ha"` and `times` gets `3`. The loop runs for `i` = 0, 1 and 2, three times, and each time adds `"ha"` **and** a dash. So the dash comes after the last `ha` too. If you picked `ha-ha-ha`, you expected the dash to go only *between* the words, but the code adds one every time round.
+:::
+
 ## Order matters
 
 JavaScript matches arguments to parameters **by position**: first to first, second to second. It does not look at the names, and it does not guess what you meant.
@@ -242,6 +286,26 @@ This is one of the most common bugs in real programs. Two habits help:
 - Choose clear parameter names, so the declaration tells you the order: `orderCoffee(size, sugars)`.
 - Before you call a function, glance back at its first line to check the order.
 
+::: quiz
+What does this program print?
+
+```js
+function owes(name, amount) {
+  console.log(`${name} owes R${amount * 2}`);
+}
+
+owes("Sipho", 50);
+owes(50, "Sipho");
+```
+
+- [x] `Sipho owes R100`, then `50 owes RNaN`
+- [ ] `Sipho owes R100` twice
+- [ ] `Sipho owes R100`, then an error
+- [ ] `Sipho owes R100`, then `50 owes RSiphoSipho`
+
+Arguments are matched by position, not by meaning. In the second call, `name` gets `50` and `amount` gets `"Sipho"`. `"Sipho" * 2` is not a number, so it gives `NaN`, and JavaScript carries on without an error. If you picked "twice", you expected JavaScript to notice the mix-up. It never does.
+:::
+
 ## A missing argument becomes `undefined`
 
 What if you call a function with fewer arguments than it has parameters?
@@ -273,6 +337,27 @@ JavaScript does not stop you. Any parameter that did not get an argument holds `
 When you see `undefined` or `NaN` appear in output where a real value should be, one of the first things to check is: **did I pass every argument?**
 
 (Passing *too many* arguments is quieter still: the extra ones are ignored. `greet("Zanele", "Mokoena", 42)` prints `Hello, Zanele! Welcome back.`)
+
+::: quiz
+What does this program print?
+
+```js
+function area(width, height) {
+  console.log(width * height);
+}
+
+area(4);
+area(4, 5, 6);
+```
+
+- [ ] `undefined`, then `20`
+- [x] `NaN`, then `20`
+- [ ] `NaN`, then `120`
+- [ ] `4`, then `120`
+- [ ] An error on the first call
+
+In `area(4)`, `height` got no argument, so it is `undefined`, and `4 * undefined` is `NaN`. In `area(4, 5, 6)`, the extra `6` has no parameter to go into, so it is ignored: `4 * 5` is `20`. If you picked `undefined`, remember that the maths still runs, and maths with `undefined` gives `NaN`.
+:::
 
 ## Default parameters
 
@@ -585,6 +670,27 @@ printBill(600);
 **Thinking the argument's variable name must match the parameter.** `greet(customer)` works fine with `function greet(name)`. Only the *value* is passed.
 
 **Putting a parameter with a default first.** `function tip(percent = 10, bill)` means you can never leave `percent` out. Put defaults last.
+:::
+
+::: quiz
+What does this program print?
+
+```js
+function ticket(price, discount = 50) {
+  console.log(price - discount);
+}
+
+ticket(200);
+ticket(200, 0);
+ticket(80, 100);
+```
+
+- [ ] `150`, `150`, `-20`
+- [ ] `150`, `200`, `30`
+- [ ] `200`, `200`, `-20`
+- [x] `150`, `200`, `-20`
+
+The default is only used when the argument is **missing**. `ticket(200)` uses 50, giving 150. `ticket(200, 0)` passes a real value, `0`, so the default is ignored and nothing is taken off: 200. `ticket(80, 100)` gives `80 - 100`, which is -20. If you picked `150` for the second line, you treated `0` as "nothing given". It is a real argument.
 :::
 
 ## Real-world uses

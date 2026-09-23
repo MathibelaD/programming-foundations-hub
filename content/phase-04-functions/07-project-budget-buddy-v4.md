@@ -236,6 +236,26 @@ check(formatMoney(-200), "R-200.00");
 Run it from inside `coding-practice` with `node phase-4/budget-tests.js`. You should see three `PASS` lines. You will add more tests to this file as you go.
 :::
 
+::: quiz
+Before the refactor, the last line of this code prints `Left: R8500.00`.
+
+```js
+const formatMoney = (amount) => `R${amount.toFixed(2)}`;
+const left = 8500;
+
+console.log("Left: R" + left.toFixed(2));
+```
+
+Which replacement for the last line prints exactly the same thing?
+
+- [ ] `console.log("Left: R" + formatMoney(left));`
+- [ ] `console.log("Left: " + formatMoney(left.toFixed(2)));`
+- [x] `console.log("Left: " + formatMoney(left));`
+- [ ] `console.log("Left: " + formatMoney);`
+
+`formatMoney` adds the `R` and the two decimals itself, so the text before it must lose its `R`. The first option prints `Left: RR8500.00`. The second crashes with `TypeError: amount.toFixed is not a function`, because `left.toFixed(2)` is already a string, and strings have no `toFixed`. The last one has no brackets, so it glues the function's code onto the text instead of calling it.
+:::
+
 ## Step 2: `isValidAmount` and `askForAmount`
 
 Look at these two pieces of v3:
@@ -352,6 +372,28 @@ The summary branch works out `left` and prints four lines. It needs three values
 :::
 
 Look at the parameter names: `income`, `total`, `count`. They are the same as the variables in the main program. That is common and fine, but remember what [Scope](#/phase-04-functions/04-scope) taught you: inside `printSummary` they are **its own local copies**. The function receives the values, and cannot change the main program's `total` even if it tried.
+
+::: quiz
+What does this program print?
+
+```js
+function addBonus(total) {
+  total = total + 100;
+  return total;
+}
+
+let total = 500;
+addBonus(total);
+console.log(total);
+```
+
+- [ ] `600`
+- [x] `500`
+- [ ] `100`
+- [ ] `undefined`
+
+Inside `addBonus`, `total` is the function's own local copy of the value. Changing it does not touch the `total` outside. The function does return 600, but the call is on a line of its own, so that value is thrown away. If you picked 600, you expected the function to change the outer variable. To keep the answer, write `total = addBonus(total);`.
+:::
 
 ## Step 5: a small tidy-up with `Math.max`
 
@@ -497,6 +539,31 @@ Run Budget Buddy once more with your own made-up month: an income of `5000`, and
 :::
 
 When you are happy, you can delete `index-v3.js`, or keep it as a souvenir.
+
+::: quiz
+Using the `statusFor` function from Step 7a, what does this print?
+
+```js
+function statusFor(income, left) {
+  if (left < 0) {
+    return "OVERSPENT";
+  }
+  if (left > income * 0.2) {
+    return "HEALTHY";
+  }
+  return "TIGHT";
+}
+
+console.log(statusFor(4000, 800), statusFor(4000, 801), statusFor(4000, 0));
+```
+
+- [x] `TIGHT HEALTHY TIGHT`
+- [ ] `HEALTHY HEALTHY TIGHT`
+- [ ] `TIGHT HEALTHY OVERSPENT`
+- [ ] `TIGHT TIGHT TIGHT`
+
+20% of 4000 is 800. Keeping exactly R800 is not **more** than 800, so it is `TIGHT`; R801 is `HEALTHY`. Having R0 left is not below 0, so it is also `TIGHT`, not `OVERSPENT`. If you picked `HEALTHY` first, you read `>` as `>=`, which is exactly why the boundary tests in Step 7a matter.
+:::
 
 ## Your finished Budget Buddy v4
 

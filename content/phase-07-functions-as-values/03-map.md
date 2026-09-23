@@ -98,6 +98,22 @@ Look carefully at `result.push(transform(item));`. This is new compared with `pr
 
 So a callback for map must **return** something. Our arrows do, because a one-line arrow without braces returns its value automatically (the implicit return from [arrow functions](#/phase-04-functions/05-arrow-functions)).
 
+::: quiz
+Using the `myMap` function from this section, what does this print?
+
+```js
+const out = myMap([2, 5, 8], (n) => n > 4);
+console.log(out);
+```
+
+- [ ] `[ 5, 8 ]`
+- [x] `[ false, true, true ]`
+- [ ] `[ 2, 5, 8 ]`
+- [ ] `true`
+
+`myMap` pushes whatever the callback **returns**, once per item. The callback returns `true` or `false`, so you get three booleans. It does not keep or drop items. If you picked `[ 5, 8 ]`, you were thinking of a different job, keeping only some items, which is next lesson's method.
+:::
+
 ## Step 2: meet `.map`
 
 Every array already has this built in:
@@ -181,6 +197,24 @@ Rule 2 is a big deal. In [Copies and references](#/phase-06-objects/04-values-an
    ```
 5. **Now experiment.** Add a fifth price, `10`, to the array. Before you run it, predict all three lines of output.
 6. Then write a second named function, `halfPrice`, and add `console.log(prices.map(halfPrice));`. Predict the output first.
+:::
+
+::: quiz
+What does this print?
+
+```js
+const marks = [40, 75, 62];
+const boosted = marks.map((mark) => mark + 5);
+marks.push(90);
+console.log(boosted.length, marks.length, boosted[2]);
+```
+
+- [ ] `4 4 67`
+- [ ] `3 4 62`
+- [ ] `4 4 95`
+- [x] `3 4 67`
+
+`map` built a **new** array of three numbers at the moment it ran: `[45, 80, 67]`. Pushing `90` onto `marks` afterwards only changes `marks`. The two arrays are not linked, so `boosted` stays at length 3. If you picked `4 4 ...`, you expected `boosted` to follow later changes to `marks`. If you picked `62`, you read from the old array.
 :::
 
 ## map with real data
@@ -344,6 +378,28 @@ Output:
 If you got `[ undefined, undefined, undefined ]`, you forgot the `return`. Read the next section.
 :::
 
+::: quiz
+What does this print?
+
+```js
+const learners = [
+  { name: "Zola", mark: 58 },
+  { name: "Imran", mark: 71 },
+];
+const same = learners.map((learner) => learner);
+const labels = learners.map((learner, i) => `${i}:${learner.name[0]}`);
+same[0].mark = 99;
+console.log(learners[0].mark, labels.join(","));
+```
+
+- [x] `99 0:Z,1:I`
+- [ ] `58 0:Z,1:I`
+- [ ] `99 1:Z,2:I`
+- [ ] `58 1:Zola,2:Imran`
+
+`map` makes a new **array**, but `(learner) => learner` puts the same objects into it. `same[0]` and `learners[0]` are one object with two names, so setting the mark to 99 shows up in both. The index starts at 0, and `name[0]` is the first letter. If you picked `58`, you expected `map` to copy the objects. It only copies them if your callback makes new ones, for example with `{ ...learner }`.
+:::
+
 ## Pitfalls
 
 ### Forgetting `return` in a braces arrow
@@ -494,6 +550,17 @@ Output:
 **Using `map` to print.** Use `forEach` for doing things. Use `map` for making a new list.
 
 **Expecting `map` to skip items.** It cannot. Same length in, same length out. If your callback returns nothing for some items, you get `undefined` in those spots. To leave items out, use `filter`.
+:::
+
+::: quiz
+Given `const cities = ["JHB", "CPT"];`, which line makes `result` equal to `[ { code: 'JHB' }, { code: 'CPT' } ]`?
+
+- [ ] `const result = cities.map((c) => { code: c });`
+- [ ] `const result = cities.forEach((c) => ({ code: c }));`
+- [x] `const result = cities.map((c) => ({ code: c }));`
+- [ ] `const result = cities.map((c) => { return code: c; });`
+
+The round brackets tell JavaScript that `{ code: c }` is an object to return. Without them, the `{` is read as the start of a function body. With only one property this does not even crash: the body runs, returns nothing, and you get `[ undefined, undefined ]`. The `forEach` line gives `undefined`, because `forEach` never returns anything. The last line is a `SyntaxError`, because `return code: c` is not valid.
 :::
 
 ## Real-world uses

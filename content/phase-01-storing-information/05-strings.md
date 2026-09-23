@@ -245,6 +245,23 @@ From here on, this course uses template literals whenever it builds text that co
 
 That experiment shows the most common template literal mistake: `${ }` only works inside **backticks**. In ordinary quotes, it is printed as plain text: `Next year ${name} will be ${age + 1}.`
 
+::: quiz
+What does this print?
+
+```js
+const qty = 3;
+const price = 12;
+console.log(`${qty} x R${price} = R${qty} * ${price}`);
+```
+
+- [ ] `3 x R12 = R36`
+- [x] `3 x R12 = R3 * 12`
+- [ ] `qty x Rprice = Rqty * price`
+- [ ] `3 x R12 = R3 * price`
+
+Only what is **inside** a `${ }` is worked out. `${qty}` and `${price}` are filled in separately, and the ` * ` between them is ordinary text. To get `R36`, the whole sum has to be inside one pair of braces: `R${qty * price}`.
+:::
+
 ## How long is a string?
 
 Every string knows how many characters it has. Ask for its `.length`:
@@ -311,6 +328,22 @@ e
 If you ask for an index that does not exist, like `name[99]`, you do not get an error. You get `undefined`, JavaScript's word for "nothing is there". You will meet `undefined` properly in the [next lesson](#/phase-01-storing-information/06-booleans-null-undefined).
 
 Why start at 0? Think of the index as "how many steps from the start". The first character is 0 steps from the start. This same counting returns with lists in [Phase 5](#/phase-05-arrays/01-what-is-an-array), so it is worth getting used to now.
+
+::: quiz
+What does this print?
+
+```js
+const code = "JHB-47";
+console.log(code[2], code[code.length - 2], code[6]);
+```
+
+- [x] `B 4 undefined`
+- [ ] `H - 7`
+- [ ] `B 7 undefined`
+- [ ] `B 4 7`
+
+Indexes start at 0, so `code[2]` is the third character, `B`. The string has 6 characters, so `code.length - 2` is 4, and `code[4]` is `4`. The last index is 5, so `code[6]` does not exist and gives `undefined`, with no error. `H - 7` is what you get if you count from 1.
+:::
 
 ## Asking a string to do something
 
@@ -453,6 +486,22 @@ Two surprises here: `Tea` with a capital T was not replaced (case-sensitive agai
 3. **Now experiment.** Change the typed name to `"  jOHN-PAUL "`. Predict the output, then run it. Does the capital P survive? Why not?
 :::
 
+::: quiz
+What does this print?
+
+```js
+const email = "  Sipho.Dlamini@Mail.co.za ";
+console.log(email.trim().toLowerCase().slice(0, 5), email.includes("mail"));
+```
+
+- [ ] `sipho true`
+- [ ] `sipho. false`
+- [x] `sipho false`
+- [ ] `  sip false`
+
+Read the chain left to right: `trim()` removes the outside spaces, `toLowerCase()` gives `"sipho.dlamini@mail.co.za"`, and `slice(0, 5)` takes indexes 0 to 4, five characters: `sipho`. But `includes` is asked of the **original** `email`, which has `Mail` with a capital M, and searching is case-sensitive, so the answer is `false`. `sipho.` is the off-by-one answer: `slice` stops *before* index 5.
+:::
+
 ## Strings never change
 
 Here is the rule from the analogy: a string, once made, **cannot be changed**. Programmers say strings are **immutable** (unchangeable). Every method you have seen gives you back a **new** string. The original stays exactly as it was.
@@ -517,6 +566,25 @@ console.log(`[${loud}]`);
 [  SAWUBONA  ]
 ```
 The spaces are still there. `greeting.trim()` on line 2 created a trimmed copy, but it was never stored, so it vanished. `greeting` itself never changed. Fix it with `const loud = greeting.trim().toUpperCase();`. That line asks for a trimmed copy, then asks *that* copy for an upper-case version. Calling one method straight after another like this is called **chaining**.
+:::
+
+::: quiz
+What does this print?
+
+```js
+let code = "abc";
+code.toUpperCase();
+code = code + "d";
+code[0] = "X";
+console.log(code, code.length);
+```
+
+- [ ] `ABCd 4`
+- [ ] `Xbcd 4`
+- [ ] `XBCD 4`
+- [x] `abcd 4`
+
+Line 2 makes `"ABC"` but never stores it, so it is thrown away. Line 3 does store something: a new string, `"abcd"`. Line 4 tries to change one character by index, which silently does nothing, because strings cannot be changed. So `code` is `"abcd"`, 4 characters long. `ABCd` is what you would expect if `toUpperCase()` changed the string in place.
 :::
 
 ## The number-and-string trap: `"5" + 5`
@@ -666,6 +734,23 @@ console.log(town[town.length]);
 **Expecting `+` to add when one side is text.** `"5" + 5` is `"55"`. Convert text to numbers first (two lessons from now).
 
 **Forgetting that searches are case-sensitive.** `"Hello".includes("h")` is `false`. Lower-case both sides first if case should not matter.
+:::
+
+::: quiz
+What does this print?
+
+```js
+const a = 2;
+const b = "3";
+console.log(a + a + b + a);
+```
+
+- [ ] `9`
+- [x] `432`
+- [ ] `2232`
+- [ ] `45`
+
+JavaScript works left to right. `a + a` is two numbers, so it adds: 4. Then `4 + "3"` has a string in it, so it joins: `"43"`. From then on everything joins, so `"43" + 2` is `"432"`. `45` is the trap of thinking the last `+` adds again: once the result is a string, it stays a string.
 :::
 
 ## Real-world uses

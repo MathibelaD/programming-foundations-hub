@@ -117,6 +117,7 @@ def main():
             "minutes": sum(l["minutes"] for p in phases for l in p["lessons"]),
             "exercises": sum(l["blocks"].get("exercise", 0) for p in phases for l in p["lessons"]),
             "challenges": sum(l["blocks"].get("challenge", 0) for p in phases for l in p["lessons"]),
+            "quizzes": sum(l["blocks"].get("quiz", 0) for p in phases for l in p["lessons"]),
             "projectSteps": sum(l["blocks"].get("project", 0) for p in phases for l in p["lessons"]),
             "snippets": sum(l["snippets"] for p in phases for l in p["lessons"]),
         },
@@ -143,7 +144,7 @@ def main():
 
     t = index["totals"]
     print(f"{t['phases']} phases | {t['lessons']} lessons | {t['exercises']} exercises | "
-          f"{t['challenges']} challenges | {t['projectSteps']} project steps | "
+          f"{t['challenges']} challenges | {t['quizzes']} knowledge checks | {t['projectSteps']} project steps | "
           f"{t['snippets']} code snippets | ~{t['minutes'] // 60}h of work")
 
 

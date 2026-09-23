@@ -106,6 +106,17 @@ This is very handy for **labelling** your output. A bare `42` on the screen mean
 
 `console.log()` with nothing inside prints an empty line, which is useful for spacing out your output so it is easier to read.
 
+::: quiz
+You want your program to print exactly `Price: R25`, with no space between the `R` and the `25`. Which line does that?
+
+- [ ] `console.log("Price: R", 25);`
+- [ ] `console.log("Price:", "R", 25);`
+- [x] `console.log("Price: R25");`
+- [ ] `console.log("Price: R" 25);`
+
+When you separate values with commas, `console.log` always puts a space between them, so the first two lines both print `Price: R 25`. Putting everything in one string gives you full control over the spaces. The last line has no comma between its two values at all, so Node stops with a `SyntaxError`.
+:::
+
 ## Expressions: making new values
 
 Here is where it gets interesting. You do not have to give `console.log` a finished value. You can give it a sum, and JavaScript works out the answer first:
@@ -194,6 +205,17 @@ Output:
 Money in this course is in South African rand, written `R`. If you use a different currency, swap in your own symbol. The code works the same.
 :::
 
+::: quiz
+Three friends share a R240 bill plus a R30 tip equally. Which line prints each person's share, `90`?
+
+- [ ] `console.log(240 + 30 / 3);`
+- [x] `console.log((240 + 30) / 3);`
+- [ ] `console.log(240 / 3 + 30);`
+- [ ] `console.log("(240 + 30) / 3");`
+
+Division happens before addition, so without brackets `240 + 30 / 3` divides only the tip: 240 + 10 is 250. The brackets make the addition happen first: 270 / 3 is 90. The third line gives each person the whole tip (80 + 30 is 110). The last line is in quotes, so it prints the text `(240 + 30) / 3` and does no maths at all.
+:::
+
 ## Statements: the instructions themselves
 
 If an expression is something that *produces a value*, what is the whole line `console.log(2 + 3);`?
@@ -275,6 +297,25 @@ Start
 End 9
 ```
 The third line starts with `//`, so it is a **comment**: a note for humans that JavaScript skips completely. Nothing is printed for it. The last line shows two values, `"End"` and the result of `10 - 1`, separated by a space.
+:::
+
+::: quiz
+This program should print `Ready`, `Set` and `Go`, in that order.
+
+```js
+console.log("Set");
+console.log("Ready");
+// console.log("Go");
+```
+
+What do you need to change?
+
+- [x] Swap the first two lines, and remove the `//` from the last line
+- [ ] Remove the `//` from the last line; Node puts the other two in the right order
+- [ ] Swap the first two lines; the last line already prints `Go`
+- [ ] Change the strings to `"1. Ready"`, `"2. Set"` and `"3. Go"`
+
+Node runs the lines top to bottom, in exactly the order you wrote them, so `Ready` has to come first in the code. And `//` turns a line into a comment, which Node skips completely, so `Go` is never printed until you remove it. Numbering the strings changes only the text: the computer does not read numbers inside quotes, so the order stays wrong.
 :::
 
 ## Numbers and strings do different things with `+`
@@ -447,6 +488,17 @@ console.log("Total:" 25 + 15);
 **Using `x` for multiply or `÷` for divide.** JavaScript only understands `*` and `/`.
 
 **Forgetting to save before running.** If the output did not change, check the tab in VS Code. A dot on the tab means unsaved changes.
+:::
+
+::: quiz
+Which line prints exactly `Score: 10`?
+
+- [ ] `console.log("Score: " + 4 + 6);`
+- [ ] `console.log("Score: 4 + 6");`
+- [ ] `console.log("Score:" + 10);`
+- [x] `console.log("Score:", 4 + 6);`
+
+In the right answer, `4 + 6` is two numbers, so it adds to `10`, and the comma puts a space after `Score:`. The first line is the tempting one: `"Score: " + 4` mixes text and a number, so it joins to the text `"Score: 4"`, and then the `6` is joined on too, giving `Score: 46`. The third line is close, but `+` never adds a space for you, so it prints `Score:10`.
 :::
 
 ## Real-world uses

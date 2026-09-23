@@ -87,6 +87,23 @@ There are many good answers. Here are some:
 That last one matters a lot. Real programs spend a surprising amount of their code on "what if something goes wrong?". You will learn to handle that in [Phase 2](#/phase-02-making-decisions/02-if-and-else).
 :::
 
+::: quiz
+A very literal assistant, with a full kettle of cold water in front of it, follows these instructions exactly:
+
+1. Put a teabag in the cup.
+2. Pour water from the kettle into the cup.
+3. Switch on the kettle and wait until it boils.
+
+What does it end up with?
+
+- [ ] A cup of hot tea, because all the steps are there
+- [x] A teabag in cold water, and a kettle of boiling water next to it
+- [ ] Nothing: it notices the steps are in the wrong order and refuses to start
+- [ ] A cup of hot water, with the teabag still beside the cup
+
+Every step is there, but **in order** matters: the water is poured in step 2, while it is still cold, and boiled only in step 3. The tempting answer is "it refuses". A literal assistant cannot notice that you *meant* something else. It does not refuse sensible-looking steps, it carries them out.
+:::
+
 ## What a program is
 
 A **program** is a written list of instructions for a computer. That is all it is. Every app on your phone, every website, every game, the software in an ATM and a microwave: all of them are lists of instructions, written by people, carried out by a computer.
@@ -104,6 +121,17 @@ console.log("Hello, world!");
 It means: *show the text `Hello, world!` on the screen.* You will take this line apart piece by piece in [Your first program](#/phase-00-start-here/06-your-first-program). For now, notice that it is readable. You can guess what it does, even though you have never seen JavaScript. That is the "both people and computers" part.
 
 The written instructions of a program are called **code** or **source code**. Writing them is called **programming** or **coding** (the two words mean the same thing in everyday use).
+
+::: quiz
+Which of these instructions could **not** be written in a programming language as it stands, and would need rewriting first?
+
+- [ ] "Show the text Welcome on the screen."
+- [ ] "Add 15 to the price, then show the new price."
+- [ ] "Show the price, then show the word Thanks."
+- [x] "If the price seems expensive, show a warning."
+
+"Seems expensive" needs judgement: expensive for whom? R50? R5000? A person guesses, a computer cannot. A program needs an exact rule, such as "if the price is more than R500, show a warning" (you will write rules like that in Phase 2). The other three are already exact: each has one meaning only.
+:::
 
 ## From code to result
 
@@ -135,6 +163,17 @@ Running a program is also called **executing** it. When programmers say "run the
 A page of sheet music is not music. It is instructions for making music. It needs a pianist to read it and play it.
 
 Your JavaScript file is the sheet music. Node is the pianist. The sound in the room is the result. And just like a pianist who plays a wrong note exactly where the sheet has a wrong note, Node will carry out your mistakes faithfully too.
+:::
+
+::: quiz
+Aisha writes a perfectly correct JavaScript program in a file called `tip.js`, but she has not installed Node yet. Using the "code, something that runs it, result" picture, what is true?
+
+- [ ] `tip.js` is not code yet: it only becomes code once Node reads it
+- [ ] The program runs, but its result is invisible until she installs Node
+- [x] `tip.js` is code, but nothing is carrying it out, so there is no result
+- [ ] Her text editor carries out the instructions instead
+
+Code is the written instructions, whether or not anything runs them, the same way sheet music is still sheet music when there is no pianist. With no Node, the middle box of the picture is empty, so nothing happens at all. A text editor only shows and edits the text. It does not carry it out.
 :::
 
 ## Why JavaScript?
@@ -220,6 +259,23 @@ HELLO   there
 Helo, wrold!
 ```
 The computer prints **exactly** what is between the quotes: the capital letters, the three spaces, and even the spelling mistakes. It does not correct `wrold` to `world`, because it has no idea what you meant. It does not know that "Hello" and "hello" are the same greeting. To a computer, they are different pieces of text. This is the sandwich game again, in code.
+:::
+
+::: quiz
+In C#, this line shows `Sala kahle` on the screen:
+
+```text
+Console.WriteLine("Sala kahle");
+```
+
+Which JavaScript line does the same job?
+
+- [x] `console.log("Sala kahle");`
+- [ ] `console.WriteLine("Sala kahle");`
+- [ ] `Console.log("Sala kahle");`
+- [ ] `console.log(Sala kahle);`
+
+The *shape* carries over (instruction name, round brackets, text in double quotes), but the exact words belong to each language, and computers take them **literally**. JavaScript has no `WriteLine`, and `Console` with a capital C is a different name from `console`, so both of those fail. Without the quotes, `Sala kahle` is no longer text to show, so that fails too.
 :::
 
 ## What this course will *not* teach (yet)

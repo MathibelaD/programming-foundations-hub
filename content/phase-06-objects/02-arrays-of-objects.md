@@ -135,6 +135,26 @@ undefined
 `pets[1]` is the second object (Mimi). The array holds two objects, so its length is `2`. `3 + 5` is `8`. There is no index `2` in a two-item array, so `pets[2]` is `undefined`, the same as reading past the end of any array.
 :::
 
+::: quiz
+What does this print?
+
+```js
+const flights = [
+  { code: "SA301", seats: 12 },
+  { code: "FA205", seats: 0 },
+  { code: "BA6234", seats: 7 },
+];
+console.log(flights[flights.length - 1].code.length);
+```
+
+- [ ] `7`
+- [ ] `3`
+- [ ] `undefined`
+- [x] `6`
+
+Read it left to right. `flights.length - 1` is `2`, so `flights[2]` is the last object. Its `code` is `"BA6234"`, and that string has 6 characters. If you picked `7`, you stopped at the object and grabbed `seats`. If you picked `3`, you took the array's length. If you picked `undefined`, you forgot the `- 1`.
+:::
+
 ## Looping over a list of objects
 
 The `for...of` loop from Phase 5 works unchanged. The only difference is that each item is now an object, so you read its properties with a dot:
@@ -196,6 +216,29 @@ Output:
 3. You should see the three numbered lines shown above.
 4. **Change it:** add a fourth product, `{ name: "Maize meal", price: 64.99, inStock: true },`. Predict the new output, then run it. You did not have to change the loop at all. That is the power of the pattern.
 5. Set Bread's `inStock` to `false`. Predict and run again.
+:::
+
+::: quiz
+What is the **first** line this prints?
+
+```js
+const queue = [
+  { name: "Ayanda", ticket: 4 },
+  { name: "Bongani", ticket: 9 },
+  { name: "Chloe", ticket: 2 },
+];
+for (let i = 1; i < queue.length; i++) {
+  const person = queue[i];
+  console.log(`${i}. ${person.name} (${person.ticket + i})`);
+}
+```
+
+- [ ] `1. Ayanda (5)`
+- [x] `1. Bongani (10)`
+- [ ] `0. Ayanda (4)`
+- [ ] `2. Bongani (11)`
+
+The loop starts at `i = 1`, not `0`, so Ayanda is skipped completely and the first object used is `queue[1]`, Bongani. The number printed is `i`, which is `1`, and `9 + 1` is `10`. If you picked `1. Ayanda (5)`, you assumed the loop starts at the first item. Always check the starting value of `i`.
 :::
 
 ## The Phase 5 patterns, on objects
@@ -387,6 +430,33 @@ These five loops (sum, max, find, filter, transform) will carry you through a su
 3. **Add to it:** below the loop, use the accumulator pattern to add up `seconds`, then print the total as minutes and seconds (use `Math.floor(total / 60)` and `total % 60`).
 4. **Add more:** use the maximum pattern to print the longest song's title.
 5. Replace the songs with four of your own favourites and run it again. The full solution is in the Level 1 exercise below, if you get stuck.
+:::
+
+::: quiz
+What does this print?
+
+```js
+const shops = [
+  { name: "Spar", price: 32 },
+  { name: "Pick n Pay", price: 29 },
+  { name: "Checkers", price: 29 },
+  { name: "Shoprite", price: 35 },
+];
+let cheapest = shops[0];
+for (const shop of shops) {
+  if (shop.price <= cheapest.price) {
+    cheapest = shop;
+  }
+}
+console.log(cheapest.name);
+```
+
+- [ ] `Pick n Pay`
+- [ ] `29`
+- [ ] `Spar`
+- [x] `Checkers`
+
+Pick n Pay (29) beats Spar (32) and becomes the cheapest so far. Then Checkers is also 29, and `29 <= 29` is `true`, so Checkers **replaces** Pick n Pay. With `<` the first 29 would stay; with `<=` the last one wins a tie. If you picked `29`, remember `cheapest` holds the whole object and we print its `name`.
 :::
 
 ## Adding new objects from user input
@@ -651,6 +721,26 @@ console.log(`Total: R${total}`);
 **Missing commas between objects.** Each `{ ... }` in the array needs a comma after it (the last one is optional). A missing one gives `SyntaxError: Unexpected token '{'`.
 
 **Inconsistent keys.** If one object has `price` and another has `Price` or `cost`, your loop will get `undefined` for some items. Every object in a list should have the same keys. The next lesson shows a neat way to guarantee that.
+:::
+
+::: quiz
+What does this print?
+
+```js
+const city = "Gqeberha";
+const name = "Luyanda";
+const people = [];
+people.push({ name: "city", city: city });
+people.push({ name: name, city: "name" });
+console.log(people[1].city + " " + people[0].name + " " + people[0].city);
+```
+
+- [ ] `Gqeberha Luyanda Gqeberha`
+- [ ] `name Luyanda Gqeberha`
+- [x] `name city Gqeberha`
+- [ ] `Luyanda city city`
+
+On the left of each `:` is a key (a label). On the right is a value: in quotes it is text, without quotes it is a variable. So the first object is `{ name: "city", city: "Gqeberha" }` and the second is `{ name: "Luyanda", city: "name" }`. `people[1].city` is the text `"name"`, `people[0].name` is the text `"city"`, and `people[0].city` is the variable's value `"Gqeberha"`. The trap is treating quoted text as if it were a variable.
 :::
 
 ## Real-world uses

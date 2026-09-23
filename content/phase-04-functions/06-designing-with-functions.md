@@ -161,6 +161,43 @@ Using local variables inside a function is fine. A pure function can have `const
 Programs *must* ask and print, or they would be useless. `prompt` and `console.log` are not wrong. The idea is to keep them in a **few, clearly named** functions (like `askForNumber` and `printSummary`), and keep everything else pure.
 :::
 
+::: quiz
+Which **one** of these four functions is pure?
+
+```js
+let ticketNumber = 0;
+
+function countdownText(n) {
+  let text = "";
+  for (let i = n; i > 0; i--) {
+    text = text + i + " ";
+  }
+  return text;
+}
+
+function priceOf(item) {
+  console.log("Looking up " + item);
+  return 25;
+}
+
+function nextTicket() {
+  ticketNumber++;
+  return ticketNumber;
+}
+
+function luckyNumber(max) {
+  return Math.ceil(Math.random() * max);
+}
+```
+
+- [ ] `priceOf`
+- [ ] `nextTicket`
+- [x] `countdownText`
+- [ ] `luckyNumber`
+
+`countdownText(3)` always returns `"3 2 1 "` and does nothing else. Its own `let`, loop and variables are fine, because nothing outside it is touched. `priceOf` always returns 25, which looks pure, but it prints: that is a side effect. `nextTicket` changes a global, so the same call gives a different answer each time. `luckyNumber` gives a random answer.
+:::
+
 ## Step 3: input and output at the edges
 
 Here is the shape to aim for:
@@ -259,6 +296,28 @@ Remember from [Numbers](#/phase-01-storing-information/04-numbers) that `0.1 + 0
 3. Fix the bug (change `>` to `>=`). Run it again. All six should say `PASS`.
 4. **Change it, predict, run.** Add two more boundary tests: `check(gradeFor(69), "C")` and `check(gradeFor(70), "B")`. Predict whether they pass, then run.
 5. Now break the function on purpose: change `>= 70` to `>= 75`. Before you run, predict *which* tests will fail. Run it and check. Then put it back.
+:::
+
+::: quiz
+A shop gives free delivery on orders of **R500 or more**. Here is the function:
+
+```js
+function deliveryFee(total) {
+  if (total > 500) {
+    return 0;
+  }
+  return 50;
+}
+```
+
+Using the `check` function from this lesson, which single test would catch the bug?
+
+- [ ] `check(deliveryFee(650), 0);`
+- [ ] `check(deliveryFee(499), 50);`
+- [x] `check(deliveryFee(500), 0);`
+- [ ] `check(deliveryFee(100), 50);`
+
+An order of exactly R500 should be free, but `500 > 500` is false, so the function returns 50 and the test prints `FAIL: expected 0 but got 50`. The other three tests all pass, because they are not on the boundary. That is the point: bugs hide at the edge between cases. If you picked the R499 test, check it again: 499 should pay R50, and it does.
 :::
 
 ## Worked example: the bill splitter, rebuilt
@@ -607,6 +666,33 @@ After the fixes, all six print `PASS`.
 **Changing a test to make it pass.** If a test fails, first ask whether the *function* is wrong. Only change the expected value if the rules really changed.
 
 **Comparing decimals directly.** `check(0.1 + 0.2, 0.3)` fails. Test formatted money, or choose whole-number test values.
+:::
+
+::: quiz
+Each share is rounded **up** to the next whole rand. What does this print?
+
+```js
+const shareFor = (total, people) => Math.ceil(total / people);
+
+function check(actual, expected) {
+  if (actual === expected) {
+    console.log(`PASS: ${actual}`);
+  } else {
+    console.log(`FAIL: expected ${expected} but got ${actual}`);
+  }
+}
+
+check(shareFor(90, 4), 23);
+check(shareFor(90, 3), 30);
+check(shareFor(91, 3), 30);
+```
+
+- [ ] `PASS: 23`, `PASS: 30`, `PASS: 30`
+- [ ] `FAIL: expected 23 but got 22.5`, `PASS: 30`, `PASS: 30`
+- [ ] `FAIL: expected 23 but got 22`, `PASS: 30`, `PASS: 30`
+- [x] `PASS: 23`, `PASS: 30`, `FAIL: expected 30 but got 31`
+
+90 ÷ 4 is 22.5, rounded up to 23: pass. 90 ÷ 3 is exactly 30: pass. 91 ÷ 3 is 30.33…, and rounding **up** gives 31, so the last test fails. Here the function is right and the *test* is wrong: whoever wrote it rounded down in their head. A `FAIL` means "these two disagree", so check both sides. If you picked `22.5`, you forgot that `Math.ceil` runs before the value is returned.
 :::
 
 ## Real-world uses

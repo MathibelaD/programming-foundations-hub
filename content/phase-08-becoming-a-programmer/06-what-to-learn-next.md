@@ -45,7 +45,7 @@ Here is what you can do, written the way a job advert or a project would describ
 - **Filter, transform, sort and summarise data** with `filter`, `map`, `sort` and `reduce`.
 - **Save and load data** as JSON files.
 - **Debug calmly**, with labelled logs, stack traces and the VS Code debugger.
-- **Organise code into modules**, and use packages from npm.
+- **Organise code into modules**, and install packages from the npm registry with pnpm.
 - **Track your work with Git**, with a clean history of meaningful commits.
 - **Read error messages and documentation**, and find answers on your own.
 
@@ -192,7 +192,7 @@ A great first project: turn Budget Buddy into a web page, with a form for adding
 
 **Back-end** development means the programs that run on servers: storing data, handling logins, and answering requests from apps and websites.
 
-1. **More Node.js**: you already know it. Read files, use more of npm.
+1. **More Node.js**: you already know it. Read files, and try more of the packages you can add with pnpm.
 2. **Express**: a popular package for building a web server in Node. A server is, at heart, a program that receives a request and runs a function to build the reply. That is a callback again.
 3. **APIs**: servers that reply with JSON instead of web pages. You already know JSON.
 4. **Databases**: proper storage for lots of data, instead of one JSON file. Budget Buddy's `storage.js` is exactly the module you would swap out.

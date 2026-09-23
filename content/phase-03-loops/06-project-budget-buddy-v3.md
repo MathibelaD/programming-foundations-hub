@@ -289,6 +289,36 @@ Total: R5220.00  Biggest: R4500.00
 Check by hand: 4500 + 720 = 5220, and 4500 is the bigger of the two. **Trace it** if your numbers are different. The most likely bug is that `total`, `count` or `biggest` were created inside the loop.
 :::
 
+::: quiz
+Kagiso tries a shortcut and creates `count` inside the menu loop. He types `1`, then `1`, then `3`. What happens?
+
+```js
+const prompt = require("prompt-sync")();
+
+let running = true;
+
+while (running) {
+  let count = 0;
+  const choice = prompt("Choose 1 or 3: ").trim();
+
+  if (choice === "1") {
+    count++;
+  } else if (choice === "3") {
+    running = false;
+  }
+}
+
+console.log(`You added ${count} expense(s).`);
+```
+
+- [ ] `You added 2 expense(s).`
+- [ ] `You added 0 expense(s).`
+- [x] `ReferenceError: count is not defined`
+- [ ] `You added 1 expense(s).`
+
+A `let` inside the loop body makes a fresh `count` on every trip round the menu and throws it away at the `}`. So even inside the loop it could never get past 1. After the loop there is no `count` at all, and using a name that does not exist is a `ReferenceError`. `0` or `1` is what you might expect from "it resets each time", but the goodbye line never gets to print. Variables that must remember things across the loop, and be used after it, are created before it.
+:::
+
 ## Step 4: the summary
 
 Replace the option 2 placeholder. The summary works out what is left and shows it, with the warning from v2 if you have overspent:
@@ -438,6 +468,17 @@ Biggest: R4500.00  Average: R2356.83
 Check the average by hand: 4500 + 1850.50 + 720 = 7070.50, and 7070.50 ÷ 3 = 2356.83 (rounded).
 
 Then run it once more and choose `3` straight away. You should see `You added 0 expense(s).` and `Biggest: R0.00  Average: R0.00`, with no `NaN` anywhere.
+:::
+
+::: quiz
+In the finished Budget Buddy v3, the user adds three expenses, `120`, `0` and `30`, then quits. What is the last line of the goodbye?
+
+- [ ] `Biggest: R120.00  Average: R75.00`
+- [ ] `Biggest: R30.00  Average: R50.00`
+- [x] `Biggest: R120.00  Average: R50.00`
+- [ ] `Biggest: R120.00  Average: R0.00`
+
+An amount of 0 is valid (it is not negative), so it is added and counted: `total` is 150 and `count` is 3, which gives an average of 50. `biggest` stays at 120, because neither 0 nor 30 beats it. `R75.00` is what you get if you think the 0 was skipped, but nothing in the code skips it. If you wanted R0 expenses rejected, the check would need `amount <= 0`.
 :::
 
 ## Test it like a tester

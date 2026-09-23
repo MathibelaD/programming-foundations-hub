@@ -154,6 +154,28 @@ Output:
 No student with ID 999.
 ```
 
+::: quiz
+What does this print?
+
+```js
+const buses = [
+  { route: "A1", seats: 0 },
+  { route: "B7", seats: 12 },
+  { route: "C3", seats: 30 },
+];
+const bus = buses.find((b) => b.seats > 10);
+bus.seats = bus.seats - 5;
+console.log(bus.route, buses[1].seats);
+```
+
+- [x] `B7 7`
+- [ ] `B7 12`
+- [ ] `C3 12`
+- [ ] `undefined 12`
+
+`find` stops at the **first** match, B7 (C3 also matches, but comes later). It gives back the object itself, not a copy, so `bus` and `buses[1]` are the same object, and taking off 5 seats changes both. If you picked `B7 12`, you thought `find` hands you a copy. If you picked `C3`, you were looking for the biggest, not the first.
+:::
+
 ## findIndex: where is it?
 
 Sometimes you need the **position** instead of the item, usually so you can change or remove it with `splice` (from [Changing arrays](#/phase-05-arrays/02-changing-arrays)). `findIndex` works like `find`, but returns the index. If nothing matches, it returns `-1`, the same "not found" signal as `indexOf`.
@@ -237,6 +259,27 @@ Output:
 6. **Now experiment.** Change `idToFind` to `105`. Predict the output, then run it. Then delete the whole `if` check, keep only `console.log(wanted.name);`, and run it again to see the `TypeError` for yourself. Put the check back afterwards.
 :::
 
+::: quiz
+What does this print?
+
+```js
+const cart = [{ item: "Tea" }, { item: "Rusks" }, { item: "Milk" }];
+const wanted = cart[1];
+console.log(
+  cart.indexOf(wanted),
+  cart.indexOf({ item: "Rusks" }),
+  cart.findIndex((line) => line.item === "Milk")
+);
+```
+
+- [ ] `1 1 2`
+- [ ] `-1 -1 2`
+- [x] `1 -1 2`
+- [ ] `2 -1 3`
+
+`wanted` holds the address of the real Rusks object in the array, so `indexOf` finds it at `1`. `{ item: "Rusks" }` is a brand-new object with the same contents, a different house, so `indexOf` cannot find it: `-1`. `findIndex` uses a test on the contents, so it finds Milk at index `2`. If you picked `1 1 2`, you expected `indexOf` to compare contents. It compares addresses.
+:::
+
 ## some: does any item match?
 
 ### The flag pattern, by hand
@@ -282,6 +325,22 @@ false
 The flag loop, `mySome` and `.some` all agree: someone failed. Nobody scored over 95, so the last line is `false`.
 
 `mySome` is `myFind` with one change: instead of returning the item, it returns `true`. And instead of `undefined` at the end, it returns `false`. `some` does not care *which* item matched, only *whether* one did.
+
+::: quiz
+What does this print?
+
+```js
+const baskets = [[], ["apple"], []];
+console.log(baskets.some((basket) => basket.length > 0), baskets.includes([]));
+```
+
+- [ ] `true true`
+- [x] `true false`
+- [ ] `[ [ 'apple' ] ] false`
+- [ ] `false false`
+
+One basket has something in it, so `some` answers `true`. It answers with a boolean, not the matching items. `includes([])` makes a **new** empty array and looks for that exact array; the empty baskets are different arrays that only look the same, so the answer is `false`. If you picked `true true`, you expected `includes` to compare contents. For arrays and objects it compares addresses.
+:::
 
 ## every: do all items match?
 
@@ -393,6 +452,27 @@ true
 - `findIndex`: `21` is at index `2`.
 - `some`: nobody is 65 or older, so `false`.
 - `every`: all five ages are more than 10, so `true`.
+:::
+
+::: quiz
+What does this print?
+
+```js
+const temps = [21, 25, 35, 19, 40];
+let looked = 0;
+const allMild = temps.every((temp) => {
+  looked++;
+  return temp < 30;
+});
+console.log(allMild, looked);
+```
+
+- [ ] `false 5`
+- [ ] `true 5`
+- [ ] `false 2`
+- [x] `false 3`
+
+`every` checks 21 (fine), 25 (fine), then 35, which fails. One failure is enough to answer `false`, so it stops there and never looks at 19 or 40. The callback ran 3 times. If you picked `false 5`, you thought `every` always visits every item. Only `forEach`, `map` and `filter` do that.
 :::
 
 ## Real data: a restaurant order
@@ -581,6 +661,30 @@ Hello, Olivia!
 **Mixing up `some` and `every`.** Say the question out loud: "is there *any*?" is `some`; "are they *all*?" is `every`.
 
 **Forgetting that `every` on an empty list is `true`.** Check `.length` too if an empty list should count as "no".
+:::
+
+::: quiz
+What does this print?
+
+```js
+const expenses = [
+  { what: "Rent", amount: 4500 },
+  { what: "Data", amount: 149 },
+];
+const pos = expenses.findIndex((expense) => expense.what === "Rent");
+if (pos) {
+  console.log(`Found at ${pos}`);
+} else {
+  console.log("Not found");
+}
+```
+
+- [ ] `Found at 0`
+- [x] `Not found`
+- [ ] `Found at 1`
+- [ ] `Found at -1`
+
+Rent is found at index `0`. But `0` is **falsy**, so `if (pos)` takes the `else` branch. And if nothing matched, `-1` is truthy, so it would say "Found at -1". Both answers come out backwards. The honest check is `if (pos !== -1)`. If you picked `Found at 0`, you got the index right but forgot how `if` treats `0`.
 :::
 
 ## Real-world uses

@@ -156,6 +156,26 @@ These are the ones that catch people out:
 4. Check your predictions against the list. Any surprises? Those are the ones to remember.
 :::
 
+::: quiz
+Which value, stored in `x`, makes this print `no`?
+
+```js
+if (x) {
+  console.log("yes");
+} else {
+  console.log("no");
+}
+```
+
+- [ ] `"0"`
+- [ ] `" "`
+- [ ] `-0.5`
+- [x] `7 - 7`
+- [ ] `"false"`
+
+`7 - 7` works out to the number `0`, which is on the falsy list, so the `else` runs. The others all look like "nothing" or "no" to a person, but JavaScript only looks at the value. `"0"`, `" "` and `"false"` are strings with at least one character in them, and `-0.5` is a number that is not zero. All four are truthy.
+:::
+
 ## Why `"Sunday"` counted as "yes"
 
 Remember this bug from the last lesson?
@@ -223,6 +243,32 @@ Output:
 ```text
 Please type a name.
 ```
+
+::: quiz
+Which letters does this print?
+
+```js
+const typed = "   ";
+const name = typed.trim();
+
+if (typed) {
+  console.log("A");
+}
+if (!name) {
+  console.log("B");
+}
+if (name.length) {
+  console.log("C");
+}
+```
+
+- [ ] `B` only
+- [x] `A` and `B`
+- [ ] `A`, `B` and `C`
+- [ ] `A` only
+
+`typed` still has three spaces in it, so it is truthy and `A` prints. `name` is the trimmed version, `""`, which is falsy, so `!name` is `true` and `B` prints. `name.length` is `0`, and `0` is falsy, so `C` does not print. The tempting answer, `B` only, forgets that the untrimmed `typed` is still a string with characters in it. That is exactly why you trim before you check.
+:::
 
 ## The trap: zero is a real answer
 
@@ -317,6 +363,30 @@ e
 - `e` is `-3`: any number other than 0 (and `NaN`) is truthy, including negative ones.
 :::
 
+::: quiz
+The shopkeeper presses Enter without typing anything, so `typedStock` is `""`. What does this print?
+
+```js
+const typedStock = "";
+const stock = Number(typedStock);
+
+if (Number.isNaN(stock)) {
+  console.log("Not a number");
+} else if (!stock) {
+  console.log("Sold out");
+} else {
+  console.log(`${stock} in stock`);
+}
+```
+
+- [ ] `Not a number`
+- [ ] `0 in stock`
+- [x] `Sold out`
+- [ ] Nothing at all
+
+`Number("")` is `0`, not `NaN`, so the first question is `false`. Then `!stock` is `!0`, which is `true`, so it prints `Sold out`. The shopkeeper typed nothing, and the program decided the shop had no stock. If you picked `Not a number`, remember that empty text converts to 0. When an empty answer should count as a mistake, check the text (`!typedStock.trim()`) before you convert it.
+:::
+
 ## Default values with `||`
 
 Here is something new about `||`. In the last lesson you used it with booleans on both sides. When the sides are *not* booleans, `||` does not give back `true` or `false`. It gives back **one of the two values**:
@@ -405,6 +475,28 @@ friend
 (The third line printed an empty string, which shows up as a blank line.)
 
 You will not need `??` much in this course. It is worth recognising, and it has one handy use now: when the user presses Ctrl+C, `prompt` gives back `null`, as you saw in [Asking the user questions](#/phase-01-storing-information/08-getting-input-from-the-user). `prompt("Name? ") ?? ""` turns that `null` into an empty string, so that `.trim()` afterwards does not crash.
+
+::: quiz
+What does this print?
+
+```js
+const typedName = "  ";
+const typedTip = "0";
+
+const name = typedName.trim() || "guest";
+const tip = Number(typedTip) || 10;
+const tipText = typedTip || "10";
+
+console.log(name, tip, tipText);
+```
+
+- [x] `guest 10 0`
+- [ ] `guest 0 0`
+- [ ] `guest 10 10`
+- [ ] `guest 0 10`
+
+The trimmed name is `""`, which is falsy, so `name` falls back to `guest`. `Number("0")` is the number `0`, which is falsy, so `tip` falls back to `10`, even though the customer really chose no tip. `typedTip` is the string `"0"`, which has one character and is truthy, so `tipText` keeps it. The same zero gives two different answers, depending on whether it is text or a number. If you picked `guest 0 0`, you forgot that `||` gives up on the number 0.
+:::
 
 ## When to be explicit instead
 

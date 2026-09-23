@@ -141,6 +141,33 @@ console.log(sumOf([]), largestOf([]), averageOf([]));
 4. Now **delete** the temporary test lines and remove the `//` from `main();`, so the bottom of the file is `main();` again. Run `node index.js` once more, and check that v4 still works exactly as before. Nothing uses the new functions yet.
 :::
 
+::: quiz
+Suppose `largestOf` started at the first item instead of 0, as in lesson 4. What happens when the summary runs with no expenses?
+
+```js
+const formatMoney = (amount) => `R${amount.toFixed(2)}`;
+
+function largestOf(amounts) {
+  let largest = amounts[0];
+  for (const amount of amounts) {
+    if (amount > largest) {
+      largest = amount;
+    }
+  }
+  return largest;
+}
+
+console.log(formatMoney(largestOf([])));
+```
+
+- [ ] It prints `R0.00`
+- [ ] It prints `Rundefined`
+- [ ] It prints `RNaN`
+- [x] It crashes with `TypeError: Cannot read properties of undefined (reading 'toFixed')`
+
+An empty array has no first item, so `amounts[0]` is `undefined`. The loop never runs, and `largestOf` returns `undefined`. Then `formatMoney` tries `undefined.toFixed(2)`, and you cannot call a method on `undefined`. If you picked `Rundefined`, the template literal never gets that far: the crash happens first. That is why Budget Buddy's `largestOf` starts at 0.
+:::
+
 ## Step 2: keep every expense in an array
 
 Now we swap the three running variables for one list.
@@ -474,6 +501,17 @@ Convert first, then use the index everywhere:
   }
 ```
 Naming the two different things differently (`number` for the person, `index` for the array) makes this bug much harder to write.
+:::
+
+::: quiz
+Nandi's expenses are `[300, 120, 75, 40]`. She chooses **3) Remove an expense** and types `2`. Then she chooses it again and types `3`. Which amounts are left?
+
+- [ ] `R300.00` and `R40.00`
+- [x] `R300.00` and `R75.00`
+- [ ] `R300.00`, `R120.00` and `R40.00`
+- [ ] `R120.00` and `R40.00`
+
+Typing `2` removes index 1, the R120, and the list becomes `[300, 75, 40]`. `splice` closed the gap, so the list is numbered again: now number 3 is R40, and typing `3` removes it. R300 and R75 are left. If you picked R300 and R40, you used the old numbers for the second removal. That is why `removeExpense` shows the list, freshly numbered, every time.
 :::
 
 ## The full solution

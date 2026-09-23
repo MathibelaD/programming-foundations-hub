@@ -156,6 +156,32 @@ Each `case` checks with the same strictness as `===`. That matters a lot with `p
 
 With `case 1:`, typing `1` gives "Sorry, that is not an option." `prompt` returns the **string** `"1"`, and `switch` compares strictly, like `===`. The string `"1"` is not exactly the number `1`. Either keep the cases as strings (as above, which is simplest for menus), or convert the choice with `Number()` and use number cases. Make sure both sides are the same type.
 
+::: quiz
+What does this print?
+
+```js
+const choice = Number("2");
+
+switch (choice) {
+  case "1":
+    console.log("Balance");
+    break;
+  case "2":
+    console.log("Airtime");
+    break;
+  default:
+    console.log("Not on the menu");
+}
+```
+
+- [ ] `Airtime`
+- [x] `Not on the menu`
+- [ ] `Balance`
+- [ ] `Airtime`, then `Not on the menu`
+
+`Number("2")` is the number 2, but the cases are the strings `"1"` and `"2"`. `switch` compares like `===`, so the number 2 matches neither label and `default` runs. It is the opposite of the usual `prompt` mistake: here someone converted the input but left the labels as text. The value and the labels must be the same type: either `case 2:` with a number, or no `Number()` and `case "2":`.
+:::
+
 ## Forgetting `break`: fall-through
 
 Here is what happens if you leave out the `break` lines:
@@ -276,6 +302,38 @@ Large: R38
 It starts at `case "M"`, prints the medium price, and there is no `break`, so it falls into `case "L"` and prints the large price too. Then it hits `break` and stops. A coffee shop that charges you for two coffees because of a missing `break` is a real kind of bug.
 :::
 
+::: quiz
+What does this print?
+
+```js
+const stage = 2;
+let hours = 0;
+
+switch (stage) {
+  case 1:
+    hours = hours + 2;
+  case 2:
+    hours = hours + 2;
+  case 3:
+    hours = hours + 2;
+    break;
+  case 4:
+    hours = hours + 4;
+  default:
+    hours = hours + 1;
+}
+
+console.log(hours);
+```
+
+- [ ] `2`
+- [ ] `5`
+- [ ] `9`
+- [x] `4`
+
+It starts at `case 2:` and adds 2. There is no `break`, so it falls through into `case 3:`, adds 2 more, then hits `break` and leaves: 4. The `case 1:` lines are never run, because a `switch` jumps straight to its label and only falls **downwards**. `2` is what you would get if every case had a `break`. `5` is what you would get if it fell all the way into `default`, but the `break` under `case 3:` stops it first.
+:::
+
 ## `switch` or `if`?
 
 `switch` only ever asks one kind of question: "is this value **exactly** equal to that one?". It cannot ask "is it greater than 80?". So:
@@ -313,6 +371,28 @@ Charge your phone and power bank now.
 ```
 
 Each `case` became `stage === ...`. Stacked labels became `||`. `default` became `else`. And no `break` is needed, because an `if` chain only ever runs one block. Here you could even argue the `if` version is better: `stage >= 5` would be a clearer last check than `default`. Choose whichever reads more clearly for the problem.
+
+::: quiz
+Which `if` condition prints `R30` for exactly the same sizes as this `switch`?
+
+```js
+switch (size) {
+  case "S":
+  case "M":
+    console.log("R30");
+    break;
+  default:
+    console.log("R40");
+}
+```
+
+- [x] `if (size === "S" || size === "M")`
+- [ ] `if (size === "S" && size === "M")`
+- [ ] `if (size <= "M")`
+- [ ] `if (size === "S" || "M")`
+
+Stacked labels mean "this one or that one", so they become `||`, with a full `size === ...` on each side. `size === "S" || "M"` is the trap from [Truthy and falsy](#/phase-02-making-decisions/04-truthy-and-falsy): the right side is the string `"M"`, which is truthy, so every size would print R30. `size <= "M"` compares text alphabetically, so `"L"` would sneak in. `&&` can never be `true`, because one size cannot be both.
+:::
 
 ## The ternary operator: choosing between two values
 
@@ -611,6 +691,25 @@ One bug hiding another is very common. Fix one, run again, and look carefully at
 **Nesting ternaries.** One `?` per line. More than that, use `if`.
 
 **Using a ternary to run actions.** A ternary picks a value. To do one of two things, use `if / else`.
+:::
+
+::: quiz
+What does this print?
+
+```js
+const eggs = 0;
+const label = eggs === 1 ? "egg" : "eggs";
+const note = eggs ? "in stock" : "sold out";
+
+console.log(`${eggs} ${label}, ${note}`);
+```
+
+- [ ] `0 egg, sold out`
+- [ ] `0 eggs, in stock`
+- [x] `0 eggs, sold out`
+- [ ] `0 egg, in stock`
+
+`eggs === 1` is `false`, so `label` gets the value after the `:`, which is `"eggs"`. The second ternary has no comparison at all: its condition is `eggs` itself, which is `0`, and `0` is falsy, so `note` gets `"sold out"`. If you picked `in stock`, you may have read the condition as "does `eggs` exist?". A ternary uses the same truthy and falsy rules as `if`.
 :::
 
 ## Real-world uses

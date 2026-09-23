@@ -11,7 +11,7 @@ stage: Phase 8
 - How to share functions from one file with `module.exports`, and use them in another with `require("./file")`
 - What `const { a, b } = require(...)` means, and why the `./` matters
 - The full story of `const prompt = require("prompt-sync")();`, which you have been typing since Phase 1
-- The three kinds of module: built into Node, installed with npm, and your own
+- The three kinds of module: built into Node, installed with pnpm, and your own
 
 **Before this:** [Debugging](#/phase-08-becoming-a-programmer/02-debugging). You should be comfortable with functions, arrow functions and objects.
 
@@ -164,6 +164,32 @@ R12.00
 
 (In step 6 you should have seen `TypeError: addVat is not a function` the first time. The next section explains why.)
 
+::: quiz
+Two files in the same folder. What does running `run.js` print?
+
+```js
+// units.js
+const kmToM = (km) => km * 1000;
+const mToCm = (m) => m * 100;
+
+module.exports = { kmToM, toCm: mToCm };
+```
+
+```js
+// run.js
+const units = require("./units");
+console.log(units.kmToM(2), units.toCm(3));
+console.log(typeof units.mToCm);
+```
+
+- [ ] `2000 300`, then `function`
+- [ ] `TypeError: units.toCm is not a function`
+- [x] `2000 300`, then `undefined`
+- [ ] `ReferenceError: mToCm is not defined`
+
+The exported object has two properties: `kmToM`, and `toCm`, which holds the `mToCm` function. So both calls work. But the object has no property called `mToCm`: that name only exists *inside* `units.js`. Reading a property that is not there gives `undefined`, and `typeof undefined` is `"undefined"`. What other files see is decided by the property names in `module.exports`, not by the names of the variables.
+:::
+
 ## Why `./`?
 
 The `./` at the start of `"./money"` means "**start looking in the same folder as the file doing the requiring**". You met `.` meaning "this folder" in [The terminal](#/phase-00-start-here/05-the-terminal).
@@ -188,12 +214,35 @@ node:internal/modules/cjs/loader:1249
 Error: Cannot find module 'money'
 ```
 
-Without `./`, Node thinks you mean a **package** called `money`, the kind you install with npm, and goes looking in `node_modules` instead of your folder. It does not find one, so it gives up. The rule:
+Without `./`, Node thinks you mean a **package** called `money`, the kind you install with pnpm, and goes looking in `node_modules` instead of your folder. It does not find one, so it gives up. The rule:
 
 - `require("./something")` means **my own file**, found relative to this file.
 - `require("something")` means **a built-in module or an installed package**.
 
 If your file is in a sub-folder, the path says so: `require("./lib/money")`. To go up a folder, use `..`: `require("../money")`.
+
+::: quiz
+Your folders look like this, and `main.js` needs both `tax.js` and `rates.js`:
+
+```text
+coding-practice/
+└── phase-8/
+    ├── rates.js
+    └── app/
+        ├── main.js
+        └── lib/
+            └── tax.js
+```
+
+You run `node phase-8/app/main.js` from inside `coding-practice`. Which two lines in `main.js` work?
+
+- [ ] `require("./phase-8/app/lib/tax")` and `require("./phase-8/rates")`
+- [x] `require("./lib/tax")` and `require("../rates")`
+- [ ] `require("./lib/tax")` and `require("./rates")`
+- [ ] `require("lib/tax")` and `require("../rates")`
+
+Paths in `require` start from the folder of the file doing the requiring, here `app/`. `tax.js` is inside `app/lib/`, so `./lib/tax`. `rates.js` is one folder up from `app/`, so `../rates`. The first option is the most tempting: it describes the path from where your *terminal* is, but Node does not care where you ran the command from. `./rates` looks inside `app/`, and `lib/tax` without `./` makes Node look for a package called `lib/tax`.
+:::
 
 ## When the require goes wrong
 
@@ -243,6 +292,39 @@ loud.js is running!
 Only **once**. The first `require` runs `loud.js` from top to bottom and remembers what it exported. Every later `require` of the same file gets the remembered exports without running the file again. So a module's code runs once, however many files require it. (It also means a module should normally *only* define and export things. A module that prints things when it is required is usually a surprise nobody wanted.)
 :::
 
+::: quiz
+Two files in the same folder. What does running `shop.js` print?
+
+```js
+// stock.js
+let count = 0;
+
+function addItem() {
+  count = count + 1;
+  return count;
+}
+
+console.log("stock ready");
+module.exports = { addItem };
+```
+
+```js
+// shop.js
+const { addItem } = require("./stock");
+const again = require("./stock");
+
+addItem();
+console.log(again.addItem());
+```
+
+- [ ] `stock ready`, `stock ready`, then `1`
+- [ ] `stock ready`, then `1`
+- [ ] `stock ready`, `stock ready`, then `2`
+- [x] `stock ready`, then `2`
+
+`stock.js` runs only once, on the first `require`, so `stock ready` prints once. The second `require` hands back the same remembered exports. That means `addItem` and `again.addItem` are the **same** function, sharing the same `count`. The first call makes `count` 1, and the second makes it 2. If you picked `1`, you imagined each `require` giving you a fresh copy of the file.
+:::
+
 ## Exporting one thing instead of an object
 
 `module.exports` does not have to be an object. It can be **anything**, including a single function:
@@ -285,6 +367,32 @@ No curly braces this time, because the module exports a function, not an object.
 
 That line should look very familiar.
 
+::: quiz
+What happens when you run `till.js`?
+
+```js
+// discount.js
+function makeDiscount(percent) {
+  return (price) => price - (price * percent) / 100;
+}
+
+module.exports = makeDiscount;
+```
+
+```js
+// till.js
+const { makeDiscount } = require("./discount");
+console.log(makeDiscount(10)(200));
+```
+
+- [ ] It prints `180`
+- [ ] It prints `20`
+- [ ] It prints `undefined`
+- [x] `TypeError: makeDiscount is not a function`
+
+`discount.js` exports the function itself, not an object with a `makeDiscount` property inside. The curly braces in `till.js` try to pick a property called `makeDiscount` out of that function. There is none, so the variable is `undefined`, and calling it is a `TypeError`. Without the braces, `const makeDiscount = require("./discount");`, it prints `180`: `makeDiscount(10)` makes a "10% off" function, and `(200)` calls it straight away.
+:::
+
 ## The prompt-sync line, finally explained
 
 Since [Asking the user questions](#/phase-01-storing-information/08-getting-input-from-the-user) you have typed this line as a bit of magic:
@@ -295,7 +403,7 @@ const prompt = require("prompt-sync")();
 
 You now know every piece of it:
 
-1. `require("prompt-sync")`: no `./`, so this is a **package**. Node looks in the `node_modules` folder, finds the `prompt-sync` package that `npm install` put there, runs its main file, and hands back its `module.exports`.
+1. `require("prompt-sync")`: no `./`, so this is a **package**. Node looks in the `node_modules` folder, finds the `prompt-sync` package that `pnpm add` put there, runs its main file, and hands back its `module.exports`. (In `node_modules`, `prompt-sync` is a shortcut, or **link**, into pnpm's hidden `.pnpm` folder where the real files live. Node follows the link without you noticing.)
 2. What does `prompt-sync` export? A **function**, exactly like `greeting.js`. Its job is to *create* a prompt function. (It is written this way so that you could pass it settings, inside those brackets, if you wanted to.)
 3. The `()` straight after it **calls** that function, with no settings. It returns the actual `prompt` function, the one that asks a question and waits for an answer.
 4. `const prompt = …` stores that function under the name `prompt`.
@@ -325,7 +433,7 @@ Hi, Zanele!
 Both are functions: one that *makes* prompts, and the prompt it made. The one-line version does the same thing with less typing. No more magic.
 
 ::: note What if prompt-sync is not installed?
-If you run a program that requires `prompt-sync` in a folder where you never ran `npm install prompt-sync`, you get `Error: Cannot find module 'prompt-sync'`. Node looks in `node_modules` in the program's folder, then in its parent folder, and so on up. That is why your `coding-practice` programs find it: the package lives in `coding-practice/node_modules`.
+If you run a program that requires `prompt-sync` in a folder where you never ran `pnpm add prompt-sync`, you get `Error: Cannot find module 'prompt-sync'`. Node looks in `node_modules` in the program's folder, then in its parent folder, and so on up. That is why your `coding-practice` programs find it: the package lives in `coding-practice/node_modules`.
 :::
 
 ## Three kinds of module
@@ -333,7 +441,7 @@ If you run a program that requires `prompt-sync` in a folder where you never ran
 | Kind | Example | Where it comes from | How you require it |
 |---|---|---|---|
 | **Built-in** | `fs` (files) | Comes with Node. Nothing to install. | `require("fs")` |
-| **Installed package** | `prompt-sync` | Written by someone else, downloaded with `npm install` into `node_modules`, and listed in `package.json`. | `require("prompt-sync")` |
+| **Installed package** | `prompt-sync` | Written by someone else, downloaded with `pnpm add` into `node_modules`, and listed in `package.json`. | `require("prompt-sync")` |
 | **Your own** | `money.js` | A file you wrote. | `require("./money")` |
 
 You have used all three now. `require("fs")` from [Saving data with JSON](#/phase-06-objects/05-saving-data-with-json) is the built-in kind: it gives you an object full of file functions.
@@ -355,6 +463,25 @@ Same `require`, same idea: every module hands out whatever it put in its `module
 
 ::: note A different style you will see online
 Newer JavaScript code often uses `import { formatMoney } from "./money.js";` and `export function formatMoney…` instead of `require` and `module.exports`. These are called **ES modules**. They do the same job with different words, and need a small setting to work in Node. This course uses `require` because it works with no setup. When you meet `import` later, you will already understand the idea.
+:::
+
+::: quiz
+You download a friend's project. The folder has `index.js`, `menu.js` and a `package.json` that lists `chalk` under `dependencies`, but no `node_modules` folder. The top of `index.js` is:
+
+```js
+const fs = require("fs");
+const menu = require("./menu");
+const chalk = require("chalk");
+```
+
+You run `node index.js`. What happens, and what fixes it?
+
+- [ ] `Error: Cannot find module 'fs'`; fix it with `pnpm add fs`
+- [ ] `Error: Cannot find module './menu'`; fix it with `pnpm install`
+- [x] `Error: Cannot find module 'chalk'`; fix it with `pnpm install`
+- [ ] `Error: Cannot find module 'chalk'`; fix it with `pnpm init`
+
+`fs` is built into Node, so it is always found. `./menu` is the friend's own file, and it is right there. `chalk` is an installed package, and installed packages live in `node_modules`, which is missing. `pnpm install` reads `package.json` and downloads everything listed there. `pnpm init` only creates a new `package.json`; it does not download anything.
 :::
 
 ## How to split a file well
@@ -590,7 +717,7 @@ console.log(ShirtSize(100));
 ## Real-world uses
 
 - Every real JavaScript project is made of modules. A medium-sized app might have hundreds of files, each with a single job.
-- `npm` hosts millions of packages. Each is a module (or a group of modules) that someone exported so others could `require` it. You are now able to read the documentation for any of them.
+- The **npm registry**, the public library that pnpm downloads from, hosts millions of packages. Each is a module (or a group of modules) that someone exported so others could `require` it. You are now able to read the documentation for any of them.
 - Teams split work by module: one person owns the payments module, another the reports module.
 - Splitting code also makes testing easier: you can require one module on its own in a test file and check its functions, without running the whole program.
 

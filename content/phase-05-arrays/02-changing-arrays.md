@@ -143,6 +143,24 @@ Output:
 
 That last question has a gentle answer: popping an empty array does not crash. It gives `undefined`, because there was nothing to hand back.
 
+::: quiz
+What does this program print?
+
+```js
+const tray = ["pie"];
+const a = tray.push("scone", "muffin");
+const b = tray.pop();
+console.log(a, b, tray.length);
+```
+
+- [ ] `2 muffin 2`
+- [x] `3 muffin 2`
+- [ ] `3 muffin 3`
+- [ ] `undefined muffin 2`
+
+`push` hands back the **new length**. After adding two items to a one-item tray, that is 3, so `a` is 3. `pop` removes the last item and hands it back, so `b` is `"muffin"`, and the tray now has 2 items. If you picked `2 muffin 2`, you thought `push` returns how many items were added. If you picked `3 muffin 3`, you forgot that `pop` really removes the item.
+:::
+
 ## Adding and removing at the start: `unshift` and `shift`
 
 `shift` removes the **first** item (index 0) and hands it back. Everything else moves up one place, so the old index 1 becomes the new index 0. `unshift` does the opposite: it adds an item at the **front**, and everything else moves back one place.
@@ -218,6 +236,23 @@ Step by step:
 We added two and removed two, so we are back where we started.
 :::
 
+::: quiz
+What does this program print?
+
+```js
+const line = ["Ama", "Bongi", "Chris"];
+line.unshift(line.pop());
+console.log(line[0], line.length);
+```
+
+- [ ] `Ama 3`
+- [ ] `Chris 4`
+- [ ] `Bongi 2`
+- [x] `Chris 3`
+
+Work from the inside out. `line.pop()` removes `"Chris"` from the end and hands it back. Then `unshift` puts that same `"Chris"` at the front. One item out, one item in: the length is still 3, and `"Chris"` is at index 0. If you picked `Chris 4`, you forgot that `pop` removed him before he was added back.
+:::
+
 ## Searching: `includes` and `indexOf`
 
 Often you need to ask "is this on the list?" or "where on the list is it?".
@@ -264,6 +299,23 @@ if (guests.indexOf("Sam") === -1) {
 
 ::: note Which one should I use?
 If you only need yes or no, use `includes`. It reads like English: `if (guests.includes(name))`. Use `indexOf` when you need the **position**, usually because you want to change or remove that item next.
+:::
+
+::: quiz
+What does this program print?
+
+```js
+const codes = ["ZA", "BW", "NA", "BW"];
+console.log(codes.indexOf("BW") + codes.indexOf("LS"));
+console.log(codes.includes("na"));
+```
+
+- [x] `0`, then `false`
+- [ ] `2`, then `false`
+- [ ] `1`, then `false`
+- [ ] `0`, then `true`
+
+`indexOf` gives the index of the **first** match, so `"BW"` gives 1. `"LS"` is not there, so it gives -1. `1 + -1` is 0. `includes` is exact, and `"na"` is not `"NA"`, so it is `false`. If you picked `1`, you treated "not found" as 0; it is -1. If you picked `2`, you used the last `"BW"` (index 3).
 :::
 
 ## Removing from the middle: `splice`
@@ -381,6 +433,23 @@ Now you have enough to make a small but real program. It uses a menu loop, like 
    Final list: [ 'bread', 'rooibos' ]
    ```
 3. **Now experiment.** Why did `Bread` and `bread` count as the same item? Find the part of the code responsible. Remove `.toLowerCase()` from the "Item to add" line only, predict what happens when you add `Bread` then `bread`, and run it.
+:::
+
+::: quiz
+What does this program print?
+
+```js
+const seats = ["A1", "A2", "A3", "A4", "A5"];
+const taken = seats.splice(1, 2);
+console.log(taken.length, seats[1]);
+```
+
+- [ ] `1 A3`
+- [ ] `2 A2`
+- [x] `2 A4`
+- [ ] `2 A3`
+
+`splice(1, 2)` means "starting at index 1, remove 2 items": `"A2"` and `"A3"`. They come back in an array, so `taken.length` is 2. The rest close the gap, so `seats` is now `["A1", "A4", "A5"]`, and index 1 is `"A4"`. If you picked `1 A3`, you read the second number as "stop at index 2". It is how many to remove.
 :::
 
 ## A `const` array can still change
@@ -566,6 +635,24 @@ Rule of thumb: **every `indexOf` should be followed by a check for `-1`** before
 **Setting an index far past the end.** `seats[5] = "Chen"` on a 2-item array makes a list of length 6 with three empty gaps, which Node shows as `<3 empty items>`. To add to the end, use `push`.
 
 **Thinking `const` freezes the array.** It only stops you swapping the whole array for a different one. The contents can still change.
+:::
+
+::: quiz
+Which line of this program crashes, if any?
+
+```js
+const tins = ["beans"];      // line 1
+tins.push("pilchards");      // line 2
+tins[0] = "soup";            // line 3
+tins = ["tomatoes"];         // line 4
+```
+
+- [ ] Line 2, with `TypeError: Assignment to constant variable.`
+- [ ] Line 3, with `TypeError: Assignment to constant variable.`
+- [x] Line 4, with `TypeError: Assignment to constant variable.`
+- [ ] None of them: `tins` ends up as `[ 'tomatoes' ]`
+
+`const` only stops the name `tins` from being pointed at a different array. Lines 2 and 3 change what is **inside** the same array, which is allowed. Line 4 tries to give the name a whole new array, and that is the one thing `const` forbids. If you picked line 3, remember the glued-on label: you can swap what is in the basket, but not the basket.
 :::
 
 ## Real-world uses

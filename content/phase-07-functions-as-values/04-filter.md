@@ -125,6 +125,21 @@ Read the heart of it slowly: `if (test(item)) { result.push(item); }`. "Ask the 
 | What gets pushed | the callback's **answer** | the **original item** |
 | How many come out | always the same number | anywhere from none to all |
 
+::: quiz
+Using the `myFilter` function from this section, what does this print?
+
+```js
+console.log(myFilter([0, 3, 8], (n) => n * 2));
+```
+
+- [ ] `[ 0, 6, 16 ]`
+- [ ] `[ 6, 16 ]`
+- [x] `[ 3, 8 ]`
+- [ ] `[ 0, 3, 8 ]`
+
+`myFilter` does not push the callback's answer. It uses the answer as a yes or no inside `if`, and then pushes the **original** item. `0 * 2` is `0`, which is falsy, so `0` is left out. `6` and `16` are truthy, so `3` and `8` are kept. If you picked `[ 6, 16 ]`, you mixed up filter with map: a filter never changes the items.
+:::
+
 ## Step 3: meet `.filter`
 
 Every array has it built in:
@@ -198,6 +213,25 @@ Output:
 6. Add a second test, `isDistinction`, for marks of 80 or more. Print how many distinctions there are. Predict first.
 :::
 
+::: quiz
+What does this print?
+
+```js
+const isCheap = (price) => price < 20;
+const prices = [25, 15, 20, 9, 30];
+const cheap = prices.filter(isCheap);
+cheap.push(1);
+console.log(`${cheap.length} of ${prices.length}`);
+```
+
+- [ ] `2 of 5`
+- [x] `3 of 5`
+- [ ] `4 of 6`
+- [ ] `3 of 6`
+
+Only `15` and `9` are less than 20 (`20 < 20` is `false`), so `cheap` starts as `[15, 9]`. Pushing `1` makes it 3 long. `filter` gave back a **new** array, so the push does not touch `prices`, which is still 5 long. If you picked `... of 6`, you thought the two arrays were shared.
+:::
+
 ## The result can be any length
 
 `map` always gives back the same number of items. `filter` does not. It depends entirely on how many pass the test:
@@ -222,6 +256,23 @@ Output:
 - Three marks are over 60, so you get three.
 
 The order is always kept. `filter` never reorders things. (That is `sort`'s job, in lesson 07.)
+
+::: quiz
+What does this print?
+
+```js
+const temps = [18, 22, 17];
+const hot = temps.filter((temp) => temp > 30);
+console.log(hot.length, hot[0], typeof hot);
+```
+
+- [x] `0 undefined object`
+- [ ] `undefined undefined undefined`
+- [ ] `0 undefined undefined`
+- [ ] It crashes with a `TypeError`.
+
+No temperature is over 30, so `hot` is an **empty array**, `[]`, not `undefined`. An empty array has length `0`, reading index 0 gives `undefined` (like reading past the end of any array), and `typeof` an array is `"object"`. If you picked `undefined undefined undefined`, you expected `filter` to return `undefined` when nothing matches. It always returns an array.
+:::
 
 ## filter with real data
 
@@ -338,6 +389,28 @@ console.log(longWords.length, words.length);
 2 4
 ```
 `"apple"` has 5 letters and `"banana"` has 6, so both pass `> 4`. `""` has 0 and `"kiwi"` has 4 (not *more than* 4), so both fail. The new array has 2 items, and the original still has all 4.
+:::
+
+::: quiz
+What does this print?
+
+```js
+const shops = [
+  { name: "Spar Rosebank", town: "Johannesburg" },
+  { name: "SPAR Sea Point", town: "Cape Town" },
+  { name: "Pick n Pay Sandton", town: "Johannesburg" },
+];
+const search = "Spar";
+const found = shops.filter((shop) => shop.name.includes(search.toLowerCase()));
+console.log(found.length);
+```
+
+- [ ] `2`
+- [ ] `1`
+- [x] `0`
+- [ ] `3`
+
+Only the search word was lower-cased, into `"spar"`. The shop names were not, and `includes` cares about capitals, so neither `"Spar Rosebank"` nor `"SPAR Sea Point"` contains `"spar"`. For a search that ignores capitals, lower-case **both** sides: `shop.name.toLowerCase().includes(search.toLowerCase())`. If you picked `2`, you assumed one `toLowerCase` was enough.
 :::
 
 ## Filtered objects are the same objects
@@ -474,6 +547,31 @@ Fix: `expense.category === "food"`. This is the same `=` versus `===` trap from 
 **Confusing `filter` and `map`.** `filter` keeps or drops the *original* items; it never changes them. If you return a new string from a filter callback, the string is only used as "truthy", and you get the originals back. To change items, use `map`.
 
 **Expecting `undefined` or an error when nothing matches.** You get `[]`. Check with `.length === 0`.
+:::
+
+::: quiz
+What does this print?
+
+```js
+const stock = [
+  { item: "Sugar", qty: 0 },
+  { item: "Salt", qty: 4 },
+  { item: "Tea", qty: 0 },
+];
+const empty = stock.filter((line) => line.qty === 0);
+empty.forEach((line) => {
+  line.qty = 10;
+});
+empty.pop();
+console.log(stock.length, stock[2].qty, empty.length);
+```
+
+- [ ] `3 0 1`
+- [x] `3 10 1`
+- [ ] `2 10 1`
+- [ ] `3 10 2`
+
+`empty` is a new array, but it holds the **same** Sugar and Tea objects as `stock`. Setting `qty` to 10 through `empty` changes those real objects, so Tea in `stock` now has 10. But `pop()` changes only the `empty` array itself: `stock` still has 3 items. If you picked `3 0 1`, you thought filter copies the objects. If you picked `2 10 1`, you thought the arrays were shared too.
 :::
 
 ## Real-world uses

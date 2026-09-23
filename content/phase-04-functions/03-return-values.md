@@ -161,6 +161,26 @@ A helpful habit: **functions that work something out should return it. Leave the
 Nowhere. If you write `addAndReturn(2, 3);` on its own line, the function runs, returns `5`, and the `5` is thrown away. Nothing prints. If you want to see a returned value, log it at the calling end: `console.log(addAndReturn(2, 3));`.
 :::
 
+::: quiz
+What does this program print?
+
+```js
+function half(n) {
+  console.log(n / 2);
+}
+
+const result = half(10) + 1;
+console.log(result);
+```
+
+- [x] `5`, then `NaN`
+- [ ] `6`
+- [ ] `5`, then `6`
+- [ ] `5`, then `undefined`
+
+`half(10)` prints `5` while it runs, but it has no `return`, so the call is replaced by `undefined`. `undefined + 1` is `NaN`. If you picked `5`, then `6`, you treated the printed 5 as if it had been handed back. Printing only shows a value to a human; the code never gets it.
+:::
+
 ## Using returned values anywhere a value can go
 
 Because a call is replaced by its return value, you can put a call **anywhere you could write a value**:
@@ -187,6 +207,25 @@ R100
 ```
 
 The last line looks scary but works exactly like brackets in maths, from the inside out: `add(1, 2)` becomes `3`, and `add(3, 4)` becomes `7`, so the line becomes `add(3, 7)`, which is `10`.
+
+::: quiz
+What does this program print?
+
+```js
+function add(a, b) {
+  return a + b;
+}
+
+console.log(add("4", 2) * 3);
+```
+
+- [ ] `18`
+- [ ] `424242`
+- [x] `126`
+- [ ] `NaN`
+
+Replace the call with what it returns. `"4" + 2` has a string in it, so `+` glues: the function returns `"42"`. Then `"42" * 3`: `*` only does maths, so JavaScript turns `"42"` into the number 42, giving 126. If you picked 18, you added 4 and 2 as numbers, but `"4"` is text.
+:::
 
 ## Functions that use other functions
 
@@ -233,6 +272,33 @@ If the VAT rate changes, you change one line. If you want money shown as `R 400,
 1. Create `phase-4/vat.js` and type in the VAT program above.
 2. Run it and check you get R400.00, R60.00 and R460.00.
 3. **Change it, predict, run.** Add a second item: a `toaster` costing `259.99`. Print the same three lines for it. Work out the VAT roughly in your head first (15% of about 260 is about 39), then run it and see how close you were.
+:::
+
+::: quiz
+What does this program print?
+
+```js
+function discount(price) {
+  return price * 0.1;
+}
+
+function salePrice(price) {
+  return price - discount(price);
+}
+
+function label(price) {
+  return "R" + price;
+}
+
+console.log(label(salePrice(200)) + 5);
+```
+
+- [ ] `R185`
+- [ ] `R180`
+- [ ] `R205`
+- [x] `R1805`
+
+Work from the inside out. `discount(200)` returns 20, so `salePrice(200)` returns 180. `label(180)` returns the **string** `"R180"`. Then `"R180" + 5` glues the 5 on the end: `R1805`. If you picked `R185`, you added 5 to the number, but by then it was already text.
 :::
 
 ## `return` ends the function immediately
@@ -317,6 +383,33 @@ F
 ```
 
 For a mark of 74, the first check (`>= 80`) is false, so we move on. The second check (`>= 70`) is true, so the function returns `"B"` and stops. It never even looks at the `>= 60` check. That is why each check only needs a lower limit.
+
+::: quiz
+What does this program print?
+
+```js
+function sizeOf(n) {
+  if (n > 10) {
+    return "big";
+  }
+  console.log("checking " + n);
+  if (n > 5) {
+    return "medium";
+  }
+  return "small";
+}
+
+console.log(sizeOf(12));
+console.log(sizeOf(7));
+```
+
+- [ ] `big`, `medium`
+- [x] `big`, `checking 7`, `medium`
+- [ ] `checking 12`, `big`, `checking 7`, `medium`
+- [ ] `big`, `medium`, `checking 7`
+
+For 12, the first `return` runs straight away, so the function ends before it reaches the `console.log`. For 7, the first check is false, so `checking 7` prints, and then `return "medium"` ends the function. The `checking` line prints *inside* the call, before the outer `console.log` gets the returned word. If you picked the third option, you forgot that `return "big"` ends the function immediately.
+:::
 
 ## Functions that answer yes or no
 
@@ -663,6 +756,32 @@ Now it prints `10`.
 **Putting the value on the next line after `return`.** `return` alone on a line returns `undefined`. Keep the value on the same line.
 
 **Calling a returning function and ignoring the answer.** `formatMoney(50);` on its own does nothing you can see. Store it, print it, or use it.
+:::
+
+::: quiz
+This function should say whether a word contains the letter `a`. What does the program print?
+
+```js
+function hasLetterA(word) {
+  for (let i = 0; i < word.length; i++) {
+    if (word[i] === "a") {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  return false;
+}
+
+console.log(hasLetterA("banana"), hasLetterA("apple"));
+```
+
+- [x] `false true`
+- [ ] `true true`
+- [ ] `true false`
+- [ ] `false false`
+
+Both branches of the `if` return, so the function always ends on the **first** letter. `"banana"` starts with `b`, so it returns `false` without looking further. `"apple"` starts with `a`, so it returns `true`. If you picked `true true`, you expected the loop to keep going, but `return` ends the whole function, loop and all. The fix is to delete the `else`, so `return false` only happens after the loop has checked every letter.
 :::
 
 ## Real-world uses

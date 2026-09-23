@@ -7,7 +7,7 @@ stage: Phase 1
 
 ## What you will learn
 
-- How to set up a brand-new Node project from nothing: a folder, `npm init`, a package, and a `start` script
+- How to set up a brand-new Node project from nothing: a folder, `pnpm init`, a package, and a `start` script
 - How to **plan** a program in plain words before you write any code
 - How to build a program in small steps, running it after every step
 - How everything in Phase 1 (variables, numbers, strings, conversion and input) fits together into one useful program
@@ -57,27 +57,35 @@ Budget Buddy gets its own folder, separate from `coding-practice`. Real projects
    These three commands work the same in the macOS and Linux terminals and in Windows PowerShell.
 2. Turn the folder into a Node project:
    ```bash
-   npm init -y
+   pnpm init
    ```
-   npm prints the new `package.json`. The first part should look like this:
+   pnpm prints where it wrote the new `package.json`, then the file itself. The first part should look like this (the path will show your own home folder):
    ```text
+   Wrote to /Users/thandi/budget-buddy/package.json
+
    {
      "name": "budget-buddy",
      "version": "1.0.0",
+     "description": "",
      "main": "index.js",
    ```
-   npm used the folder name as the project name.
-3. Install prompt-sync **in this folder**:
+   pnpm used the folder name as the project name. (If you see a line saying `"type": "module"`, the one-time `pnpm config set` settings from [Setting up your computer](#/phase-00-start-here/04-setting-up-your-computer) were skipped. Delete that line from `package.json`, or `require` will not work.)
+3. Add prompt-sync **to this project**:
    ```bash
-   npm install prompt-sync
+   pnpm add prompt-sync
    ```
-   You should see:
+   You should see something like:
    ```text
-   added 3 packages, and audited 4 packages in 2s
+   Packages: +3
+   +++
+   Progress: resolved 3, reused 3, downloaded 0, added 3, done
 
-   found 0 vulnerabilities
+   dependencies:
+   + prompt-sync 4.2.0
+
+   Done in 0.8s using pnpm v12.6.0
    ```
-   (Yes, you already installed it in `coding-practice`. But packages belong to the project folder they were installed in, so this project needs its own copy.)
+   (Yes, you already installed it in `coding-practice`. But each project lists its own packages and gets its own `node_modules`, so this project needs it too. Notice `reused 3, downloaded 0`: pnpm already has those three packages in its shared store on your computer from lesson 8, so it links them in instead of downloading them again. Your numbers may differ, and that is fine.)
 4. Open the folder in VS Code:
    ```bash
    code .
@@ -85,12 +93,12 @@ Budget Buddy gets its own folder, separate from `coding-practice`. Real projects
    (Or use **File → Open Folder** and pick `budget-buddy`.)
 5. In VS Code, create a new file in the `budget-buddy` folder called `index.js`. Leave it empty for now.
 
-Your folder should now contain `index.js`, `node_modules/`, `package.json` and `package-lock.json`.
+Your folder should now contain `index.js`, `node_modules/`, `package.json` and `pnpm-lock.yaml`.
 :::
 
 ### Add a `start` script
 
-In [Your first program](#/phase-00-start-here/06-your-first-program) you added a `start` script, so that `npm start` runs your program. Do the same here. Open `package.json` and change the `"scripts"` section so that it looks like this:
+In [Your first program](#/phase-00-start-here/06-your-first-program) you added a `start` script, so that `pnpm start` runs your program. Do the same here. Open `package.json` and change the `"scripts"` section so that it looks like this:
 
 ```text
   "scripts": {
@@ -105,6 +113,7 @@ Watch the commas: there must be a comma after the `"start"` line, because anothe
 {
   "name": "budget-buddy",
   "version": "1.0.0",
+  "description": "",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
@@ -113,14 +122,24 @@ Watch the commas: there must be a comma after the `"start"` line, because anothe
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
   "dependencies": {
     "prompt-sync": "^4.2.0"
   }
 }
 ```
 
-Save it. From now on, you can run Budget Buddy with either `node index.js` or `npm start`, from inside the `budget-buddy` folder. They do the same thing. `npm start` is the standard way to say "run this project", and anyone who downloads a Node project expects it to work.
+Save it. From now on, you can run Budget Buddy with either `node index.js` or `pnpm start`, from inside the `budget-buddy` folder. They do the same thing. `pnpm start` is the standard way to say "run this project", and anyone who downloads a Node project expects it to work.
+
+::: quiz
+In `budget-buddy`, your code is in `index.js` and there is no file called `budget.js`. But by mistake, the `"scripts"` section of `package.json` says `"start": "node budget.js"`. What happens when you run `pnpm start`?
+
+- [ ] It runs `index.js`, because `"main"` in `package.json` says that is the main file
+- [ ] pnpm stops with `ERR_PNPM_NO_SCRIPT` and `Missing script: start`
+- [ ] pnpm creates an empty `budget.js` and runs that
+- [x] pnpm runs `node budget.js`, and Node fails with `Error: Cannot find module` for `budget.js`
+
+`pnpm start` does exactly what the `start` script says, and nothing else, so it runs `node budget.js`, which fails because that file does not exist. The `start` script *does* exist, so this is not the "missing script" error: that one means there is no `"start"` line at all. `"main"` plays no part in `pnpm start`. Fix it by changing the script to `node index.js`.
+:::
 
 ## Step 2: Plan in plain words
 
@@ -145,18 +164,18 @@ That is the plan. Now put it into `index.js` as **comments**, so the plan lives 
 Save, and run it:
 
 ```bash
-npm start
+pnpm start
 ```
 
 You should see:
 
 ```text
-> budget-buddy@1.0.0 start
-> node index.js
-
+$ node index.js
 ```
 
-The two lines starting with `>` are npm telling you which script it is running. After that, nothing, because comments do nothing. That is fine. It proves the `start` script works and the file has no errors. Now you fill in the plan, one section at a time.
+(The very first time, pnpm may print `Already up to date` and a `Done in ...` line before it. That is pnpm checking your packages, and you can ignore it.)
+
+The line starting with `$` is pnpm telling you which command it is running for the `start` script. After that, nothing, because comments do nothing. That is fine. It proves the `start` script works and the file has no errors. Now you fill in the plan, one section at a time.
 
 ::: note Why comments first?
 Writing the plan as comments splits a big, scary job ("write a budget program") into small, obvious ones ("ask for the rent"). Each comment is a to-do item. Professional programmers do this all the time, especially when a problem feels too big to start. [How to solve problems](#/phase-08-becoming-a-programmer/01-solving-problems) in Phase 8 builds a whole method around it.
@@ -182,7 +201,7 @@ console.log(name, income, typeof income);
 // 3. Show the results
 ```
 
-Run it with `npm start` and answer the questions. Below the `>` lines from npm, you should see:
+Run it with `pnpm start` and answer the questions. Below the `$ node index.js` line from pnpm, you should see:
 
 ```text
 === Budget Buddy ===
@@ -266,6 +285,30 @@ If the total comes out as a long string of digits joined together, one or more o
 :::
 
 Once the numbers are right, delete the check line.
+
+::: quiz
+Kagiso types `9000` for his income, `4000` for rent, `2500` for food and `1000` for transport. He forgot `Number(...)` on the food question only. What does his check line print?
+
+```js
+const prompt = require("prompt-sync")();
+
+const income = Number(prompt("Monthly income: R"));
+const rent = Number(prompt("Rent: R"));
+const food = prompt("Food: R");
+const transport = Number(prompt("Transport: R"));
+
+const totalExpenses = rent + food + transport;
+const left = income - totalExpenses;
+console.log(totalExpenses, left);
+```
+
+- [x] `400025001000 -400024992000`
+- [ ] `7500 1500`
+- [ ] `400025001000 NaN`
+- [ ] `40003500 -39994500`
+
+`rent + food` is a number plus the text `"2500"`, so it joins: `"40002500"`. Adding `transport` joins again: `"400025001000"`. Then `-` only works on numbers, so JavaScript converts that long text to a number and subtracts, giving a huge negative number, not `NaN`. One missing `Number()` is enough to spoil the whole total, and everything calculated from it.
+:::
 
 ## Step 6: Show the results
 
@@ -360,6 +403,17 @@ Before you look at the full solution, make sure your version works, then try the
 3. For example, add `const airtime = Number(prompt("Airtime: R"));` after the transport question, and change the total to `rent + food + transport + airtime`. Notice that you had to change two places. Once you know about arrays, in [Phase 5](#/phase-05-arrays/06-project-budget-buddy-v5), Budget Buddy will handle any number of expenses without that problem.
 :::
 
+::: quiz
+Nandi earns R12000, and her expenses add up to R11000. With the stage 7 code, what is the last line of her summary?
+
+- [ ] `That is 0.1% of your income, or about R33 a day.`
+- [x] `That is 8.3% of your income, or about R33 a day.`
+- [ ] `That is 8.33% of your income, or about R34 a day.`
+- [ ] `That is 8.3% of your income, or about R34 a day.`
+
+She has R1000 left. 1000 / 12000 is 0.0833…, and × 100 makes 8.333…, which `toFixed(1)` shows as `8.3`. 1000 / 30 is 33.33…, and `Math.floor` rounds **down** to 33. `R34` is rounding up, which the budget avoids on purpose; `0.1%` forgets the `* 100`.
+:::
+
 ## The full solution
 
 Here is the complete Budget Buddy v1. Compare it with yours. Yours does not have to be identical: if it works and you can explain every line, it is correct.
@@ -397,14 +451,14 @@ console.log(`That is ${percentLeft.toFixed(1)}% of your income, or about R${perD
 ::: debug Three things that go wrong
 These are the problems learners hit most often in this project. For each one, say what causes it.
 
-1. Running `npm start` prints `npm error Missing script: "start"`.
+1. Running `pnpm start` prints `Error: ERR_PNPM_NO_SCRIPT` and `Missing script: start`.
 2. Running `node index.js` prints `Error: Cannot find module 'prompt-sync'`.
 3. The summary prints the income line, then crashes with `TypeError: totalExpenses.toFixed is not a function`.
 :::
 
 ::: solution
 1. The `start` script was not added to `package.json`, or the file was not saved, or you are in the wrong folder. Check that `"start": "node index.js"` is inside `"scripts"`, save, and make sure you are inside `budget-buddy`.
-2. prompt-sync is not installed in this project. From inside `budget-buddy`, run `npm install prompt-sync`. (Having it in `coding-practice` does not help this folder.)
+2. prompt-sync is not installed in this project. From inside `budget-buddy`, run `pnpm add prompt-sync`. (Having it in `coding-practice` does not help this folder.)
 3. At least one expense (here, `rent`) was not converted, so `+` joined the expenses into the text `"550032001800"`. `totalExpenses` is a string, and strings do not have `toFixed`: that ability belongs to numbers (see [why types matter](#/phase-01-storing-information/06-booleans-null-undefined)). Wrap each expense question in `Number(...)`.
 :::
 
@@ -426,7 +480,7 @@ What you just built is a tiny version of real software:
 
 - **Banking and budgeting apps** do exactly these sums, just with more categories and nicer screens.
 - **The "plan with comments, build in small steps" method** is how professionals start new features, whatever the language.
-- **`npm init`, `npm install` and a `start` script** are the first three things done in almost every real JavaScript project. You have now done them from scratch, on your own.
+- **`pnpm init`, `pnpm add` and a `start` script** (or their npm equivalents, `npm init`, `npm install` and `npm start`) are the first three things done in almost every real JavaScript project. You have now done them from scratch, on your own.
 
 ::: connect
 **This builds on:** everything in Phase 1: [values](#/phase-01-storing-information/01-values-and-output), [variables](#/phase-01-storing-information/02-variables) and [const](#/phase-01-storing-information/03-let-and-const), [numbers](#/phase-01-storing-information/04-numbers) and `toFixed`, [template literals](#/phase-01-storing-information/05-strings), [converting types](#/phase-01-storing-information/07-converting-between-types) and [asking questions](#/phase-01-storing-information/08-getting-input-from-the-user).
@@ -478,7 +532,7 @@ After saving R1500.00, you have R3000.00 left, or about R100 a day.
 :::
 
 ::: recap
-- A new project gets its own folder, `npm init -y`, its own `npm install` of any packages it needs, and a `start` script so `npm start` runs it.
+- A new project gets its own folder, `pnpm init`, its own `pnpm add` for any packages it needs, and a `start` script so `pnpm start` runs it.
 - **Plan first**, as comments: ask, calculate, show. Each comment is a small to-do.
 - **Build in small steps** and run after every one. Use temporary `console.log` checks, then delete them.
 - Convert every numeric answer with `Number(prompt(...))` as it comes in.
@@ -494,13 +548,13 @@ It breaks a big problem into small, clear steps, so you always know what to do n
 If something breaks, you know the problem is in the few lines you just added, so it is quick to find. If you write everything first and it fails, the bug could be anywhere.
 :::
 
-::: interview What does `npm start` do, and why is it useful?
+::: interview What does `pnpm start` do, and why is it useful?
 It runs the command stored under `"start"` in the `scripts` section of `package.json`, here `node index.js`. It is useful because it is the standard way to run any Node project: someone new to your project can run it without knowing which file to start.
 :::
 
 ::: checkpoint
-- [ ] I created `~/budget-buddy` with `npm init -y` and installed prompt-sync in it
-- [ ] I added a `start` script and ran the project with `npm start`
+- [ ] I created `~/budget-buddy` with `pnpm init` and added prompt-sync to it
+- [ ] I added a `start` script and ran the project with `pnpm start`
 - [ ] I wrote the plan as comments before writing code
 - [ ] I ran the program after each step, and removed my temporary check lines
 - [ ] My Budget Buddy prints a summary with amounts to two decimal places
@@ -509,7 +563,7 @@ It runs the command stored under `"start"` in the `scripts` section of `package.
 :::
 
 ::: resources
-- **npm Docs, "npm init":** https://docs.npmjs.com/cli/commands/npm-init. What `npm init` does, and what `-y` skips.
-- **npm Docs, "npm run-script":** https://docs.npmjs.com/cli/commands/npm-run. How scripts like `start` work, for when you want more than one.
+- **pnpm Docs, "pnpm init":** https://pnpm.io/cli/init. What `pnpm init` does.
+- **pnpm Docs, "pnpm run":** https://pnpm.io/cli/run. How scripts like `start` work, for when you want more than one.
 - **freeCodeCamp:** https://www.freecodecamp.org/learn. If you want extra practice with the basics of Phase 1, the first sections of the JavaScript course cover the same ground with lots of short exercises.
 :::

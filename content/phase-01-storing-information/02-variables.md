@@ -120,6 +120,22 @@ This difference is small to look at, but important. You will make this mistake a
 
 Compare the two versions. `income - rent - food` explains itself. `1500 - 450 - 300` does not. **Variables make code readable**, and that is half their value.
 
+::: quiz
+What does this print?
+
+```js
+let price = 35;
+console.log("price", price * 2);
+```
+
+- [ ] `35 70`
+- [ ] `price price * 2`
+- [x] `price 70`
+- [ ] `70`
+
+`"price"` is in quotes, so it is the word *price*, not the box. `price * 2` has no quotes, so JavaScript looks in the box, finds 35, and doubles it. If you picked `35 70`, you read the quoted `"price"` as the variable. Quotes always mean "this exact text".
+:::
+
 ## `=` does not mean "equals"
 
 This is the most important sentence in this lesson:
@@ -176,6 +192,26 @@ After payday: 1200
 The old value is **gone** once you replace it. The box holds one thing at a time.
 
 Code runs from **top to bottom**, so what a variable holds depends on *where you are* in the program. Line 2 prints `1000` because, at that moment, the box holds `1000`.
+
+::: quiz
+What is the last line this prints?
+
+```js
+let bags = 3;
+console.log("Bags:", bags);
+bags = 5;
+let total = bags * 10;
+bags = 8;
+console.log("Total:", total);
+```
+
+- [x] `Total: 50`
+- [ ] `Total: 80`
+- [ ] `Total: 30`
+- [ ] `Total: bags * 10`
+
+`total` is worked out once, on line 4, when `bags` holds 5, so it stores the finished answer, 50. Changing `bags` to 8 afterwards does not reach back and redo the sum: `total` holds a number, not a formula. `80` is what you get if you imagine `total` keeps watching `bags`.
+:::
 
 ## The line that confuses everyone: `score = score + 1`
 
@@ -237,6 +273,25 @@ Write your answer down *before* you open the solution. Then type the code in and
 `let b = a;` means "look in box `a` right now, find `5`, and put a copy of `5` into box `b`". From that moment the two boxes are separate. Changing `a` later does not reach back and change `b`.
 
 If you said `20` and `20`, you pictured `b` as a *link* to `a`. That is a reasonable guess, but for numbers and text it is wrong. (There is a twist for lists and objects in [Phase 6](#/phase-06-objects/04-values-and-references). Park that thought for now.)
+:::
+
+::: quiz
+What does this print?
+
+```js
+let steps = 4;
+steps = steps + steps;
+steps = steps + 1;
+steps = steps * 2;
+console.log(steps);
+```
+
+- [ ] `10`
+- [ ] `16`
+- [ ] `9`
+- [x] `18`
+
+Each line works out the right side using what is in the box *now*, then replaces it: 4 + 4 is 8, then 8 + 1 is 9, then 9 × 2 is 18. If you got 10, you forgot that line 2 had already changed `steps` to 8. `16` skips the `+ 1` line, and `9` stops one line too early.
 :::
 
 ## Declaring now, filling later
@@ -392,6 +447,17 @@ let greeting = "Sawubona";
 **Mismatched capitals.** `userName`, `username` and `UserName` are three different variables. Pick one spelling and copy it exactly.
 
 **Using a variable before the line that creates it.** The computer reads top to bottom. It cannot use a box it has not built yet.
+:::
+
+::: quiz
+Only one of these programs runs without an error **and** prints `12`. Which one?
+
+- [ ] `let n = 10; let n = n + 2; console.log(n);`
+- [x] `let n = 10; n = n + 2; console.log(n);`
+- [ ] `n = 10; let n = n + 2; console.log(n);`
+- [ ] `let n = 10; n + 2; console.log(n);`
+
+The second one makes the box once with `let`, then stores `n + 2` back into it. The first uses `let` twice for the same name, which is a `SyntaxError`. The third uses `n` before the line that creates it, which is a `ReferenceError`. The last one is the sneaky one: `n + 2` does work out 12, but nothing stores it, so `n` is still 10 and it prints `10`.
 :::
 
 ## Real-world uses

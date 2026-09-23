@@ -1,6 +1,6 @@
 ---
 title: Setting up your computer
-summary: Install a code editor (VS Code) and Node.js, check they work, and change a few settings that make a beginner's life easier.
+summary: Install a code editor (VS Code), Node.js and pnpm, check they work, and change a few settings that make a beginner's life easier.
 minutes: 40
 stage: Phase 0
 ---
@@ -9,20 +9,23 @@ stage: Phase 0
 
 - What a **code editor** is, and why you cannot write code in Word
 - How to install **VS Code** and **Node.js** on Windows, macOS or Linux
-- How to check that Node is installed, using two short commands
+- How to check that Node is installed, using a short command
+- How to install **pnpm**, the tool that sets up JavaScript projects and downloads shared code, and give it two one-time settings
 - A few settings that save beginners a lot of pain: auto save, a bigger font, visible file extensions
-- What to do when the computer says `node` is "not recognized" or "not found"
+- What to do when the computer says `node` or `pnpm` is "not recognized" or "not found"
 
 **Before this:** [The map](#/phase-00-start-here/03-the-map).
 
-## The problem: two tools, and nothing else
+## The problem: a few tools, and nothing else
 
-To program in this course you need exactly two things:
+To program in this course you need two main things:
 
 1. **Somewhere to write code.** That is a code editor. We will use **VS Code**.
 2. **Something to run the code.** That is **Node.js**, the "pianist" from [What is programming?](#/phase-00-start-here/02-what-is-programming) that reads your JavaScript and carries it out.
 
-Both are free, both work on Windows, macOS and Linux, and both are used by millions of professional programmers. You are installing real tools, not toy ones.
+Plus one small helper, **pnpm**, which sets up your projects and fetches code that other people have shared. You will install it last, once Node is working.
+
+All three are free, all work on Windows, macOS and Linux, and all are used by millions of professional programmers. You are installing real tools, not toy ones.
 
 ::: analogy A kitchen
 VS Code is your **kitchen counter**, with good lighting and sharp knives: the place where you prepare things. Node.js is your **stove**: the thing that actually cooks what you prepared. You need both. A beautiful counter with no stove means raw food. A stove with no counter means chopping onions on the floor.
@@ -62,11 +65,22 @@ A code editor gives you things that matter from day one:
 Over time VS Code will suggest **extensions** (add-ons). You do not need any for this course. Everything we use is built in. If it asks, you can say "no" or ignore it.
 :::
 
+::: quiz
+Sipho types `console.log("Hi");` in Google Docs, copies it into a new file in VS Code, saves it as `hi.js`, and runs it with Node. It fails with a `SyntaxError`. What is the most likely cause?
+
+- [x] Google Docs changed the straight quotes into curly ones, and they came along when he copied
+- [ ] VS Code can only run code that was typed inside VS Code
+- [ ] Google Docs saved the text in a different language from JavaScript
+- [ ] Code copied from anywhere always breaks, so it must be retyped
+
+The text itself travels fine when you copy it, and that is exactly the problem: the curly quotes `“ ”` travel too, and JavaScript does not recognise them. VS Code does not run code at all (Node does), and copying from a plain-text source such as another code file is fine.
+:::
+
 ## Part 2: Node.js
 
 **Node.js** is the program that runs JavaScript files on your computer, outside a web browser. When you type `node hello.js`, Node opens `hello.js`, reads your instructions and carries them out.
 
-Installing Node also installs **npm**, a tool for creating JavaScript projects and downloading code that other people have shared. You will use npm for the first time in [Your first program](#/phase-00-start-here/06-your-first-program).
+Installing Node also installs a tool called **npm**. This course uses a similar tool called **pnpm** instead, which you will install in Part 3. You can ignore npm.
 
 ### LTS or Current?
 
@@ -123,20 +137,84 @@ The **terminal** is a window where you type commands to the computer instead of 
    v24.8.0
    ```
    Your numbers will probably be different, and that is fine. What matters is that **you see a version number and not an error**, and that the first number is **20 or higher**.
-5. Now type this and press **Enter**:
-   ```bash
-   npm --version
-   ```
-6. You should see another version number, this time without a `v`. Something like:
-   ```text
-   11.6.0
-   ```
-7. If both printed a number: congratulations, your computer can now run JavaScript. If either one printed an error, go to the troubleshooting section below.
+5. If it printed a number: congratulations, your computer can now run JavaScript. If it printed an error, go to the troubleshooting section below.
 :::
 
 What did you just do? `node` is the name of the program. `--version` is an extra instruction to it, meaning "don't run anything, only tell me which version you are". The two dashes are part of the option's name, so type both.
 
-## Part 3: settings that make life easier
+::: quiz
+Your terminal is in a folder that contains a file called `hello.js`. You type `node --version` and press **Enter**. What happens?
+
+- [ ] Node runs `hello.js`, because it is the only JavaScript file here, and then shows the version
+- [ ] An error, because there is no file called `--version`
+- [x] Node prints its version number, and nothing else happens
+- [ ] Node asks which file you want to check the version of
+
+`--version` is an **option**: an extra instruction to `node` meaning "do not run anything, only tell me your version". Node never runs a file you did not name, whatever is in the folder. The two dashes are how it knows `--version` is an option and not a file name.
+:::
+
+## Part 3: pnpm
+
+A **package** is a bundle of code that someone else has written and shared, so you do not have to write everything yourself. A **package manager** is a tool that creates JavaScript projects and downloads packages into them for you. You will use one for the first time in [Your first program](#/phase-00-start-here/06-your-first-program).
+
+This course uses a package manager called **pnpm** (say it letter by letter: "p-n-p-m"; the name comes from "performant npm"). It does the same job as npm, the one that came with Node, and its commands are nearly the same. We use pnpm because it is faster and saves disk space: it keeps **one** copy of each package on your computer and lets all your projects share it, instead of copying it into every project.
+
+pnpm does not come with Node, so you install it yourself. The installer is a single command that you paste into the terminal.
+
+::: try Install pnpm
+1. Open a terminal, the same way as in the box above.
+2. Copy the line for your system, paste it into the terminal, and press **Enter**. (To paste: **Ctrl+V** in PowerShell, **Cmd+V** on macOS, **Ctrl+Shift+V** in most Linux terminals.)
+   - **macOS and Linux:**
+     ```bash
+     curl -fsSL https://get.pnpm.io/install.sh | sh -
+     ```
+   - **Windows (PowerShell):**
+     ```bash
+     Invoke-WebRequest https://get.pnpm.io/install.ps1 -UseBasicParsing | Invoke-Expression
+     ```
+3. Wait until it finishes and you get the blinking cursor back. It prints a few lines about what it installed. You do not need to read them.
+4. **Close the terminal and open a new one.** The installer tells the computer where pnpm lives, but only terminals opened *afterwards* find out. This is the same rule as for Node.
+5. In the new terminal, type this and press **Enter**:
+   ```bash
+   pnpm --version
+   ```
+6. You should see a version number, without a `v`. Something like:
+   ```text
+   12.6.0
+   ```
+   Your number may be different. A number, not an error, means pnpm is installed.
+:::
+
+### Two one-time settings
+
+There is one more step, and you only ever do it once per computer. JavaScript has two styles for sharing code between files: an older, classic style (using a word you will meet later, `require`) and a newer one. This course uses the **classic style**, because it works with no extra set-up. Newer versions of pnpm start projects in the newer style, so we tell pnpm to use the classic one, and to keep its settings file short.
+
+::: try Set up pnpm for this course
+1. In your terminal, type this line and press **Enter**:
+   ```bash
+   pnpm config set init-type commonjs --global
+   ```
+2. Then this one, and press **Enter**:
+   ```bash
+   pnpm config set init-package-manager false --global
+   ```
+3. Neither command prints anything if it worked. In the terminal, silence usually means success.
+:::
+
+What do the parts mean? `pnpm config set` means "change one of pnpm's settings". Next comes the setting's name and the value you want. **CommonJS** is the official name of the classic style. `--global` means "for every project on this computer", which is why you never need to do it again.
+
+::: quiz
+Tomorrow you start a brand-new project folder on the same computer. Do you need to run the two `pnpm config set ... --global` lines again?
+
+- [ ] Yes, once inside every new project folder
+- [ ] Only if you have opened a new terminal since running them
+- [ ] No, never again, even if you move to a new computer
+- [x] No, not on this computer; you would run them again only on a different computer
+
+`--global` means "for every project on **this computer**", so one run covers every folder you create from now on. The setting is saved on the computer, so it survives closing the terminal. The trap is "never again": a different computer has its own pnpm with its own settings, and starts from scratch.
+:::
+
+## Part 4: settings that make life easier
 
 A few minutes here will save you hours of confusion later.
 
@@ -212,29 +290,25 @@ zsh: command not found: node
 
 On **Linux** the message usually contains `node: command not found` or `Command 'node' not found`.
 
-All of these mean the same thing: **the terminal cannot find the Node program.** Try these fixes in order:
+The same messages can appear with `pnpm` instead of `node`. All of these mean the same thing: **the terminal cannot find the program.** Try these fixes in order:
 
 1. **Close every terminal window and open a new one.** This fixes it most of the time. Terminals only look for programs when they start, so one that was open while you installed Node does not know about it. If you are using VS Code's terminal, close **all of VS Code** and reopen it.
 2. **Restart your computer.** It sounds silly, and it often works.
-3. **Reinstall Node.** Download the LTS installer again and run it, keeping the default options.
+3. **Reinstall.** For Node, download the LTS installer again and run it, keeping the default options. For pnpm, run its install command from Part 3 again, then open a new terminal.
 
-Why does this happen? When you type a command, the terminal looks for a program with that name in a list of folders called the **PATH**. The Node installer adds Node's folder to the PATH, but terminals that were already open keep using the old list until they are restarted.
+Why does this happen? When you type a command, the terminal looks for a program with that name in a list of folders called the **PATH**. The Node and pnpm installers add their folders to the PATH, but terminals that were already open keep using the old list until they are restarted.
 
-### Windows: "running scripts is disabled on this system"
+For pnpm, the cause is nearly always step 1: `pnpm --version` was typed in the same terminal that ran the installer. Open a new one.
 
-On some Windows computers, `node --version` works but `npm --version` shows a red error like this:
+### Later: "require is not defined in ES module scope"
+
+You will not see this until Phase 1, but it belongs here because the cause is set-up. If a program that uses `require` crashes with:
 
 ```text
-npm : File C:\Program Files\nodejs\npm.ps1 cannot be loaded because running scripts is disabled on this system.
+ReferenceError: require is not defined in ES module scope, you can use import instead
 ```
 
-This is a Windows safety setting in PowerShell, not a problem with your install. To allow it for your own user account, type this into PowerShell and press **Enter**:
-
-```bash
-Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
-```
-
-If it asks you to confirm, type `Y` and press **Enter**. Then close PowerShell, open a new one, and try `npm --version` again.
+then the first of the two pnpm settings in Part 3 was skipped, so pnpm created your project in the newer style. Your project's settings file, `package.json` (you will create it in [Your first program](#/phase-00-start-here/06-your-first-program)), will contain a line `"type": "module",`. The fix: delete that whole line from `package.json` and save. Then run `pnpm config set init-type commonjs --global` so it does not happen in your next project.
 
 ### Linux: nvm says "command not found"
 
@@ -247,7 +321,9 @@ Use **Terminal → New Terminal** from VS Code's menu bar instead. It does exact
 ::: mistake
 **Choosing "Current" instead of "LTS".** It usually still works, but LTS is the safer choice. If you installed Current by accident, you do not need to change it for this course.
 
-**Running `node --version` in a terminal opened before installing Node.** Always open a fresh terminal after installing anything.
+**Running `node --version` or `pnpm --version` in a terminal opened before installing.** Always open a fresh terminal after installing anything.
+
+**Skipping the two `pnpm config set` lines.** Nothing goes wrong straight away, which is why this is easy to miss. It shows up later, as the `require is not defined` error above. Run them now if you are not sure; running them twice does no harm.
 
 **Typing `node -version` with one dash.** Node's long options use two dashes: `--version`. (A short form `node -v` also works.)
 
@@ -256,25 +332,38 @@ Use **Terminal → New Terminal** from VS Code's menu bar instead. It does exact
 **Writing code in Word or Google Docs.** The curly quotes they insert will break your code. Always use VS Code.
 :::
 
+::: quiz
+Weeks from now, a program crashes with `ReferenceError: require is not defined in ES module scope, you can use import instead`. What do you check first?
+
+- [ ] Whether you misspelled `require` in your code, the same way as a `consle` typo
+- [x] Whether your project's `package.json` contains a `"type": "module",` line
+- [ ] Whether pnpm is installed, by opening a new terminal and running `pnpm --version`
+- [ ] Whether `package.json` is missing a comma
+
+The message says `require` is not defined **in ES module scope**: the project was set up in the newer style, which happens when pnpm's `init-type` setting was skipped. The tell-tale sign is `"type": "module",` in `package.json`. A typo is tempting because it is also a `ReferenceError`, but a typo would name the misspelled word, and this message names `require` spelled correctly.
+:::
+
 ## Real-world uses
 
 The tools you just installed are the real thing:
 
 - **VS Code** is the most popular code editor in the world. Professional programmers use it at companies of every size.
 - **Node.js** runs the servers behind many websites and apps you use, and the build tools that nearly all modern websites are made with.
-- **npm** hosts well over two million shared packages of code. When you install `prompt-sync` in Phase 1, you will be using the same system professional teams use every day.
+- The **npm registry**, the public library of shared packages that both npm and pnpm download from, holds well over two million packages. When you install `prompt-sync` in Phase 1, you will be using the same system professional teams use every day.
+- **pnpm** is used by many large open-source projects and companies, because on a big project its speed and disk savings add up.
 
 ::: connect
-**This builds on:** [What is programming, really?](#/phase-00-start-here/02-what-is-programming), which introduced the idea of code plus something that runs it. VS Code is where the code lives, and Node is what runs it.
+**This builds on:** [What is programming, really?](#/phase-00-start-here/02-what-is-programming), which introduced the idea of code plus something that runs it. VS Code is where the code lives, Node is what runs it, and pnpm organises your projects.
 
-**This unlocks:** [The terminal without fear](#/phase-00-start-here/05-the-terminal), where you learn to move around your computer by typing, and then [Your first program](#/phase-00-start-here/06-your-first-program), where VS Code and Node finally work together.
+**This unlocks:** [The terminal without fear](#/phase-00-start-here/05-the-terminal), where you learn to move around your computer by typing, and then [Your first program](#/phase-00-start-here/06-your-first-program), where VS Code, Node and pnpm finally work together.
 :::
 
 ::: recap
 - A **code editor** edits plain text with extra help for code: colours, warnings, a file explorer and a terminal. Word and Notepad are not suitable.
-- **VS Code** is the editor we use. **Node.js** runs JavaScript files. Installing Node also installs **npm**.
+- **VS Code** is the editor we use. **Node.js** runs JavaScript files. **pnpm** is the package manager: it creates projects and downloads shared code (packages). You install it separately, after Node.
 - Always choose the **LTS** (Long Term Support) version of Node: stable and supported for a long time.
-- `node --version` and `npm --version` check the installation. A version number means success.
+- `node --version` and `pnpm --version` check the installation. A version number means success.
+- The two `pnpm config set ... --global` lines are done once per computer, so projects use the classic `require` style.
 - Turn on **Auto Save**, make the font comfortable, and learn **Ctrl+`** for VS Code's built-in terminal.
 - Turn on **file extensions** in Windows or macOS, so `hello.js.txt` can never fool you.
 - "Not recognized" or "command not found" almost always means: open a **new** terminal.
@@ -296,7 +385,8 @@ So that you can see the real, full name of every file. Otherwise a file that loo
 - [ ] I installed VS Code and opened it
 - [ ] I installed the LTS version of Node.js
 - [ ] `node --version` printed a version number in a fresh terminal
-- [ ] `npm --version` printed a version number
+- [ ] I installed pnpm, and `pnpm --version` printed a version number in a new terminal
+- [ ] I ran the two `pnpm config set` lines
 - [ ] I turned on Auto Save and set a comfortable font size
 - [ ] I opened VS Code's built-in terminal and ran `node --version` there
 - [ ] I turned on file extensions in my file explorer (or checked they were already visible)
@@ -305,5 +395,6 @@ So that you can see the real, full name of every file. Otherwise a file that loo
 ::: resources
 - **VS Code documentation:** https://code.visualstudio.com/docs. Official guides, including a setup page for each operating system.
 - **Node.js downloads:** https://nodejs.org/en/download. The official place to get Node, with instructions for every system.
+- **pnpm installation:** https://pnpm.io/installation. The official install instructions, if the command above gives you trouble. **Why pnpm?** https://pnpm.io/motivation explains the shared store in more detail.
 - **javascript.info, "Code editors":** https://javascript.info/code-editors. A short explanation of what editors are and why they help.
 :::

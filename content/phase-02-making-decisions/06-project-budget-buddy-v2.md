@@ -61,7 +61,7 @@ Run it once to make sure it works. In the terminal, from inside the `budget-budd
 node index.js
 ```
 
-(If you set up the `start` script in v1, `npm start` does the same thing.)
+(If you set up the `start` script in v1, `pnpm start` does the same thing.)
 
 Now let's see how it behaves badly. Run it and type `abc` as your income:
 
@@ -190,6 +190,17 @@ That is -Infinity% of your income, or about R-377 a day.
 The `NaN`s are gone. Try `-5000` as the income too: same message. Then try a normal income, to check that good answers are left alone.
 
 Two new problems have appeared, though. `-Infinity%` is nonsense, and `R-11300.00` reads badly. Keep them in mind. You will fix both soon.
+:::
+
+::: quiz
+After step 2, which answer typed at `Monthly income: R` leaves `income` as `0` **without** printing the "not a valid amount" message?
+
+- [ ] `abc`
+- [x] Nothing: you press Enter straight away
+- [ ] `-1`
+- [ ] `NaN`
+
+Pressing Enter gives the empty string, and `Number("")` is `0`. Zero is a number and it is not negative, so neither side of the `||` is `true`, and no message prints. `income` is 0 because that is what the conversion gave. `abc` and the word `NaN` both convert to `NaN`, and `-1` is negative, so all three print the message and then set `income` to 0. For a budget, treating "nothing" as R0 is reasonable, but it is worth knowing that it happens silently.
 :::
 
 ## Step 3: check the three expenses
@@ -333,6 +344,33 @@ Then test the boundary: income `10000` and expenses adding to `8000` leaves exac
 :::
 
 (It says `tight`, because 2000 is not *more than* 2000.)
+
+::: quiz
+Someone rearranged the status chain from step 5. With these numbers, what does it print?
+
+```js
+const income = 8000;
+const left = -500;
+let status;
+
+if (left > income * 0.2) {
+  status = "healthy";
+} else if (left <= income * 0.2) {
+  status = "tight";
+} else if (left < 0) {
+  status = "overspent";
+}
+
+console.log(status);
+```
+
+- [ ] `overspent`
+- [ ] `healthy`
+- [x] `tight`
+- [ ] `undefined`
+
+20% of 8000 is 1600. -500 is not more than 1600, so it is not healthy. The next question, `left <= 1600`, is `true` for -500, so the chain stops there with `tight`. The `left < 0` question is never asked. In fact it can never be reached, because every number that is not more than 1600 is "at most 1600". That is why the step 5 version checks `left < 0` first. `overspent` is what this month deserves, not what this code gives.
+:::
 
 ## Step 6: "Left over" or "Short by"
 

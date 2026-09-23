@@ -39,6 +39,17 @@ JavaScript is the car you learn in. Programming is driving. By the end of this c
 
 So when a lesson explains a loop or a function, pay most attention to the **idea** (why it exists, what problem it solves) and a bit less to the exact punctuation. The punctuation you will pick up by typing it many times.
 
+::: quiz
+Six months after this course, Naledi starts a job that uses Python. Her first task: go through 200 exam marks and count how many are 50 or more. Which part is she most likely to have to learn fresh?
+
+- [ ] Planning the steps: keep a count, look at each mark in turn, decide pass or fail, add one to the count
+- [ ] The idea of repeating the same check for every one of the 200 marks
+- [x] The exact words and punctuation Python uses to write those steps down
+- [ ] The idea of making a choice ("is this mark 50 or more?") for each mark
+
+The plan, the repeating and the choosing are **programming**: the driving skill, which works in any language. What changes between JavaScript and Python is the car: the exact words and punctuation. If you picked one of the "idea" options, notice that those ideas are exactly what the course promises to carry over.
+:::
+
 ## The lesson loop
 
 Almost every lesson follows the same rhythm. Once you know it, you will always know where you are.
@@ -81,6 +92,17 @@ Three habits that make a real difference:
 3. **Change things and predict.** When an example works, change something small, *say out loud what you expect to happen*, then run it. When your prediction is wrong, you have found something worth understanding.
 
 You will set up the code editor in [Setting up your computer](#/phase-00-start-here/04-setting-up-your-computer). For now, reading is fine. Starting from lesson 06, you type everything.
+
+::: quiz
+Lindiwe copies a lesson example with the **Copy** button, runs it, and it works first time. Sipho types the same example himself, forgets a bracket, gets an error, and needs ten minutes to fix it. Going by this lesson, what should Lindiwe do next?
+
+- [ ] Nothing more: her code works, and she saved ten minutes
+- [ ] Read the example again, slowly, until she is sure she understands every line
+- [ ] Copy the next example too, since copying avoids mistakes like Sipho's
+- [x] Type the example herself, then change something small, predict the result, and run it
+
+Sipho's ten minutes were not wasted: fixing that bracket is the learning. Lindiwe has working code but has not practised anything yet. The tempting option is "read it again slowly", but reading is exactly what this lesson says is *not* enough. Typing, then changing and predicting, is.
+:::
 
 ## The boxes you will see on every page
 
@@ -183,6 +205,17 @@ A good mechanic does not stare at a broken car feeling hopeless. They run a chec
 **Rushing.** Doing two lessons properly beats skimming six. Nobody is timing you.
 :::
 
+::: quiz
+You changed the text in a program, ran it, and the terminal still shows the **old** text. There is no error. Which step of the stuck routine is most likely to find the problem fastest?
+
+- [ ] Reread the error message, slowly
+- [x] Check that you saved, and that you ran the file you edited
+- [ ] Open the hint
+- [ ] Explain the code out loud to a rubber duck
+
+"Old output, no error" is the classic sign of an unsaved file, or of running a different file from the one you changed. There is no error message to reread, which rules out the first option. Explaining out loud is a good step, but it checks your *thinking*, and here the code may be perfectly fine.
+:::
+
 ## Your progress is saved in this browser
 
 At the bottom of every lesson is a **Mark lesson complete** button. Click it when you have finished a lesson, and the lesson gets a tick in the sidebar on the left. Ticks in **Checkpoint** boxes are remembered too, and so are the stages you tick on the [project page](#/project).
@@ -202,6 +235,17 @@ You do not need to install anything for this one.
 3. Scroll down to the **Checkpoint** box near the bottom of this page and tick the first item.
 4. Reload the page (**F5** or **Ctrl+R** on Windows and Linux, **Cmd+R** on macOS). Scroll back down. Your tick is still there.
 5. Arrange your screen: this page on one half, and on the other half, any other window you like for now. From lesson 04, that other half will be your code editor.
+:::
+
+::: quiz
+You work through five lessons on your laptop in Chrome, ticking the checkpoints and marking each lesson complete. That evening, on the same laptop, you open the course in Firefox. What do you find?
+
+- [x] No ticks, but your code files are still on the laptop, untouched
+- [ ] All your ticks, because they are saved on the laptop
+- [ ] No ticks, and the code files you wrote are gone too
+- [ ] All your ticks, but the code files you wrote are gone
+
+Ticks are stored in **one browser** on one device, not in the computer as a whole, so Firefox knows nothing about what Chrome saved. Your code is completely separate: it lives in files on your computer, which the website never touches. The trap is thinking "same laptop, same ticks".
 :::
 
 ::: connect

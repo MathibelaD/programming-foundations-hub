@@ -194,6 +194,17 @@ The last one is perfect, because 0.5 and 0.25 are halves and quarters: they sit 
 5. **Now experiment.** Try `0.1 + 0.7`, `0.25 + 0.5` and `3 * 1.1`. Before each run, guess: will it come out perfectly, or with a strange tail? (Hint: are the numbers made of halves and quarters?)
 :::
 
+::: quiz
+Three of these print exactly the answer you would expect. One prints a long, strange tail of digits. Which one?
+
+- [ ] `console.log(0.25 + 0.125);`
+- [ ] `console.log(1.5 + 2.75);`
+- [x] `console.log(0.2 + 0.4);`
+- [ ] `console.log(0.5 * 3);`
+
+`0.2 + 0.4` prints `0.6000000000000001`. Tenths like 0.2 and 0.4 cannot be stored exactly in binary, so each is stored very slightly off, and the error shows up in the answer. The others are made only of halves, quarters and eighths (0.125 is one eighth), which sit exactly on the binary ruler's marks, so they print `0.375`, `4.25` and `1.5`. Small-looking numbers are not the problem; tenths are.
+:::
+
 ## Money: the practical advice
 
 The third line in that experiment should worry you: `12.5 + 19.99` gave `32.489999999999995`, not `32.49`. Imagine that on a till slip.
@@ -262,6 +273,23 @@ The result of `toFixed` is a **string**: text, ready for showing. That is why `"
 
 ::: note What other languages do
 In C#, you would store money in a `decimal`, which is marked in exact tenths and hundredths, so `0.1 + 0.2` gives exactly `0.3`. Java has something similar called `BigDecimal`. JavaScript has no built-in `decimal`, which is why the "whole cents" trick is so common in JavaScript programs that handle real money.
+:::
+
+::: quiz
+What does this print?
+
+```js
+const price = 4.5;
+const shown = price.toFixed(2);
+console.log(shown + 1);
+```
+
+- [ ] `5.50`
+- [x] `4.501`
+- [ ] `5.5`
+- [ ] `4.51`
+
+`toFixed(2)` gives back the **text** `"4.50"`, not a number. `+` with text joins instead of adding, so `"4.50" + 1` is `"4.501"`. It looks almost like a price, which is what makes this bug hard to spot. If you picked `5.50` or `5.5`, you treated `shown` as a number. Do the maths first, and call `toFixed` last.
 :::
 
 ## All the number operators
@@ -336,6 +364,21 @@ The movie is 2 hours and 15 minutes
 
 The same idea turns seconds into minutes, days into weeks, or cents into rand and cents.
 
+::: quiz
+What does this print?
+
+```js
+console.log(29 % 7, 2 ** 5);
+```
+
+- [ ] `4 10`
+- [ ] `4 32`
+- [ ] `1 10`
+- [x] `1 32`
+
+`%` gives what is **left over**: 7 goes into 29 four times (that is 28), leaving 1. `**` is a power: 2 × 2 × 2 × 2 × 2 is 32. The `4` is how many times 7 fits, not the remainder, and `10` is 2 × 5, which is what you get if you read `**` as a multiply.
+:::
+
 ## Which operator goes first? (Precedence)
 
 When there are several operators in one expression, JavaScript follows the same order you learned at school as **BODMAS** (or PEMDAS): brackets first, then powers, then multiply and divide, then add and subtract. The technical name for this order is **operator precedence**.
@@ -383,6 +426,21 @@ Which line gives the average of the two marks? What does each line print?
 70
 ```
 The first line divides only `mark2` by 2 (giving `40`) and then adds `60`, so it prints `100`. That is a classic bug: "the average of 60 and 80 is 100?" The second line adds first, because of the brackets, and then divides, giving the real average, `70`.
+:::
+
+::: quiz
+What does this print?
+
+```js
+console.log(10 - 4 - 2 + 3 * 2 ** 2);
+```
+
+- [x] `16`
+- [ ] `20`
+- [ ] `40`
+- [ ] `196`
+
+Power first: `2 ** 2` is 4. Then multiply: `3 * 4` is 12. Then `-` and `+`, from left to right: 10 − 4 is 6, 6 − 2 is 4, and 4 + 12 is 16. `20` comes from working out `4 - 2` first; operators on the same level go left to right. `40` comes from doing `3 * 2` before the power, and `196` from going strictly left to right like a basic calculator.
 :::
 
 ## Shortcuts for changing a variable
@@ -530,6 +588,25 @@ Change the `6` to `20`, and you have a 20-sided dice. Games, quizzes that shuffl
    You rolled: 2
    ```
 4. **Now experiment.** Add a second dice, and print the total of both. What is the smallest total you could ever see? The largest?
+:::
+
+::: quiz
+A school trip has 40 learners, and then 5 more sign up. Each bus seats 12. What does this print?
+
+```js
+let learners = 40;
+learners += 5;
+const buses = Math.ceil(learners / 12);
+const lastBus = learners % 12;
+console.log(buses, lastBus);
+```
+
+- [ ] `3 9`
+- [ ] `4 4`
+- [x] `4 9`
+- [ ] `4 3.75`
+
+`learners += 5` makes it 45. 45 / 12 is 3.75, and `Math.ceil` rounds **up** to 4, because nobody can be left behind. `45 % 12` is what is left after three full buses (36 learners): 9 people on the last bus. `3` is what `Math.floor` would give, and `4 4` comes from forgetting that `+=` changed `learners` to 45.
 :::
 
 ## Dividing by zero

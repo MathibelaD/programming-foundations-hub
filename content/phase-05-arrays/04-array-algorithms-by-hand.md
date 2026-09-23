@@ -155,6 +155,26 @@ Notice also that `averageOf` **uses** `totalOf`. Small functions that build on e
 
 **The pattern's name:** the **accumulator** pattern (you "accumulate" a result). Boiling a whole list down to one value like this is also called **reducing** the list. Keep that word in mind for Phase 7.
 
+::: quiz
+These amounts came from `prompt`, so they are strings. What does this print?
+
+```js
+const typed = ["20", "35", "5"];
+let total = 0;
+for (const t of typed) {
+  total = total + t;
+}
+console.log(total);
+```
+
+- [ ] `60`
+- [x] `020355`
+- [ ] `20355`
+- [ ] `NaN`
+
+The accumulator starts as the number 0, but `0 + "20"` has a string in it, so `+` glues: `"020"`. From then on `total` is a string, and each piece is glued on: `"02035"`, then `"020355"`. If you picked `20355`, you forgot the starting 0 is glued on too. The fix is `total = total + Number(t);`, which gives 60.
+:::
+
 ## 2. Biggest and smallest (max and min)
 
 **The question:** Which is the largest? Which is the smallest?
@@ -238,6 +258,31 @@ When *is* starting at 0 fine? When you know every value is 0 or more (like money
 **Real-world example:** the highest score in a game, the cheapest flight, the hottest day, the fastest lap time (the smallest).
 
 **The pattern's name:** **maximum / minimum**, or "keep the best so far".
+
+::: quiz
+What does this program print?
+
+```js
+function whereIsLargest(numbers) {
+  let at = 0;
+  for (let i = 1; i < numbers.length; i++) {
+    if (numbers[i] >= numbers[at]) {
+      at = i;
+    }
+  }
+  return at;
+}
+
+console.log(whereIsLargest([7, 12, 5, 12, 3]));
+```
+
+- [ ] `12`
+- [ ] `1`
+- [x] `3`
+- [ ] `4`
+
+This keeps the **position** of the biggest so far, not the value. `at` becomes 1 when it meets the first 12. At index 3 there is another 12, and `12 >= 12` is true, so `at` moves to 3. The 3 at index 4 is not bigger. If you picked 1, you read `>=` as `>`: with `>`, the first 12 would win. If you picked 12, you returned the value instead of the index.
+:::
 
 ## 3. Count the matches (the counter)
 
@@ -451,6 +496,30 @@ Compare this with the last lesson, where you changed prices **in place** with `p
 
 **The pattern's name:** **mapping** (or **transforming**). Each old item "maps" to exactly one new item, like each place on the ground maps to one spot on a paper map.
 
+::: quiz
+This function should add a R50 delivery fee to every price. What does the program print?
+
+```js
+function withDelivery(prices) {
+  const result = [];
+  for (const p of prices) {
+    result.push(p + 50);
+  }
+  return prices;
+}
+
+const menu = [80, 120];
+console.log(withDelivery(menu));
+```
+
+- [x] `[ 80, 120 ]`
+- [ ] `[ 130, 170 ]`
+- [ ] `[ 80, 120, 130, 170 ]`
+- [ ] `[]`
+
+The loop builds the right new list in `result`, but the function returns `prices`, the original array, which was never changed. The new list is thrown away when the function ends. If you picked `[ 130, 170 ]`, you trusted the loop and missed the last line. When you map by hand, return the **new** array.
+:::
+
 ## 6. Find the first match (finding by hand)
 
 **The question:** What is the first item that matches a rule?
@@ -523,6 +592,31 @@ In fact, this is how `indexOf` from lesson 2 works on the inside. Now you know.
 **Real-world example:** the first available seat on a flight, the first appointment slot after 2 pm, the first transaction that looks suspicious, the first player with no lives left.
 
 **The pattern's name:** **finding**, or **searching**. This one-by-one kind is called a **linear search**, because it walks along the line of items.
+
+::: quiz
+What does this program print?
+
+```js
+function firstLong(words) {
+  for (let i = 0; i < words.length; i++) {
+    if (words[i].length > 6) {
+      return i;
+    }
+  }
+  return -1;
+}
+
+console.log(firstLong(["Durban", "Kimberley", "Polokwane"]), firstLong(["Paarl"]));
+```
+
+- [ ] `0 -1`
+- [ ] `Kimberley -1`
+- [ ] `2 -1`
+- [x] `1 -1`
+- [ ] `1 undefined`
+
+`"Durban"` has 6 letters, and `6 > 6` is false, so the search moves on. `"Kimberley"` has 9, so the function returns its **index**, 1, and stops without looking at `"Polokwane"`. `"Paarl"` never matches, so the loop finishes and the function returns -1. If you picked `0 -1`, you read `>` as `>=`.
+:::
 
 ## 7. Does any match? Do all match? (the flag, with a shortcut)
 
@@ -744,6 +838,30 @@ PASS: false
 **Declaring the result inside the loop.** `const result = [];` must come **before** the loop. Inside, you would get a fresh empty array on every iteration.
 
 **Removing items from the list you are looping over.** Build a new array of what you want to keep instead.
+:::
+
+::: quiz
+This function is called `allPaid`. What does the program print?
+
+```js
+function allPaid(amounts) {
+  for (const a of amounts) {
+    if (a > 0) {
+      return true;
+    }
+  }
+  return false;
+}
+
+console.log(allPaid([150, 0, 150]), allPaid([]));
+```
+
+- [ ] `false true`
+- [ ] `false false`
+- [x] `true false`
+- [ ] `true true`
+
+Ignore the name and read the code: it returns `true` as soon as it finds **one** amount above 0. That is the "any" recipe, not "all". The first item, 150, is enough, so it returns `true`. The empty list never enters the loop, so it returns `false`. If you picked `false true`, you trusted the name: that is what a real "all" would give. A real "all" returns `false` inside the loop when one fails, and `true` after it.
 :::
 
 ## Real-world uses

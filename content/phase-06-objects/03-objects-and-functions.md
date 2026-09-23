@@ -111,6 +111,28 @@ Output:
 The kettle **outside** the function changed. With numbers and strings that never happens. Why objects behave differently is the big idea of [Copies and references](#/phase-06-objects/04-values-and-references), two lessons from now. For now, notice it, and prefer functions that *return* new values over functions that quietly change what they were given.
 :::
 
+::: quiz
+What does this print?
+
+```js
+function addTip(bill, percent) {
+  bill.total = bill.total + bill.total * percent / 100;
+  return bill.total;
+}
+
+const table = { total: 200 };
+const withTip = addTip(table, 10);
+console.log(withTip + table.total);
+```
+
+- [ ] `420`
+- [x] `440`
+- [ ] `220`
+- [ ] `400`
+
+`addTip` returns `220`, but it also **changes** the object it was given: `bill` and `table` are the same object, so `table.total` is now `220` too. That makes `220 + 220`. If you picked `420`, you assumed `table` was left alone. This is the warning box from this section in action (and the whole story is two lessons from now).
+:::
+
 ## Returning an object: factory functions
 
 Look at this list of expenses and spot the problems before you run it:
@@ -203,6 +225,26 @@ Why bother?
 3. **Change it:** add an `owner` parameter to `createPet`, store it in the object, and include it in `describePet`, for example `Bella the dog is 4 years old and belongs to Ayanda.` You will need to update every `createPet(...)` call too. Predict which lines of output change, then run it.
 :::
 
+::: quiz
+A factory with a small mistake. What does this print?
+
+```js
+function createItem(name, price) {
+  return { name: price, price: name };
+}
+
+const item = createItem("Vetkoek", 12);
+console.log(item.name + item.price);
+```
+
+- [ ] `Vetkoek12`
+- [ ] `NaN`
+- [ ] `undefinedundefined`
+- [x] `12Vetkoek`
+
+In `name: price`, the left side is the **key** and the right side is the **variable** whose value is stored. So the key `name` gets the value of `price` (`12`), and the key `price` gets `"Vetkoek"`. Then `12 + "Vetkoek"` joins them as text. If you picked `Vetkoek12`, you read the keys as if they matched the parameters. The keys are fine; the values are swapped.
+:::
+
 ## Returning several answers at once
 
 A function can only `return` one value. But that one value can be an object with several properties, which is a neat way to hand back several answers together:
@@ -241,6 +283,34 @@ Highest: 90, lowest: 45
 ```
 
 One loop works out three things, and the caller picks out whichever ones it needs by name.
+
+::: quiz
+What does this print?
+
+```js
+function tally(words) {
+  let longest = "";
+  let count = 0;
+  for (const word of words) {
+    if (word.length > longest.length) {
+      longest = word;
+      count++;
+    }
+  }
+  return { longest: longest, count: count };
+}
+
+const result = tally(["ubuntu", "sawubona", "hi", "lekker", "molweni"]);
+console.log(result.longest, result.count);
+```
+
+- [ ] `sawubona 5`
+- [ ] `molweni 3`
+- [x] `sawubona 2`
+- [ ] `sawubona 1`
+
+`count` only goes up when a **new longest** word is found, not for every word. `"ubuntu"` (6) beats `""` (count 1), `"sawubona"` (8) beats it (count 2), and nothing after is longer than 8 letters. The one returned object carries both answers. If you picked `sawubona 5`, you counted every word; `count++` is inside the `if`.
+:::
 
 ## Methods on your own objects
 
@@ -410,6 +480,32 @@ console.log(counter.add);
 Each `counter.add()` call adds one to `counter.count` (because `this` is `counter`). The last line has no brackets after `add`, so it does not call the method. It prints the function itself, the same way `console.log(Math.round)` did in the first lesson.
 :::
 
+::: quiz
+What does this print?
+
+```js
+const kiosk = {
+  name: "Kiosk A",
+  sold: 3,
+  sell: function (n) {
+    this.sold = this.sold + n;
+    return this.name;
+  },
+};
+
+const stall = { name: "Stall B", sold: 10, sell: kiosk.sell };
+const who = stall.sell(2);
+console.log(who, kiosk.sold, stall.sold);
+```
+
+- [x] `Stall B 3 12`
+- [ ] `Kiosk A 5 10`
+- [ ] `Stall B 5 10`
+- [ ] `Kiosk A 3 12`
+
+The method was written inside `kiosk`, but that does not matter. What matters is the call: `stall.sell(2)`, so `this` is `stall`. It adds 2 to `stall.sold` and returns `"Stall B"`, and `kiosk` is not touched. If you picked `Kiosk A 5 10`, you decided `this` from where the function was written. Always look to the left of the dot at the call.
+:::
+
 ## Arrow functions and `this`: a gentle warning
 
 In [lesson 04-05](#/phase-04-functions/05-arrow-functions) we said arrow functions behave differently with `this`. Here is where it shows:
@@ -445,6 +541,27 @@ Arrow functions are still perfect for everything else: small helpers like `forma
 2. Run it with `node phase-6/account.js` and check you get the same three lines.
 3. **Add a method** called `describe` to the factory that returns a string like `Lindiwe has R500.00`. Use it to print both accounts.
 4. **Break it on purpose:** change `withdraw` to an arrow function (`withdraw: (amount) => { ... }`) and run it. The `Sorry Kofi, not enough money.` line disappears. Inside the arrow, `this.balance` is `undefined`, so the check `amount > this.balance` is never true and the safety check silently stops working. No error, no warning, only a missing line. Change it back and run it again.
+:::
+
+::: quiz
+This program should print `R80`:
+
+```js
+const tag = {
+  price: 80,
+  show: ???,
+};
+console.log(tag.show());
+```
+
+Which of these, put in place of `???`, prints `R80`?
+
+- [ ] `() => { return "R" + this.price; }`
+- [ ] `function () { "R" + this.price; }`
+- [ ] `function () { return "R" + price; }`
+- [x] `function () { return "R" + this.price; }`
+
+A `function` method gets `this` from the thing before the dot, so `this.price` is `80`. The arrow version prints `Rundefined`, because an arrow does not get `this` from `tag`. The second option works out the text but never returns it, so it prints `undefined`. The third crashes with `ReferenceError: price is not defined`: `price` is a property, not a variable, so it must be reached through `this`.
 :::
 
 ## Object or array? Choosing the right shape

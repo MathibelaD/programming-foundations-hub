@@ -93,6 +93,27 @@ Finished. count is now 2
 
 `if` asks the question **once**. If the answer is `true`, it runs the block once and moves on. `while` asks the question, runs the block, and then **goes back up and asks again**. That going-back-up is the whole difference.
 
+::: quiz
+What does this print?
+
+```js
+let cups = 3;
+
+while (cups < 6) {
+  cups = cups + 2;
+}
+
+console.log(cups);
+```
+
+- [ ] `5`
+- [ ] `6`
+- [x] `7`
+- [ ] `9`
+
+3 is less than 6, so `cups` becomes 5. 5 is still less than 6, so it becomes 7. Now `7 < 6` is `false` and the loop ends. It never lands on 6, because it goes up in twos from an odd number. `5` is what you would get if the body ran only once, the way an `if` would.
+:::
+
 ## What JavaScript does, step by step
 
 When JavaScript reaches a `while`, it follows these rules, every single time:
@@ -136,6 +157,28 @@ Output:
 ```text
 Done
 ```
+
+::: quiz
+What does this print?
+
+```js
+let battery = 10;
+
+while (battery > 0) {
+  battery = battery - 4;
+  console.log(battery);
+}
+
+console.log("Off");
+```
+
+- [ ] `6`, `2`, `Off`
+- [x] `6`, `2`, `-2`, `Off`
+- [ ] `10`, `6`, `2`, `Off`
+- [ ] `6`, `2`, `-2`, `-6`, `Off`
+
+On the third check `battery` is 2, which is more than 0, so the body runs again: `battery` becomes -2 and **then** it is printed. The condition is only checked at the top, so the loop cannot notice that the battery went below 0 halfway through the body. `6, 2, Off` is the tempting answer if you expect the loop to stop the moment the value goes negative.
+:::
 
 ## Tracing a countdown
 
@@ -282,6 +325,29 @@ Output:
 The trap is that `n` ends at 16, not 8. The loop only stops *after* `n` has gone past 10. And `16` was never added to `total`, because the check came first.
 :::
 
+::: quiz
+What does this print?
+
+```js
+let followers = 50;
+let months = 0;
+
+while (followers <= 1000) {
+  followers = followers * 3;
+  months = months + 1;
+}
+
+console.log(months, followers);
+```
+
+- [x] `3 1350`
+- [ ] `2 450`
+- [ ] `3 1000`
+- [ ] `4 4050`
+
+50 becomes 150, then 450, then 1350. After 450 the condition `450 <= 1000` is still `true`, so there is a third month. The loop overshoots the target, because it only checks at the top. `2 450` is where you land if you stop at the last value below 1000. `3 1000` imagines the loop stopping exactly on the target, which only happens if the maths lands there.
+:::
+
 ## Infinite loops: breaking things on purpose
 
 In the last lesson, Thandi's coach forgot to count laps and she ran forever. Let's do that to the computer. It is perfectly safe, and knowing how to stop a runaway program is an essential skill.
@@ -361,6 +427,17 @@ This prints **nothing at all** and never finishes. The terminal looks frozen. Th
 Later in this lesson your loops will ask the user questions. The `prompt-sync` package treats Ctrl+C at a question as "no answer" (it gives back `null`), rather than stopping your program. So a loop that keeps asking may ask again. If that happens, type an answer the loop accepts, or close the terminal (the bin icon in VS Code) and open a new one. Nothing is damaged either way.
 :::
 
+::: quiz
+Which one of these loops never stops?
+
+- [ ] `let n = 1; while (n < 10) { n = n * 2; }`
+- [x] `let n = 0; while (n < 10) { n = n * 2; }`
+- [ ] `let n = 20; while (n > 10) { n = n - 3; }`
+- [ ] `let n = 1; while (n > 10) { n = n + 1; }`
+
+When `n` starts at 0, `n * 2` is still 0, so the step changes nothing and `0 < 10` stays `true` for ever. There *is* a step, but it does not move towards stopping. The first loop goes 1, 2, 4, 8, 16 and stops. The third goes 20, 17, 14, 11, 8 and stops. The last one looks worrying, because its step moves away from its condition, but `1 > 10` is `false` on the very first check, so its body runs zero times.
+:::
+
 ## Keep asking until the answer is valid
 
 This is the use of `while` you will write most often in real programs.
@@ -425,7 +502,7 @@ Newcomers often find this odd. The first `prompt` gets the very first answer, so
 :::
 
 ::: try Keep asking until valid
-1. `prompt-sync` should already be installed in your `coding-practice` folder from [Asking the user questions](#/phase-01-storing-information/08-getting-input-from-the-user). If you get `Cannot find module 'prompt-sync'`, run `npm install prompt-sync` from inside `coding-practice`.
+1. `prompt-sync` should already be installed in your `coding-practice` folder from [Asking the user questions](#/phase-01-storing-information/08-getting-input-from-the-user). If you get `Cannot find module 'prompt-sync'`, run `pnpm add prompt-sync` from inside `coding-practice`.
 2. Create `phase-3/tickets.js` and type in the ticket program above.
 3. Run it with `node phase-3/tickets.js`. Try, in order: `lots`, `0`, `12`, `3`. You should see the error message three times, then the booking line.
 4. Run it again and type `4` straight away. The error message should never appear.
@@ -461,6 +538,30 @@ Welcome!
 ```
 
 (A real bank would lock you out after three tries. You will be able to add that yourself soon.)
+
+::: quiz
+The user types `two`, then `14`, then `3`, then `8`. What happens?
+
+```js
+const prompt = require("prompt-sync")();
+
+let size = Number(prompt("Shoe size (3 to 13)? "));
+
+while (Number.isNaN(size) || size < 3 || size > 13) {
+  console.log("Try again.");
+  size = Number(prompt("Shoe size (3 to 13)? "));
+}
+
+console.log(`Size ${size} it is.`);
+```
+
+- [ ] `Try again.` prints 3 times, then `Size 8 it is.`
+- [ ] `Try again.` prints 2 times, then `Size 8 it is.`
+- [ ] `Try again.` prints 1 time, then `Size 3 it is.`
+- [x] `Try again.` prints 2 times, then `Size 3 it is.`
+
+`two` is `NaN` and `14` is too big, so each of them prints `Try again.` and the question is asked again. `3` is on the boundary: it is not below 3, so the condition is `false`, the loop ends, and the program never asks a fourth time. The `8` is never read. If you expected `Size 8`, you treated 3 as invalid, but the rule is `size < 3`, not `size <= 3`.
+:::
 
 ## When should you use while?
 

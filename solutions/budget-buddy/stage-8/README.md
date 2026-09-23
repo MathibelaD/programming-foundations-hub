@@ -12,11 +12,11 @@ A small money tracker that runs in the terminal. I built it while learning to pr
 
 ## How to run it
 
-You need [Node.js](https://nodejs.org/) installed.
+You need [Node.js](https://nodejs.org/) and [pnpm](https://pnpm.io/installation) installed.
 
 ```bash
-npm install
-npm start
+pnpm install
+pnpm start
 ```
 
 ## How the code is organised

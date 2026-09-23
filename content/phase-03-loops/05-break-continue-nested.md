@@ -109,6 +109,30 @@ Booking 4 ticket(s).
 
 Both versions are correct and both are common. Use whichever you find easier to read. The rule for `while (true)`: **there must be a `break` that is guaranteed to be reachable**, or you have written an infinite loop on purpose.
 
+::: quiz
+What does this print?
+
+```js
+let total = 0;
+
+for (let n = 1; n <= 10; n++) {
+  total += n;
+  if (total > 10) {
+    break;
+  }
+}
+
+console.log(total);
+```
+
+- [ ] `10`
+- [ ] `55`
+- [x] `15`
+- [ ] `6`
+
+`total` goes 1, 3, 6, 10. At 10 the test `total > 10` is `false`, so the loop carries on, adds 5, and reaches 15. Now the test is `true`, and `break` leaves the loop with `total` at 15. `10` is the tempting answer, but the `break` only happens after the total has already gone past 10, not before. `55` is what you would get without the `break`.
+:::
+
 ## continue: skip to the next iteration
 
 `continue` means "**skip the rest of this iteration** and go straight to the next one". In a `for` loop, the step still runs, then the condition is checked as usual.
@@ -188,6 +212,29 @@ Both only affect the **innermost** loop they are in. That matters in nested loop
 
 For step 3: `2fast` checks one character, and `nodigits` checks all eight (there is nothing to find, so the loop runs to the end). For step 4, all eight characters are checked, and the answer is still `true`. `break` did not change the answer, only the amount of work.
 
+::: quiz
+What happens when this runs?
+
+```js
+let i = 0;
+
+while (i < 5) {
+  if (i === 2) {
+    continue;
+  }
+  console.log(i);
+  i++;
+}
+```
+
+- [ ] It prints `0`, `1`, `3`, `4`
+- [x] It prints `0`, `1`, then never finishes
+- [ ] It prints `0`, `1`, `2`, `3`, `4`
+- [ ] It prints `0`, `1`, then ends normally
+
+When `i` is 2, `continue` jumps back to the condition and skips everything below it, including `i++`. So `i` stays 2, the condition is `true` again, `continue` runs again, and so on for ever, with nothing more printed. `0, 1, 3, 4` is what the same idea gives in a `for` loop, where the step lives in the brackets and still runs after `continue`. In a `while`, make sure the step happens before any `continue`.
+:::
+
 ## do...while: run at least once (briefly)
 
 A normal `while` checks its condition **before** the first iteration, so the body can run zero times. Sometimes you want the body to run **at least once**, and only *then* decide whether to repeat. JavaScript has a loop for that: `do...while`.
@@ -221,6 +268,28 @@ Thanks for playing.
 The body is between `do {` and `}`, and the condition comes **at the end**: `} while (answer === "y");`. Note the semicolon after it. This is the one place a `;` belongs after a `while (...)`.
 
 You will not use `do...while` often. Most programmers reach for it for "play again?" loops and menus, which always show at least once. Everything it does can also be done with a normal `while` and a starting value. Know it exists, recognise it when you see it, and do not worry about it beyond that.
+
+::: quiz
+What does this print?
+
+```js
+let tries = 10;
+
+do {
+  console.log("Try", tries);
+  tries++;
+} while (tries < 5);
+
+console.log("Done", tries);
+```
+
+- [ ] `Done 10`
+- [ ] `Try 10`, then `Done 10`
+- [ ] `Try 10`, `Try 11`, `Try 12` and so on, for ever
+- [x] `Try 10`, then `Done 11`
+
+A `do...while` runs its body first and checks afterwards. So `Try 10` prints and `tries` becomes 11. Then `11 < 5` is `false`, so the loop stops. `Done 10` is what a normal `while` would print: `10 < 5` is `false` on the very first check, so its body would run zero times.
+:::
 
 ## Nested loops: a loop inside a loop
 
@@ -348,6 +417,30 @@ Before you run this one, **fill in this trace for `row` 2** on paper. The inner 
 
 For step 3, the columns still line up, because 9 × 9 = 81, which has two digits. A 10 × 10 grid would have `100` and need another rule. For step 4 you get a triangle: row 1 has one number, row 2 has two, and so on, because the inner loop now runs a different number of times on each row.
 
+::: quiz
+What does this print?
+
+```js
+for (let row = 1; row <= 3; row++) {
+  let line = "";
+  for (let col = 1; col <= 5; col++) {
+    if (col > row) {
+      break;
+    }
+    line = line + col;
+  }
+  console.log(line);
+}
+```
+
+- [x] `1`, `12`, `123`
+- [ ] `1`
+- [ ] `12345`, `12345`, `12345`
+- [ ] `1`, `1`, `1`
+
+`break` only leaves the **innermost** loop, the `col` loop. The `row` loop carries on: it prints the line, then starts the next row with a fresh `col` loop. On row 1 the inner loop stops when `col` is 2, on row 2 when `col` is 3, and so on, so each row is one number longer. `1` on its own is what you would get if `break` stopped both loops.
+:::
+
 ## The menu loop pattern
 
 This is the pattern that turns a script that runs once into an **app** that keeps running.
@@ -473,6 +566,43 @@ You might wonder why we use a `running` flag instead of `break` for quitting. It
 2. Run it with `node phase-3/wallet.js`. Buy data twice, try to buy airtime with R2 left, type something silly, then quit with a capital `Q`.
 3. **Add an option:** `3) Load R50`, which adds 50 to the balance. You need one more `console.log` line in the menu and one more `case`. Run it and use your new option.
 4. **Predict, then test:** what happens if you delete the `case "q":` block completely? How would you get out? (Ctrl+C at a `prompt-sync` question does not always stop a program. Closing the terminal always works.) Put it back afterwards.
+:::
+
+::: quiz
+The user types `a`, then `b`, then `A`, then `x`. What is printed at the end?
+
+```js
+const prompt = require("prompt-sync")();
+
+let points = 0;
+let running = true;
+
+while (running) {
+  const choice = prompt("a, b or x? ").trim().toLowerCase();
+
+  switch (choice) {
+    case "a":
+      points += 5;
+    case "b":
+      points += 1;
+      break;
+    case "x":
+      running = false;
+      break;
+    default:
+      points = 0;
+  }
+}
+
+console.log(points);
+```
+
+- [ ] `11`
+- [x] `13`
+- [ ] `0`
+- [ ] `7`
+
+`case "a":` has no `break`, so choosing `a` adds 5 and then falls through into `case "b":` and adds 1 more. So `a` gives 6, `b` gives 7, and `A` becomes `a` thanks to `.toLowerCase()`, giving 13. `x` sets the flag to `false`, the loop ends, and 13 is printed. `11` forgets the fall-through. `0` forgets the `.toLowerCase()` and sends `A` to `default`. `7` assumes the `break` under `case "b":` leaves the loop, but it only leaves the `switch`.
 :::
 
 ## When to use each tool

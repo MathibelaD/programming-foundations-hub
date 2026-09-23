@@ -1,12 +1,12 @@
 {
- "generated": "2026-09-23T20:02:13",
+ "generated": "2026-09-23T20:44:33",
  "phases": [
   {
    "id": "phase-00-start-here",
    "order": 0,
    "title": "Start Here",
    "blurb": "What programming actually is, how this course works, the map of what comes next, and getting your computer ready.",
-   "goal": "Explain what a program is, move around with the terminal, create a JavaScript project with npm init, and run your first program with node.",
+   "goal": "Explain what a program is, move around with the terminal, create a JavaScript project with pnpm init, and run your first program with node.",
    "lessons": [
     {
      "id": "phase-00-start-here/01-how-this-course-works",
@@ -17,6 +17,7 @@
      "stage": "Phase 0",
      "blocks": {
       "analogy": 3,
+      "quiz": 4,
       "predict": 1,
       "solution": 1,
       "interview": 4,
@@ -28,7 +29,7 @@
       "checkpoint": 1,
       "resources": 1
      },
-     "words": 3027,
+     "words": 3622,
      "snippets": 3,
      "headings": [
       "What you will learn",
@@ -53,6 +54,7 @@
       "exercise": 2,
       "hint": 1,
       "solution": 2,
+      "quiz": 4,
       "try": 1,
       "warn": 1,
       "predict": 1,
@@ -63,8 +65,8 @@
       "checkpoint": 1,
       "resources": 1
      },
-     "words": 3031,
-     "snippets": 8,
+     "words": 3571,
+     "snippets": 9,
      "headings": [
       "What you will learn",
       "The problem: computers are powerful, and completely clueless",
@@ -85,6 +87,7 @@
      "stage": "Phase 0",
      "blocks": {
       "analogy": 2,
+      "quiz": 4,
       "try": 1,
       "exercise": 2,
       "solution": 2,
@@ -96,7 +99,7 @@
       "checkpoint": 1,
       "resources": 1
      },
-     "words": 3947,
+     "words": 4455,
      "snippets": 6,
      "headings": [
       "What you will learn",
@@ -113,13 +116,14 @@
      "id": "phase-00-start-here/04-setting-up-your-computer",
      "path": "content/phase-00-start-here/04-setting-up-your-computer.md",
      "title": "Setting up your computer",
-     "summary": "Install a code editor (VS Code) and Node.js, check they work, and change a few settings that make a beginner's life easier.",
+     "summary": "Install a code editor (VS Code), Node.js and pnpm, check they work, and change a few settings that make a beginner's life easier.",
      "minutes": 40,
      "stage": "Phase 0",
      "blocks": {
       "analogy": 1,
       "note": 2,
-      "try": 1,
+      "quiz": 4,
+      "try": 3,
       "warn": 1,
       "exercise": 1,
       "mistake": 1,
@@ -129,15 +133,16 @@
       "checkpoint": 1,
       "resources": 1
      },
-     "words": 3231,
-     "snippets": 4,
+     "words": 4560,
+     "snippets": 3,
      "headings": [
       "What you will learn",
-      "The problem: two tools, and nothing else",
+      "The problem: a few tools, and nothing else",
       "Part 1: a code editor",
       "Part 2: Node.js",
       "Check that it worked",
-      "Part 3: settings that make life easier",
+      "Part 3: pnpm",
+      "Part 4: settings that make life easier",
       "Troubleshooting",
       "Real-world uses"
      ]
@@ -153,6 +158,7 @@
       "analogy": 2,
       "note": 4,
       "warn": 2,
+      "quiz": 5,
       "try": 2,
       "exercise": 2,
       "hint": 1,
@@ -164,8 +170,8 @@
       "checkpoint": 1,
       "resources": 1
      },
-     "words": 3722,
-     "snippets": 25,
+     "words": 4301,
+     "snippets": 26,
      "headings": [
       "What you will learn",
       "What the terminal is, and why bother",
@@ -187,12 +193,13 @@
      "id": "phase-00-start-here/06-your-first-program",
      "path": "content/phase-00-start-here/06-your-first-program.md",
      "title": "Your first program (and what every file is for)",
-     "summary": "Create your practice folder, set it up with npm init, write and run hello.js, and understand every line of every file involved.",
+     "summary": "Create your practice folder, set it up with pnpm init, write and run hello.js, and understand every line of every file involved.",
      "minutes": 50,
      "stage": "Phase 0",
      "blocks": {
       "analogy": 2,
       "try": 6,
+      "quiz": 5,
       "note": 3,
       "warn": 1,
       "exercise": 2,
@@ -206,19 +213,19 @@
       "checkpoint": 1,
       "resources": 1
      },
-     "words": 4470,
-     "snippets": 20,
+     "words": 5438,
+     "snippets": 23,
      "headings": [
       "What you will learn",
       "The problem: a place for everything",
       "Step 1: create the folder",
       "Step 2: open it in VS Code",
-      "Step 3: `npm init -y`",
+      "Step 3: `pnpm init`",
       "`package.json`, line by line",
       "Step 4: your first program",
       "Every part of `console.log(\"Hello, world!\");`",
       "The edit → save → run loop",
-      "Step 5: a `start` script and `npm start`",
+      "Step 5: a `start` script and `pnpm start`",
       "Step 6: the folder layout for the course",
       "Bonus: two playgrounds for quick experiments",
       "Real-world uses"
@@ -235,6 +242,7 @@
       "analogy": 2,
       "try": 3,
       "note": 3,
+      "quiz": 5,
       "exercise": 2,
       "solution": 4,
       "warn": 1,
@@ -248,8 +256,8 @@
       "checkpoint": 1,
       "resources": 1
      },
-     "words": 3943,
-     "snippets": 33,
+     "words": 4525,
+     "snippets": 37,
      "headings": [
       "What you will learn",
       "The problem: red text is scary",
@@ -282,6 +290,7 @@
      "blocks": {
       "analogy": 2,
       "note": 2,
+      "quiz": 4,
       "try": 1,
       "predict": 1,
       "solution": 5,
@@ -296,8 +305,8 @@
       "checkpoint": 1,
       "resources": 1
      },
-     "words": 3618,
-     "snippets": 32,
+     "words": 4103,
+     "snippets": 33,
      "headings": [
       "What you will learn",
       "The problem: a program is about information",
@@ -320,6 +329,7 @@
      "blocks": {
       "analogy": 1,
       "try": 1,
+      "quiz": 4,
       "note": 1,
       "predict": 1,
       "solution": 5,
@@ -334,8 +344,8 @@
       "checkpoint": 1,
       "resources": 1
      },
-     "words": 2691,
-     "snippets": 33,
+     "words": 3125,
+     "snippets": 36,
      "headings": [
       "What you will learn",
       "The problem: programs need to remember things",
@@ -359,6 +369,7 @@
       "analogy": 1,
       "note": 2,
       "try": 2,
+      "quiz": 4,
       "predict": 1,
       "solution": 5,
       "exercise": 2,
@@ -372,8 +383,8 @@
       "checkpoint": 1,
       "resources": 1
      },
-     "words": 3702,
-     "snippets": 34,
+     "words": 4183,
+     "snippets": 37,
      "headings": [
       "What you will learn",
       "The problem: some values should never change",
@@ -395,6 +406,7 @@
      "blocks": {
       "analogy": 2,
       "try": 3,
+      "quiz": 5,
       "warn": 1,
       "note": 1,
       "predict": 1,
@@ -410,8 +422,8 @@
       "checkpoint": 1,
       "resources": 1
      },
-     "words": 5378,
-     "snippets": 46,
+     "words": 5917,
+     "snippets": 50,
      "headings": [
       "What you will learn",
       "The problem: two kinds of numbers in everyday life",
@@ -437,6 +449,7 @@
      "blocks": {
       "analogy": 2,
       "try": 2,
+      "quiz": 5,
       "predict": 1,
       "solution": 5,
       "exercise": 2,
@@ -450,8 +463,8 @@
       "checkpoint": 1,
       "resources": 1
      },
-     "words": 3888,
-     "snippets": 62,
+     "words": 4387,
+     "snippets": 67,
      "headings": [
       "What you will learn",
       "The problem: programs are full of text",
@@ -477,6 +490,7 @@
       "analogy": 2,
       "try": 1,
       "warn": 1,
+      "quiz": 4,
       "predict": 1,
       "solution": 5,
       "exercise": 2,
@@ -490,8 +504,8 @@
       "checkpoint": 1,
       "resources": 1
      },
-     "words": 3307,
-     "snippets": 32,
+     "words": 3758,
+     "snippets": 36,
      "headings": [
       "What you will learn",
       "The problem: not every answer is a number or a word",
@@ -513,6 +527,7 @@
      "blocks": {
       "analogy": 2,
       "warn": 1,
+      "quiz": 5,
       "try": 1,
       "predict": 1,
       "solution": 5,
@@ -527,8 +542,8 @@
       "checkpoint": 1,
       "resources": 1
      },
-     "words": 3455,
-     "snippets": 38,
+     "words": 4025,
+     "snippets": 43,
      "headings": [
       "What you will learn",
       "The problem: text that looks like a number",
@@ -545,13 +560,14 @@
      "id": "phase-01-storing-information/08-getting-input-from-the-user",
      "path": "content/phase-01-storing-information/08-getting-input-from-the-user.md",
      "title": "Asking the user questions (and your first package)",
-     "summary": "Make your programs interactive with prompt-sync, and learn what really happens when you run npm install.",
+     "summary": "Make your programs interactive with prompt-sync, and learn what really happens when you run pnpm add.",
      "minutes": 45,
      "stage": "Phase 1",
      "blocks": {
       "analogy": 1,
       "try": 2,
       "note": 2,
+      "quiz": 3,
       "predict": 1,
       "solution": 5,
       "exercise": 2,
@@ -565,8 +581,8 @@
       "checkpoint": 1,
       "resources": 1
      },
-     "words": 3962,
-     "snippets": 25,
+     "words": 4781,
+     "snippets": 28,
      "headings": [
       "What you will learn",
       "The problem: programs that only talk",
@@ -587,6 +603,7 @@
      "blocks": {
       "analogy": 1,
       "try": 1,
+      "quiz": 3,
       "note": 1,
       "warn": 1,
       "project": 1,
@@ -600,8 +617,8 @@
       "checkpoint": 1,
       "resources": 1
      },
-     "words": 3586,
-     "snippets": 25,
+     "words": 4159,
+     "snippets": 26,
      "headings": [
       "What you will learn",
       "What you are building",
@@ -635,6 +652,7 @@
      "blocks": {
       "analogy": 2,
       "try": 2,
+      "quiz": 5,
       "why": 1,
       "predict": 1,
       "solution": 5,
@@ -649,8 +667,8 @@
       "checkpoint": 1,
       "resources": 1
      },
-     "words": 4223,
-     "snippets": 41,
+     "words": 4851,
+     "snippets": 45,
      "headings": [
       "What you will learn",
       "The problem: every program so far does the same thing every time",
@@ -677,6 +695,7 @@
       "try": 2,
       "predict": 1,
       "solution": 5,
+      "quiz": 4,
       "warn": 1,
       "exercise": 2,
       "hint": 2,
@@ -689,8 +708,8 @@
       "checkpoint": 1,
       "resources": 1
      },
-     "words": 4676,
-     "snippets": 40,
+     "words": 5211,
+     "snippets": 44,
      "headings": [
       "What you will learn",
       "The problem: asking is not enough",
@@ -715,6 +734,7 @@
      "blocks": {
       "analogy": 1,
       "try": 1,
+      "quiz": 5,
       "note": 2,
       "predict": 1,
       "solution": 5,
@@ -729,8 +749,8 @@
       "checkpoint": 1,
       "resources": 1
      },
-     "words": 3873,
-     "snippets": 43,
+     "words": 4551,
+     "snippets": 47,
      "headings": [
       "What you will learn",
       "The problem: one question is often not enough",
@@ -753,6 +773,7 @@
      "blocks": {
       "analogy": 2,
       "try": 1,
+      "quiz": 4,
       "warn": 1,
       "predict": 1,
       "solution": 5,
@@ -767,8 +788,8 @@
       "checkpoint": 1,
       "resources": 1
      },
-     "words": 3739,
-     "snippets": 46,
+     "words": 4255,
+     "snippets": 50,
      "headings": [
       "What you will learn",
       "The problem: \"did they type anything?\"",
@@ -791,6 +812,7 @@
      "blocks": {
       "analogy": 2,
       "try": 2,
+      "quiz": 4,
       "predict": 1,
       "solution": 5,
       "exercise": 2,
@@ -804,8 +826,8 @@
       "checkpoint": 1,
       "resources": 1
      },
-     "words": 3939,
-     "snippets": 36,
+     "words": 4484,
+     "snippets": 40,
      "headings": [
       "What you will learn",
       "The problem: long chains of \"is it exactly this?\"",
@@ -826,6 +848,7 @@
      "blocks": {
       "note": 1,
       "try": 7,
+      "quiz": 2,
       "why": 1,
       "project": 1,
       "solution": 2,
@@ -837,8 +860,8 @@
       "checkpoint": 1,
       "resources": 1
      },
-     "words": 4531,
-     "snippets": 30,
+     "words": 4823,
+     "snippets": 31,
      "headings": [
       "What you will build",
       "Where you are starting from",
@@ -874,6 +897,7 @@
       "note": 2,
       "analogy": 1,
       "why": 1,
+      "quiz": 3,
       "try": 1,
       "exercise": 3,
       "solution": 6,
@@ -888,8 +912,8 @@
       "checkpoint": 1,
       "resources": 1
      },
-     "words": 4772,
-     "snippets": 16,
+     "words": 5176,
+     "snippets": 19,
      "headings": [
       "What you will learn",
       "The problem: doing the same thing again and again",
@@ -912,6 +936,7 @@
      "stage": "Phase 3",
      "blocks": {
       "analogy": 1,
+      "quiz": 5,
       "try": 3,
       "predict": 1,
       "solution": 5,
@@ -929,8 +954,8 @@
       "checkpoint": 1,
       "resources": 1
      },
-     "words": 4843,
-     "snippets": 32,
+     "words": 5534,
+     "snippets": 36,
      "headings": [
       "What you will learn",
       "The problem: from plan to program",
@@ -953,6 +978,7 @@
      "stage": "Phase 3",
      "blocks": {
       "analogy": 1,
+      "quiz": 5,
       "try": 2,
       "note": 2,
       "predict": 1,
@@ -968,8 +994,8 @@
       "checkpoint": 1,
       "resources": 1
      },
-     "words": 4950,
-     "snippets": 40,
+     "words": 5588,
+     "snippets": 44,
      "headings": [
       "What you will learn",
       "The problem: the loop ingredients are scattered",
@@ -995,6 +1021,7 @@
      "blocks": {
       "analogy": 1,
       "try": 2,
+      "quiz": 5,
       "predict": 1,
       "solution": 5,
       "exercise": 2,
@@ -1008,8 +1035,8 @@
       "checkpoint": 1,
       "resources": 1
      },
-     "words": 5310,
-     "snippets": 36,
+     "words": 6014,
+     "snippets": 41,
      "headings": [
       "What you will learn",
       "The problem: \"I know how loops work, but what do I *use* them for?\"",
@@ -1032,6 +1059,7 @@
      "stage": "Phase 3",
      "blocks": {
       "analogy": 2,
+      "quiz": 5,
       "note": 1,
       "try": 3,
       "predict": 1,
@@ -1048,8 +1076,8 @@
       "checkpoint": 1,
       "resources": 1
      },
-     "words": 5110,
-     "snippets": 30,
+     "words": 5786,
+     "snippets": 35,
      "headings": [
       "What you will learn",
       "The problem: loops that are too rigid",
@@ -1074,6 +1102,7 @@
       "note": 1,
       "project": 5,
       "warn": 1,
+      "quiz": 2,
       "stop": 1,
       "solution": 2,
       "connect": 1,
@@ -1083,8 +1112,8 @@
       "checkpoint": 1,
       "resources": 1
      },
-     "words": 4194,
-     "snippets": 25,
+     "words": 4511,
+     "snippets": 26,
      "headings": [
       "What you will build",
       "Where we are, and what is wrong with it",
@@ -1117,6 +1146,7 @@
      "blocks": {
       "analogy": 1,
       "try": 3,
+      "quiz": 4,
       "note": 1,
       "predict": 1,
       "solution": 7,
@@ -1131,8 +1161,8 @@
       "checkpoint": 1,
       "resources": 1
      },
-     "words": 4313,
-     "snippets": 31,
+     "words": 4776,
+     "snippets": 35,
      "headings": [
       "What you will learn",
       "The problem: the same lines, three times",
@@ -1158,6 +1188,7 @@
       "analogy": 1,
       "note": 2,
       "try": 3,
+      "quiz": 5,
       "predict": 1,
       "solution": 8,
       "exercise": 5,
@@ -1171,8 +1202,8 @@
       "checkpoint": 1,
       "resources": 1
      },
-     "words": 3926,
-     "snippets": 40,
+     "words": 4484,
+     "snippets": 45,
      "headings": [
       "What you will learn",
       "The problem: a function for every person?",
@@ -1196,6 +1227,7 @@
       "analogy": 1,
       "try": 2,
       "note": 1,
+      "quiz": 5,
       "predict": 1,
       "solution": 7,
       "exercise": 4,
@@ -1209,8 +1241,8 @@
       "checkpoint": 1,
       "resources": 1
      },
-     "words": 4305,
-     "snippets": 36,
+     "words": 4870,
+     "snippets": 41,
      "headings": [
       "What you will learn",
       "The problem: the answer is stuck on the screen",
@@ -1233,6 +1265,7 @@
      "blocks": {
       "analogy": 1,
       "try": 1,
+      "quiz": 4,
       "note": 1,
       "predict": 2,
       "solution": 6,
@@ -1247,8 +1280,8 @@
       "checkpoint": 1,
       "resources": 1
      },
-     "words": 3879,
-     "snippets": 43,
+     "words": 4375,
+     "snippets": 47,
      "headings": [
       "What you will learn",
       "The problem: \"but I made that variable!\"",
@@ -1268,6 +1301,7 @@
      "stage": "Phase 4",
      "blocks": {
       "analogy": 1,
+      "quiz": 5,
       "try": 1,
       "predict": 1,
       "solution": 6,
@@ -1283,8 +1317,8 @@
       "checkpoint": 1,
       "resources": 1
      },
-     "words": 4195,
-     "snippets": 42,
+     "words": 4771,
+     "snippets": 46,
      "headings": [
       "What you will learn",
       "Why learn another way to write the same thing?",
@@ -1308,6 +1342,7 @@
      "blocks": {
       "analogy": 1,
       "note": 2,
+      "quiz": 3,
       "warn": 1,
       "try": 2,
       "exercise": 2,
@@ -1322,8 +1357,8 @@
       "checkpoint": 1,
       "resources": 1
      },
-     "words": 5030,
-     "snippets": 20,
+     "words": 5492,
+     "snippets": 23,
      "headings": [
       "What you will learn",
       "The problem: one long list of instructions",
@@ -1348,6 +1383,7 @@
       "project": 9,
       "note": 1,
       "try": 2,
+      "quiz": 3,
       "stop": 1,
       "mistake": 1,
       "connect": 1,
@@ -1357,8 +1393,8 @@
       "checkpoint": 1,
       "resources": 1
      },
-     "words": 4766,
-     "snippets": 14,
+     "words": 5128,
+     "snippets": 17,
      "headings": [
       "What you will build",
       "What \"refactoring\" means",
@@ -1393,6 +1429,7 @@
       "analogy": 1,
       "why": 1,
       "try": 1,
+      "quiz": 5,
       "predict": 1,
       "solution": 5,
       "note": 1,
@@ -1407,8 +1444,8 @@
       "checkpoint": 1,
       "resources": 1
      },
-     "words": 3459,
-     "snippets": 38,
+     "words": 3973,
+     "snippets": 43,
      "headings": [
       "What you will learn",
       "The problem: one variable per thing does not scale",
@@ -1431,6 +1468,7 @@
      "blocks": {
       "analogy": 2,
       "try": 2,
+      "quiz": 5,
       "predict": 1,
       "solution": 5,
       "note": 1,
@@ -1446,8 +1484,8 @@
       "checkpoint": 1,
       "resources": 1
      },
-     "words": 3990,
-     "snippets": 35,
+     "words": 4562,
+     "snippets": 40,
      "headings": [
       "What you will learn",
       "The problem: real lists change",
@@ -1469,6 +1507,7 @@
      "stage": "Phase 5",
      "blocks": {
       "analogy": 1,
+      "quiz": 5,
       "why": 1,
       "try": 1,
       "predict": 1,
@@ -1485,8 +1524,8 @@
       "checkpoint": 1,
       "resources": 1
      },
-     "words": 3558,
-     "snippets": 33,
+     "words": 4183,
+     "snippets": 38,
      "headings": [
       "What you will learn",
       "The problem: one line per item, again",
@@ -1509,6 +1548,7 @@
       "analogy": 1,
       "note": 1,
       "try": 1,
+      "quiz": 5,
       "predict": 1,
       "solution": 5,
       "exercise": 2,
@@ -1522,8 +1562,8 @@
       "checkpoint": 1,
       "resources": 1
      },
-     "words": 5324,
-     "snippets": 33,
+     "words": 5958,
+     "snippets": 38,
      "headings": [
       "What you will learn",
       "The problem: the same questions, over and over",
@@ -1546,6 +1586,7 @@
      "stage": "Phase 5",
      "blocks": {
       "analogy": 1,
+      "quiz": 5,
       "try": 2,
       "predict": 1,
       "solution": 5,
@@ -1560,8 +1601,8 @@
       "checkpoint": 1,
       "resources": 1
      },
-     "words": 3445,
-     "snippets": 43,
+     "words": 3986,
+     "snippets": 48,
      "headings": [
       "What you will learn",
       "The problem: text arrives in one long piece",
@@ -1586,6 +1627,7 @@
       "note": 2,
       "why": 1,
       "try": 4,
+      "quiz": 2,
       "debug": 1,
       "solution": 3,
       "connect": 1,
@@ -1595,8 +1637,8 @@
       "checkpoint": 1,
       "resources": 1
      },
-     "words": 4088,
-     "snippets": 29,
+     "words": 4355,
+     "snippets": 30,
      "headings": [
       "What you will build",
       "Why this change?",
@@ -1628,6 +1670,7 @@
      "blocks": {
       "analogy": 1,
       "try": 2,
+      "quiz": 5,
       "predict": 1,
       "solution": 5,
       "note": 1,
@@ -1643,8 +1686,8 @@
       "checkpoint": 1,
       "resources": 1
      },
-     "words": 4633,
-     "snippets": 50,
+     "words": 5167,
+     "snippets": 55,
      "headings": [
       "What you will learn",
       "The problem: one thing, many details",
@@ -1670,6 +1713,7 @@
       "note": 2,
       "predict": 1,
       "solution": 5,
+      "quiz": 4,
       "try": 3,
       "exercise": 2,
       "hint": 2,
@@ -1682,8 +1726,8 @@
       "checkpoint": 1,
       "resources": 1
      },
-     "words": 4481,
-     "snippets": 34,
+     "words": 5006,
+     "snippets": 38,
      "headings": [
       "What you will learn",
       "The problem: lists that fall out of step",
@@ -1704,6 +1748,7 @@
      "blocks": {
       "analogy": 2,
       "warn": 1,
+      "quiz": 5,
       "try": 2,
       "note": 1,
       "predict": 1,
@@ -1719,8 +1764,8 @@
       "checkpoint": 1,
       "resources": 1
      },
-     "words": 3948,
-     "snippets": 36,
+     "words": 4586,
+     "snippets": 41,
      "headings": [
       "What you will learn",
       "The problem: too many loose arguments",
@@ -1743,6 +1788,7 @@
      "blocks": {
       "analogy": 1,
       "try": 2,
+      "quiz": 5,
       "note": 1,
       "predict": 1,
       "solution": 4,
@@ -1756,8 +1802,8 @@
       "checkpoint": 1,
       "resources": 1
      },
-     "words": 4079,
-     "snippets": 48,
+     "words": 4725,
+     "snippets": 53,
      "headings": [
       "What you will learn",
       "A promise from Phase 1",
@@ -1784,6 +1830,7 @@
       "predict": 1,
       "solution": 5,
       "note": 1,
+      "quiz": 4,
       "try": 2,
       "exercise": 2,
       "hint": 1,
@@ -1796,8 +1843,8 @@
       "checkpoint": 1,
       "resources": 1
      },
-     "words": 4607,
-     "snippets": 52,
+     "words": 5180,
+     "snippets": 58,
      "headings": [
       "What you will learn",
       "The problem: programs have no memory",
@@ -1818,6 +1865,7 @@
      "blocks": {
       "stop": 1,
       "why": 1,
+      "quiz": 2,
       "try": 2,
       "solution": 2,
       "challenge": 1,
@@ -1826,8 +1874,8 @@
       "checkpoint": 1,
       "resources": 1
      },
-     "words": 4994,
-     "snippets": 40,
+     "words": 5308,
+     "snippets": 42,
      "headings": [
       "What you will build",
       "The plan",
@@ -1859,6 +1907,7 @@
      "minutes": 45,
      "stage": "Phase 7",
      "blocks": {
+      "quiz": 4,
       "analogy": 1,
       "try": 2,
       "note": 1,
@@ -1875,8 +1924,8 @@
       "checkpoint": 1,
       "resources": 1
      },
-     "words": 4005,
-     "snippets": 32,
+     "words": 4477,
+     "snippets": 36,
      "headings": [
       "What you will learn",
       "The problem: loops that are almost the same",
@@ -1898,6 +1947,7 @@
      "stage": "Phase 7",
      "blocks": {
       "analogy": 1,
+      "quiz": 4,
       "try": 1,
       "predict": 1,
       "solution": 5,
@@ -1912,8 +1962,8 @@
       "checkpoint": 1,
       "resources": 1
      },
-     "words": 3290,
-     "snippets": 42,
+     "words": 3804,
+     "snippets": 46,
      "headings": [
       "What you will learn",
       "The problem: you keep writing the same loop",
@@ -1938,6 +1988,7 @@
      "stage": "Phase 7",
      "blocks": {
       "analogy": 1,
+      "quiz": 4,
       "try": 1,
       "predict": 1,
       "solution": 5,
@@ -1953,8 +2004,8 @@
       "checkpoint": 1,
       "resources": 1
      },
-     "words": 3467,
-     "snippets": 39,
+     "words": 3962,
+     "snippets": 42,
      "headings": [
       "What you will learn",
       "The problem: making a new list from an old one",
@@ -1976,6 +2027,7 @@
      "stage": "Phase 7",
      "blocks": {
       "analogy": 1,
+      "quiz": 5,
       "try": 1,
       "predict": 1,
       "solution": 5,
@@ -1990,8 +2042,8 @@
       "checkpoint": 1,
       "resources": 1
      },
-     "words": 3314,
-     "snippets": 32,
+     "words": 3915,
+     "snippets": 37,
      "headings": [
       "What you will learn",
       "The problem: I only want some of them",
@@ -2013,6 +2065,7 @@
      "stage": "Phase 7",
      "blocks": {
       "analogy": 1,
+      "quiz": 5,
       "try": 1,
       "predict": 1,
       "solution": 5,
@@ -2027,8 +2080,8 @@
       "checkpoint": 1,
       "resources": 1
      },
-     "words": 3744,
-     "snippets": 35,
+     "words": 4347,
+     "snippets": 40,
      "headings": [
       "What you will learn",
       "The problem: questions, not lists",
@@ -2050,6 +2103,7 @@
      "stage": "Phase 7",
      "blocks": {
       "analogy": 1,
+      "quiz": 5,
       "try": 1,
       "predict": 1,
       "solution": 5,
@@ -2064,8 +2118,8 @@
       "checkpoint": 1,
       "resources": 1
      },
-     "words": 3473,
-     "snippets": 35,
+     "words": 4023,
+     "snippets": 40,
      "headings": [
       "What you will learn",
       "The problem: many things in, one thing out",
@@ -2086,6 +2140,7 @@
      "minutes": 55,
      "stage": "Phase 7",
      "blocks": {
+      "quiz": 5,
       "analogy": 2,
       "note": 1,
       "try": 1,
@@ -2102,8 +2157,8 @@
       "checkpoint": 1,
       "resources": 1
      },
-     "words": 4509,
-     "snippets": 39,
+     "words": 5112,
+     "snippets": 44,
      "headings": [
       "What you will learn",
       "The problem: putting things in order",
@@ -2126,6 +2181,7 @@
      "stage": "Phase 7",
      "blocks": {
       "stop": 1,
+      "quiz": 3,
       "try": 1,
       "note": 2,
       "project": 1,
@@ -2137,8 +2193,8 @@
       "checkpoint": 1,
       "resources": 1
      },
-     "words": 5005,
-     "snippets": 43,
+     "words": 5421,
+     "snippets": 46,
      "headings": [
       "What you will build",
       "Use the same test data as this lesson",
@@ -2174,6 +2230,7 @@
      "blocks": {
       "analogy": 1,
       "why": 1,
+      "quiz": 4,
       "try": 2,
       "note": 1,
       "mistake": 1,
@@ -2187,8 +2244,8 @@
       "checkpoint": 1,
       "resources": 1
      },
-     "words": 5001,
-     "snippets": 32,
+     "words": 5676,
+     "snippets": 36,
      "headings": [
       "What you will learn",
       "The problem: knowing the pieces is not the same as building something",
@@ -2211,6 +2268,7 @@
       "analogy": 1,
       "note": 2,
       "try": 2,
+      "quiz": 4,
       "debug": 5,
       "solution": 6,
       "mistake": 1,
@@ -2221,8 +2279,8 @@
       "checkpoint": 1,
       "resources": 1
      },
-     "words": 4578,
-     "snippets": 25,
+     "words": 5250,
+     "snippets": 31,
      "headings": [
       "What you will learn",
       "The problem: the program runs, but the answer is wrong",
@@ -2247,6 +2305,7 @@
      "blocks": {
       "analogy": 1,
       "try": 1,
+      "quiz": 5,
       "predict": 1,
       "solution": 5,
       "note": 2,
@@ -2261,8 +2320,8 @@
       "checkpoint": 1,
       "resources": 1
      },
-     "words": 4050,
-     "snippets": 42,
+     "words": 4815,
+     "snippets": 50,
      "headings": [
       "What you will learn",
       "The problem: one very long file",
@@ -2289,6 +2348,7 @@
       "warn": 1,
       "note": 1,
       "try": 1,
+      "quiz": 4,
       "exercise": 2,
       "hint": 1,
       "solution": 3,
@@ -2301,8 +2361,8 @@
       "checkpoint": 1,
       "resources": 1
      },
-     "words": 4065,
-     "snippets": 30,
+     "words": 4682,
+     "snippets": 31,
      "headings": [
       "What you will learn",
       "The problem: \"it worked yesterday\"",
@@ -2327,6 +2387,7 @@
      "stage": "Phase 8",
      "blocks": {
       "warn": 1,
+      "quiz": 3,
       "try": 3,
       "note": 1,
       "project": 1,
@@ -2339,8 +2400,8 @@
       "checkpoint": 1,
       "resources": 1
      },
-     "words": 5396,
-     "snippets": 31,
+     "words": 5882,
+     "snippets": 32,
      "headings": [
       "What you will build",
       "Where you are starting from",
@@ -2383,7 +2444,7 @@
       "checkpoint": 1,
       "resources": 1
      },
-     "words": 3347,
+     "words": 3358,
      "snippets": 9,
      "headings": [
       "What you will learn",
@@ -2407,7 +2468,7 @@
       "note": 1,
       "resources": 1
      },
-     "words": 4235,
+     "words": 4388,
      "snippets": 0,
      "headings": [
       "A",
@@ -2443,7 +2504,8 @@
   "minutes": 3045,
   "exercises": 112,
   "challenges": 56,
+  "quizzes": 253,
   "projectSteps": 18,
-  "snippets": 2004
+  "snippets": 2219
  }
 }

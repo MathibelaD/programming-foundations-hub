@@ -18,10 +18,12 @@ Everything below follows from that.
 
 ## Where learners put their code
 
-- **`~/coding-practice/`** is created in Phase 0 lesson 06 with `npm init -y`. It gets one folder per phase: `phase-1/`, `phase-2/` and so on. Lessons say, for example, "create `phase-1/variables.js`" and "run `node phase-1/variables.js` from inside `coding-practice`".
+- **`~/coding-practice/`** is created in Phase 0 lesson 06 with `pnpm init`. It gets one folder per phase: `phase-1/`, `phase-2/` and so on. Lessons say, for example, "create `phase-1/variables.js`" and "run `node phase-1/variables.js` from inside `coding-practice`".
 - **`~/budget-buddy/`** is the course project, created in the Phase 1 project lesson. Each phase ends with a lesson that adds to it (see `content/project.json`).
 
 The course uses **CommonJS** (`require`, `module.exports`) because it works with no configuration. User input comes from the `prompt-sync` package, installed in lesson 01-08.
+
+The package manager is **pnpm**, not npm. Learners install it in 00-04 and run two one-time settings there (`pnpm config set init-type commonjs --global` and `pnpm config set init-package-manager false --global`), so that `pnpm init` creates a CommonJS project with a short `package.json`. Use `pnpm init`, `pnpm add <package>`, `pnpm install`, `pnpm start` and `pnpm run <script>` in lessons. The lockfile is `pnpm-lock.yaml`. Packages still come from the npm registry, so linking to npmjs.com package pages is fine.
 
 Money in examples is in South African rand, written `R`, with a short note in 01-04 telling learners to use their own currency.
 
@@ -46,6 +48,7 @@ Body, in this order. Leave out a section only if it truly does not fit.
 ::: analogy                     a physical, everyday picture of the idea
 ## <The idea, step by step>     several small sections, each: explain, tiny code, output
 ::: try                         exact steps to run it on your machine, then "change X, predict, run"
+::: quiz                        a knowledge check at the end of each key ## section (see below)
 ::: predict                     show code, ask what it prints; answer in a ::: solution
 ::: exercise Level 1 — Guided   numbered steps
 ::: exercise Level 2 — On your own   requirements only, with ::: hint and ::: solution
@@ -77,9 +80,42 @@ Blocks start with `::: kind Optional title` and end with a line containing only 
 | `mistake` | Common mistakes | no |
 | `note` / `warn` / `why` / `recap` / `stop` | as named | no |
 | `checkpoint` | Checkpoint (checkboxes are saved) | no |
-| `resources` | Go deeper (optional) | no |
+| `resources` | Go deeper (optional) | **yes** |
+| `quiz` | Knowledge check (interactive multiple choice) | no |
 | `hint` / `solution` | Hint / Solution | **yes** |
 | `interview` | Test yourself | **yes** |
+
+### Knowledge checks (`::: quiz`)
+
+The site shows a lesson one `##` section at a time. Each key section ends with a knowledge check, so that learners find out straight away whether the idea landed. Aim for 3–5 per lesson.
+
+````
+::: quiz
+What does this print?
+
+```js
+let total = 0;
+for (let i = 1; i < 4; i++) {
+  total = total + i;
+}
+console.log(total);
+```
+
+- [ ] `10`
+- [x] `6`
+- [ ] `4`
+
+`i` takes 1, 2 and 3, so `total` is 6. If you picked 10, you included 4: check `<` versus `<=`.
+:::
+````
+
+The question comes first, then 3–5 options (exactly one `- [x]`), then the explanation, which is shown after the learner answers. `tools/check.py` enforces the shape.
+
+- **Test understanding, not memory.** Use new code, names and numbers. Never ask for a definition, or for a sentence copied from the lesson.
+- **Wrong options are real mistakes**: off by one, `"52"` instead of `7`, the value before reassignment, `undefined` vs an error.
+- **The explanation names the trap** behind the most tempting wrong option.
+- Only concepts from the ladder up to this point. Run every snippet with Node.
+- Vary where the right answer sits.
 
 Code fences: use `js` for JavaScript, `bash` for terminal commands, and `text` for program output. Put the output directly under the code, introduced with "Output:" or "You should see:".
 
@@ -103,7 +139,7 @@ This is what a lesson may use. It may use everything from earlier rows and **not
 
 | Lesson(s) | Newly allowed |
 |---|---|
-| 00-xx | terminal commands, `console.log("text")`, `npm init -y`, `node file.js` |
+| 00-xx | terminal commands, `console.log("text")`, `pnpm init`, `node file.js` |
 | 01-01 | values, numbers and strings in `console.log`, `+ - * /`, comments, top-to-bottom order |
 | 01-02 | `let`, assignment, reassignment, `x = x + 1` |
 | 01-03 | `const`, naming rules |
@@ -111,7 +147,7 @@ This is what a lesson may use. It may use everything from earlier rows and **not
 | 01-05 | strings, template literals, `.length`, `[i]` on strings, `.toUpperCase() .toLowerCase() .trim() .includes() .slice()` |
 | 01-06 | booleans, `null`, `undefined`, `typeof` |
 | 01-07 | `Number()`, `String()`, `parseInt`, `parseFloat`, `NaN`, `Number.isNaN` |
-| 01-08 | `require("prompt-sync")`, `prompt()`, npm install, `node_modules` |
+| 01-08 | `require("prompt-sync")`, `prompt()`, `pnpm add`, `node_modules` |
 | 02-01 | `=== !== < > <= >=` (and why not `==`) |
 | 02-02 | `if`, `else`, `else if`, blocks `{ }` |
 | 02-03 | `&& || !` |

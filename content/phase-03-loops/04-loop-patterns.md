@@ -155,6 +155,33 @@ For step 3, the loop body runs zero times and it prints `Total spent: R0.00`. Th
 
 **Real-world accumulators:** a till slip total, a bank balance built from transactions, the total distance on a running app, the number of calories eaten today, the total points in a season.
 
+::: quiz
+The user types `20`, then `15`, then `0`, then `40`. What does this print?
+
+```js
+const prompt = require("prompt-sync")();
+
+let total = 0;
+let count = 0;
+let amount = Number(prompt("Amount (0 to finish): R"));
+
+while (amount !== 0) {
+  total += amount;
+  count++;
+  amount = Number(prompt("Amount (0 to finish): R"));
+}
+
+console.log(total, count);
+```
+
+- [ ] `75 3`
+- [ ] `35 3`
+- [x] `35 2`
+- [ ] `75 4`
+
+20 and 15 are added and counted. Then the user types 0, the sentinel. `0 !== 0` is `false`, so the loop ends and the program never asks again: the 40 is never read. The 0 is not counted either, because the condition is checked before the body runs. `35 3` counts the sentinel as an amount, and `75` pretends the program kept listening after the user said "finished".
+:::
+
 ## Pattern 2: the counter (how many match?)
 
 **The job:** count how many values pass a test.
@@ -251,6 +278,30 @@ It counts the multiples of 3 from 1 to 20: 3, 6, 9, 12, 15 and 18. The loop runs
 :::
 
 **Real-world counters:** how many unread messages, how many items in stock are below the reorder level, how many learners were absent, how many times a word appears in a document.
+
+::: quiz
+This was meant to count the capital letters. What does it print?
+
+```js
+const code = "Ab3 dE7!";
+let upper = 0;
+
+for (let i = 0; i < code.length; i++) {
+  if (code[i] === code[i].toUpperCase()) {
+    upper++;
+  }
+}
+
+console.log(upper);
+```
+
+- [x] `6`
+- [ ] `2`
+- [ ] `4`
+- [ ] `8`
+
+The test asks "does this character stay the same when it is made upper case?". `A` and `E` do, but so do `3`, the space, `7` and `!`, because characters that are not letters have no upper case: `"3".toUpperCase()` is still `"3"`. So 6 characters pass. `2` is what the programmer meant. A counter counts whatever passes the test, so try the test on characters you did not have in mind.
+:::
 
 ## Pattern 3: maximum and minimum (keep the best so far)
 
@@ -363,6 +414,32 @@ The minimum is the same pattern with `<` instead of `>`. When is it safe to star
 
 For step 4, it prints `Highest: 20°C  Lowest: 20°C`. On day 1 both are set to 20, and no later day beats them, which is correct.
 
+::: quiz
+This should find the cheapest of four prices. The user types `45`, `30`, `60` and `25`. What does it print?
+
+```js
+const prompt = require("prompt-sync")();
+
+let cheapest = 0;
+
+for (let i = 1; i <= 4; i++) {
+  const price = Number(prompt(`Price ${i}: R`));
+  if (price < cheapest) {
+    cheapest = price;
+  }
+}
+
+console.log(`Cheapest: R${cheapest}`);
+```
+
+- [ ] `Cheapest: R25`
+- [x] `Cheapest: R0`
+- [ ] `Cheapest: R45`
+- [ ] `Cheapest: R30`
+
+No price is less than 0, so `price < cheapest` is `false` every time, and the made-up starting value is never replaced. It is the starting-value trap, the other way round: 0 is a safe start for the *highest* price, but for the *lowest* it beats every real price. Let the first value in (`if (i === 1 || price < cheapest)`) and you get the R25 you expected.
+:::
+
 ## Pattern 4: building a string
 
 **The job:** make a new piece of text, one bit at a time.
@@ -432,6 +509,30 @@ Remember that difference. In Phase 7 it becomes the difference between two famou
 
 **Real-world string building:** masking passwords and card numbers, creating usernames from names, removing spaces or dashes from ID numbers, drawing text bars and progress bars, formatting a receipt line by line.
 
+::: quiz
+What does this print?
+
+```js
+const name = "lindiwe dube";
+let initials = "";
+
+for (let i = 0; i < name.length; i++) {
+  if (i === 0 || name[i - 1] === " ") {
+    initials = initials + name[i].toUpperCase();
+  }
+}
+
+console.log(initials);
+```
+
+- [ ] `L`
+- [ ] `L D`
+- [ ] `LINDIWE DUBE`
+- [x] `LD`
+
+A character is added only when it is the first one (`i === 0`) or the character before it is a space. That picks out position 0 (`l`) and position 8 (`d`, the letter after the space). The space itself fails the test, so it is never added, which is why the answer is not `L D`. If you picked `L`, you may have read `i === 0` as the only test, but `||` means either reason is enough.
+:::
+
 ## Pattern 5: the flag (did we find it?)
 
 **The job:** answer a yes/no question about all the values, like "is there a digit anywhere in this password?".
@@ -497,6 +598,31 @@ You might notice that the loop keeps going after it has found the `5`, which is 
 A flag can also start as `true` and be knocked down. "Did **every** learner pass?" starts as `true` ("everyone passed, so far") and becomes `false` the first time a failing mark appears. "Any?" questions start `false`, and "all?" questions start `true`.
 
 **Real-world flags:** "does this order contain any alcohol?" (check ID at delivery), "is any seat still free?", "has every form field been filled in?", "did any payment fail?".
+
+::: quiz
+This flag loop has a bug. Which value of `password` makes it print `true`?
+
+```js
+let hasDigit = false;
+
+for (let i = 0; i < password.length; i++) {
+  if ("0123456789".includes(password[i])) {
+    hasDigit = true;
+  } else {
+    hasDigit = false;
+  }
+}
+
+console.log(hasDigit);
+```
+
+- [ ] `"abc4def"`
+- [ ] `"4abcdef"`
+- [x] `"abcdef4"`
+- [ ] `"abcdefg"`
+
+The `else` knocks the flag back down on every character that is not a digit, so the flag only remembers the **last** character. Only a password that ends in a digit prints `true`. `"abc4def"` does contain a digit, and the flag does go up at the `4`, but the `d` straight after it knocks it down again. That is why the recipe says: never set the flag back inside the loop.
+:::
 
 ## Patterns work together
 

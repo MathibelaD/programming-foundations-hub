@@ -90,6 +90,22 @@ Output:
 - Splitting with an empty string `""` cuts between **every character**, giving an array of letters.
 - If the separator does not appear at all, you get an array with **one** item: the whole string. (Not an empty array.)
 
+::: quiz
+What does this program print?
+
+```js
+const parts = "12:30:".split(":");
+console.log(parts.length, parts[0] + parts[1]);
+```
+
+- [ ] `2 42`
+- [ ] `2 1230`
+- [x] `3 1230`
+- [ ] `3 42`
+
+There are two colons, so the scissors cut twice and make three pieces: `"12"`, `"30"`, and an empty string `""` after the last colon. So the length is 3. The pieces are strings, so `+` glues them: `"1230"`. If you picked `42`, you forgot that `split` always gives strings. If you picked `2`, you forgot the empty piece at the end.
+:::
+
 ## `join`: from an array back to a string
 
 `join` is an array method. You give it the text to put **between** the items, and it gives back one string:
@@ -167,6 +183,23 @@ Much friendlier than `[ 'mango', 'litchi', 'guava' ]`.
 5. **Now experiment.** Change the last line so it prints `21/03/2025`. Then try `date.split("")` and predict its `.length` before you run it.
 :::
 
+::: quiz
+What does this program print?
+
+```js
+const digits = "2024".split("");
+const joined = digits.join("-");
+console.log(joined, joined.length);
+```
+
+- [x] `2-0-2-4 7`
+- [ ] `2-0-2-4- 8`
+- [ ] `2-0-2-4 4`
+- [ ] `2024 4`
+
+`split("")` gives four one-letter strings. `join("-")` puts a dash only **between** them, so there are 3 dashes and 4 digits: 7 characters. If you picked the version with a dash at the end, you were thinking of the loop that added a dash every time round. `join` never adds one after the last item.
+:::
+
 ## Counting words
 
 A word counter sounds straightforward: split at spaces, then take `.length`. Try it on messy text, though:
@@ -213,6 +246,22 @@ Output:
 ```
 
 Notice `text.trim().split(" ")`: first trim, then split the trimmed string. You can call one method straight on the result of another like this. It is read left to right.
+
+::: quiz
+What does this program print?
+
+```js
+const pieces = " braai at five ".split(" ");
+console.log(pieces.length, pieces[0] === "");
+```
+
+- [ ] `3 false`
+- [ ] `4 true`
+- [x] `5 true`
+- [ ] `5 false`
+
+There are four spaces, so the scissors cut four times and make five pieces: `""`, `"braai"`, `"at"`, `"five"` and `""`. The space at the start leaves an empty string at index 0, and the space at the end leaves one at the end. If you picked 3, you counted only the words. That is why `countWords` trims first and skips empty pieces.
+:::
 
 ## Reversing a word, two ways
 
@@ -361,6 +410,32 @@ braai #rugby #sunshine #family
 #braai #rugby #sunshine #family
 ```
 Splitting at `", "` (comma **and** space) gives three clean words, with no spaces left on them. After `push` there are 4. `join(" #")` only puts `" #"` **between** items, so the first word has no `#`. The last line adds it at the front by hand.
+:::
+
+::: quiz
+This version of `capitalise` has no check for an empty word, and `capitaliseName` does not `trim`. Which call crashes?
+
+```js
+function capitalise(word) {
+  return word[0].toUpperCase() + word.slice(1).toLowerCase();
+}
+
+function capitaliseName(fullName) {
+  const words = fullName.split(" ");
+  const result = [];
+  for (const word of words) {
+    result.push(capitalise(word));
+  }
+  return result.join(" ");
+}
+```
+
+- [ ] `capitaliseName("z b")`
+- [ ] `capitaliseName("ZOLA BUDD")`
+- [x] `capitaliseName("zola budd ")`
+- [ ] `capitaliseName("Zola")`
+
+The space at the end of `"zola budd "` leaves an empty string as the last piece. `""[0]` is `undefined`, and `undefined.toUpperCase()` crashes with `TypeError: Cannot read properties of undefined (reading 'toUpperCase')`. If you picked `"z b"`, one-letter words are fine: `"z".slice(1)` is an empty string, and that is not an error.
 :::
 
 ## Parsing numbers from input
@@ -563,6 +638,26 @@ Total: 49.75
 **Calling `reverse` on a string.** `"hello".reverse()` is a `TypeError`, because only arrays have `reverse`. Split first.
 
 **Forgetting that `reverse` changes the array.** If you still need the original order, reverse a fresh array made by `split`.
+:::
+
+::: quiz
+What does this program print?
+
+```js
+const pieces = "10,,5,".split(",");
+let total = 0;
+for (const piece of pieces) {
+  total = total + Number(piece);
+}
+console.log(total, total / pieces.length);
+```
+
+- [ ] `15 7.5`
+- [ ] `15 5`
+- [ ] `NaN NaN`
+- [x] `15 3.75`
+
+The input splits into four pieces: `"10"`, `""`, `"5"` and `""`. `Number("")` is 0, not `NaN`, so the total is still 15, and nothing looks wrong. But the average divides by 4 pieces, giving 3.75, when there were really only two amounts. That is why `parseAmounts` skips empty pieces before it converts them. If you picked `NaN NaN`, you expected the empty pieces to become `NaN`.
 :::
 
 ## Real-world uses

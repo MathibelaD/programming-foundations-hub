@@ -90,6 +90,24 @@ The last three show a very real problem. People often type `R150` or `1,500` (wi
 One odd case: `Number("")`, an empty string, gives `0`, not `NaN`. So if a user presses **Enter** without typing anything, `Number()` quietly turns that into zero. Remember this. It is a sneaky source of bugs, and you will handle it in [Phase 2](#/phase-02-making-decisions/04-truthy-and-falsy).
 :::
 
+::: quiz
+What does this print?
+
+```js
+const a = Number(" 3.50 ");
+const b = Number("");
+const c = Number("2 000");
+console.log(a + b, c);
+```
+
+- [ ] `NaN NaN`
+- [ ] `3.5 2000`
+- [x] `3.5 NaN`
+- [ ] `3.50 NaN`
+
+`Number()` allows spaces at the start and end, so `" 3.50 "` becomes 3.5 (a number does not keep a trailing zero). The empty string becomes 0, so `a + b` is 3.5. But a space in the **middle**, as in `"2 000"`, is not allowed, so `c` is `NaN`. People often write thousands like that, but `Number()` does not accept it.
+:::
+
 ## Text to number, more forgivingly: `parseInt()` and `parseFloat()`
 
 JavaScript has two other converters that are more forgiving. They read from the start of the string and **stop** at the first character that does not fit, keeping what they have so far.
@@ -156,6 +174,21 @@ The course's advice: **use `Number()` by default**. Its strictness is a feature.
    parseFloat: 2.75
    ```
 5. **Now experiment.** Change `weight` to each of these in turn, and predict all three lines before you run it: `"2.75"`, `"  8  "`, `"kg 2.75"`, `"3 bags"`.
+:::
+
+::: quiz
+What does this print?
+
+```js
+console.log(parseInt("3.99 litres"), parseFloat("0.5.5"), parseInt("R3"));
+```
+
+- [x] `3 0.5 NaN`
+- [ ] `4 0.5 NaN`
+- [ ] `3 NaN 3`
+- [ ] `3 0.55 3`
+
+`parseInt` stops at the first character that cannot be part of a whole number, the dot, so it gives 3. It does not round, which is why `4` is wrong. `parseFloat` reads `0.5`, then meets a second dot, which cannot be part of the number, and stops there. `parseInt("R3")` fails straight away, because the very first character is not a digit, so it gives `NaN`.
 :::
 
 ## `NaN`: Not a Number
@@ -246,6 +279,24 @@ false
 - `parseInt` keeps the `7` and ignores `" days"`, while the strict `Number` refuses the whole thing.
 - `Number("")` is `0` (the sneaky case from the warning), so `0 + 7` is `7`.
 - `"7.0"` converts to `7`, which is a real number, so `Number.isNaN` says `false`.
+:::
+
+::: quiz
+The user meant to type `40` twice, but the second time they typed a capital letter O instead of a zero. What does this print?
+
+```js
+const typedA = "40";
+const typedB = "4O";
+const total = Number(typedA) + Number(typedB);
+console.log(total, Number.isNaN(total), typeof total);
+```
+
+- [ ] `40 false number`
+- [ ] `NaN true NaN`
+- [ ] `404O false string`
+- [x] `NaN true number`
+
+`Number("4O")` is `NaN`, and anything added to `NaN` is `NaN`, so `total` is `NaN` and `Number.isNaN` says `true`. The odd part: `typeof NaN` is `"number"`, because `NaN` is a number-shaped error value, not a type of its own. `404O` would need `+` to join text, but both sides were converted first, so it tries to add.
 :::
 
 ## Number to text: `String()` and template literals
@@ -339,6 +390,23 @@ Output:
 12.507.25
 19.75
 ```
+
+::: quiz
+What does this print?
+
+```js
+const x = "6";
+const y = "2";
+console.log(x * y, x - y + 1, x + y - 1);
+```
+
+- [ ] `12 41 61`
+- [x] `12 5 61`
+- [ ] `12 5 7`
+- [ ] `62 5 61`
+
+`*` and `-` only make sense for numbers, so JavaScript converts: `x * y` is 12, and `x - y` is the **number** 4, so `+ 1` adds to 5. In the last one, `+` comes first, with two strings, so it joins them into `"62"`; then `- 1` converts that to 62 and subtracts, giving 61. `41` is the trap of thinking the result of `x - y` is still text.
+:::
 
 ## `toFixed` gives you text
 
@@ -489,6 +557,23 @@ In 10 years: 27
 **Checking for `NaN` any way other than `Number.isNaN()`.** `NaN` is not equal to anything, not even itself.
 
 **Doing maths with the result of `toFixed`.** It is text. Calculate first, format last.
+:::
+
+::: quiz
+What does this print?
+
+```js
+const price = 9.5;
+const shown = price.toFixed(2);
+console.log(shown * 2, shown + 2, Number(shown) + 2);
+```
+
+- [ ] `19.00 11.50 11.50`
+- [ ] `NaN 9.502 11.5`
+- [x] `19 9.502 11.5`
+- [ ] `19 11.5 11.5`
+
+`shown` is the text `"9.50"`. `*` converts it to a number, so `shown * 2` is 19; the `.00` is gone, because the result is an ordinary number again. `+` joins text, so `shown + 2` is `"9.502"`. Converting first with `Number()` gives the real sum, 11.5. `19.00` is the mistake of thinking the `toFixed` formatting survives more maths.
 :::
 
 ## Real-world uses

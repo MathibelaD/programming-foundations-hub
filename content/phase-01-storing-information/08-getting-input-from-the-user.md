@@ -1,14 +1,14 @@
 ---
 title: Asking the user questions (and your first package)
-summary: Make your programs interactive with prompt-sync, and learn what really happens when you run npm install.
+summary: Make your programs interactive with prompt-sync, and learn what really happens when you run pnpm add.
 minutes: 45
 stage: Phase 1
 ---
 
 ## What you will learn
 
-- What a **package** is, and how to install one with `npm install`
-- What `node_modules`, `package-lock.json` and the `dependencies` section of `package.json` are for
+- What a **package** is, and how to install one with `pnpm add`
+- What `node_modules`, `pnpm-lock.yaml` and the `dependencies` section of `package.json` are for
 - How to ask the user a question and use their answer, with `prompt()`
 - Why every answer arrives as a **string**, and how to turn it into a number
 
@@ -27,7 +27,9 @@ There is one hitch: Node does not come with a simple "ask a question and wait fo
 ::: analogy Apps on your phone
 Your phone comes with some apps built in: the clock, the camera, the calculator. For everything else, you go to an app store, find what somebody else built, and install it. You do not write your own WhatsApp.
 
-Code works the same way. Node comes with some tools built in (like `console.log` and `Math`). For everything else, there is **npm**, an app store for code, where millions of free **packages** are available. A package is a bundle of code someone else wrote and shared, so that you do not have to write it yourself.
+Code works the same way. Node comes with some tools built in (like `console.log` and `Math`). For everything else, there is the **npm registry**, an app store for code, where millions of free **packages** are available. A package is a bundle of code someone else wrote and shared, so that you do not have to write it yourself.
+
+The app on your phone that downloads and installs things from the store is like **pnpm**, the tool you installed in [Setting up your computer](#/phase-00-start-here/04-setting-up-your-computer). pnpm is a **package manager**: a program that fetches packages from the registry and puts them in your project.
 :::
 
 ## Installing your first package
@@ -40,23 +42,31 @@ The package you need is called `prompt-sync`. It gives you one tool, `prompt`, w
    cd ~/coding-practice
    ```
    (This works in the macOS and Linux terminals, and in Windows PowerShell, where `~` also means your home folder.)
-2. Check you are in the right place. On macOS and Linux, run `ls`. On Windows, run `dir`. You should see `package.json` in the list, along with your `phase-1` folder. **If there is no `package.json`, stop:** you are in the wrong folder, or you need to run `npm init -y` first, as in [Your first program](#/phase-00-start-here/06-your-first-program).
+2. Check you are in the right place. On macOS and Linux, run `ls`. On Windows, run `dir`. You should see `package.json` in the list, along with your `phase-1` folder. **If there is no `package.json`, stop:** you are in the wrong folder, or you need to run `pnpm init` first, as in [Your first program](#/phase-00-start-here/06-your-first-program).
 3. Install the package:
    ```bash
-   npm install prompt-sync
+   pnpm add prompt-sync
    ```
-4. After a few seconds, you should see something like this (the number of seconds will be different):
+4. After a few seconds, you should see something like this (the time and the pnpm version will be different):
    ```text
-   added 3 packages, and audited 4 packages in 2s
+   Packages: +3
+   +++
+   Progress: resolved 3, reused 0, downloaded 3, added 3, done
 
-   found 0 vulnerabilities
+   dependencies:
+   + prompt-sync 4.2.0
+
+   Done in 1.2s using pnpm v12.6.0
    ```
+   The very first time you use pnpm on a computer, it may also print a few lines about a "content-addressable store" and a "virtual store". You can ignore them: that is pnpm setting up its storage.
 5. That is it: prompt-sync is installed in this folder. Now look at what changed.
 :::
 
-You need an internet connection for this, because npm downloads the package from its online store, the **npm registry**. "Found 0 vulnerabilities" means npm checked the packages against a list of known security problems and found none.
+You need an internet connection for this, because pnpm downloads the package from the online store, the **npm registry**. (The registry is still called "npm" because it was built for npm, the package manager that comes with Node. pnpm uses the very same registry.)
 
-"Added 3 packages" may seem odd, since you asked for one. The next section explains why.
+**`add`** is pnpm's word for "install a new package into this project". There is also `pnpm install` with no package name, which you will meet below: it installs everything a project *already* lists.
+
+"Packages: +3" and "added 3" may seem odd, since you asked for one. The next section explains why.
 
 ## What changed in your folder
 
@@ -65,26 +75,30 @@ Run `ls` (or `dir` on Windows) again, or look in the VS Code Explorer. There are
 ```text
 coding-practice/
 ├── node_modules/         ← new folder
-│   ├── ansi-regex/
-│   ├── prompt-sync/
-│   └── strip-ansi/
-├── package-lock.json     ← new file
-├── package.json          ← changed
+│   ├── .pnpm/            ← where pnpm really keeps prompt-sync, strip-ansi and ansi-regex
+│   └── prompt-sync       ← a shortcut (link) into .pnpm
+├── phase-0/
+├── phase-1/
 ├── hello.js
-└── phase-1/
+├── package.json          ← changed: now has "dependencies"
+└── pnpm-lock.yaml        ← new file
 ```
+
+(On macOS and Linux, names that start with a dot, like `.pnpm`, are **hidden**: `ls` does not show them unless you run `ls -a`. VS Code's Explorer shows them either way. Inside `node_modules` there is also a small file called `.modules.yaml`, where pnpm keeps notes for itself.)
 
 ### `node_modules/`: where the packages live
 
-`node_modules` is the folder where npm puts the code for every package you install. Open `node_modules/prompt-sync` in VS Code if you are curious. It is ordinary JavaScript, written by another programmer. You will not understand all of it yet, and you do not need to.
+`node_modules` is the folder where your project's packages live. When your code says `require("prompt-sync")`, Node looks in here for it. Open `node_modules/prompt-sync` in VS Code if you are curious. It is ordinary JavaScript, written by another programmer. You will not understand all of it yet, and you do not need to.
 
-You asked for one package but got three because packages use other packages. `prompt-sync` needs a small package called `strip-ansi` to do its job, and `strip-ansi` needs one called `ansi-regex`. npm worked all of that out and installed the whole chain. A package that another package needs is called a **dependency**.
+You asked for one package but got three because packages use other packages. `prompt-sync` needs a small package called `strip-ansi` to do its job, and `strip-ansi` needs one called `ansi-regex`. pnpm worked all of that out and installed the whole chain. A package that another package needs is called a **dependency**.
 
-**Never edit anything inside `node_modules`.** It is npm's folder. If it ever gets into a mess, you can delete the whole `node_modules` folder and run `npm install` (with no package name). npm reads the list in `package.json` and downloads everything again.
+So why is only `prompt-sync` at the top of `node_modules`? pnpm keeps all three packages inside the hidden `.pnpm` folder, and puts a **link** (a shortcut, like a shortcut on your desktop that opens a file stored somewhere else) at the top level only for the packages **you** asked for. That is deliberate: your code can only `require` what you installed on purpose, so it cannot accidentally depend on `strip-ansi`, a package you never chose and that could disappear if prompt-sync changes. This is one of the reasons people choose pnpm. (The other big one: pnpm keeps a single copy of each package version in a shared store on your computer, so ten projects that use prompt-sync do not need ten copies.)
+
+**Never edit anything inside `node_modules`.** It is pnpm's folder. If it ever gets into a mess, you can delete the whole `node_modules` folder and run `pnpm install` (with no package name). pnpm reads the list in `package.json` and puts everything back.
 
 ### `package.json`: the `dependencies` section
 
-Open `package.json`. npm has added a new section at the bottom:
+Open `package.json`. pnpm has added a new section at the bottom:
 
 ```text
   "dependencies": {
@@ -94,28 +108,45 @@ Open `package.json`. npm has added a new section at the bottom:
 
 This is the list of packages **your project** depends on. It says "this project needs prompt-sync, version 4.2.0 or a compatible newer one". (The `^` means "this version, or a newer one with fixes and small improvements, but no big changes that might break things".) The version number you see might be newer, which is fine.
 
-This list is the important part. It means anyone with a copy of your project can run `npm install` and get exactly the packages it needs.
+This list is the important part. It means anyone with a copy of your project can run `pnpm install` and get exactly the packages it needs.
 
-### `package-lock.json`: the exact record
+### `pnpm-lock.yaml`: the exact record
 
-`package-lock.json` is a longer file that records the **exact** version of every package that was installed, including `strip-ansi` and `ansi-regex`, and where each was downloaded from. npm writes it and keeps it up to date. You never edit it by hand.
+`pnpm-lock.yaml` is a longer file that records the **exact** version of every package that was installed, including `strip-ansi` and `ansi-regex`. It is a **YAML** file (say "yam-ul"), which is a simple text format for settings and lists. pnpm writes it and keeps it up to date. You never edit it by hand.
 
-Why have both? `package.json` says what you *asked for* ("prompt-sync, version 4.2 or compatible"). `package-lock.json` records what you *actually got* ("prompt-sync 4.2.0, strip-ansi 5.2.0, ansi-regex 4.1.1"), so that someone installing your project next year gets the same versions you tested with.
+Why have both? `package.json` says what you *asked for* ("prompt-sync, version 4.2 or compatible"). `pnpm-lock.yaml` records what you *actually got* ("prompt-sync 4.2.0, strip-ansi 5.2.0, ansi-regex 4.1.1"), so that someone installing your project next year gets the same versions you tested with.
 
 | File or folder | What it is | Who edits it | Share it with others? |
 |---|---|---|---|
-| `package.json` | Your project's details and the list of packages it needs | You (and npm, when you install) | Yes |
-| `package-lock.json` | The exact versions npm installed | npm only | Yes |
-| `node_modules/` | The downloaded code of every package | npm only | **No** |
+| `package.json` | Your project's details and the list of packages it needs | You (and pnpm, when you add a package) | Yes |
+| `pnpm-lock.yaml` | The exact versions pnpm installed | pnpm only | Yes |
+| `node_modules/` | The code of every package (or links to it) | pnpm only | **No** |
 
 ### Why `node_modules` is never shared
 
-`node_modules` can get very big. Real projects often have hundreds of packages and tens of thousands of files in there. Since `package.json` and `package-lock.json` hold everything needed to download it again, there is no point sending it to anyone. When programmers share a project, they leave `node_modules` out, and the other person runs `npm install`.
+`node_modules` can get very big. Real projects often have hundreds of packages and tens of thousands of files in there. Since `package.json` and `pnpm-lock.yaml` hold everything needed to download it again, there is no point sending it to anyone. When programmers share a project, they leave `node_modules` out, and the other person runs `pnpm install`.
 
 When you start using Git to save your work in [Phase 8](#/phase-08-becoming-a-programmer/04-saving-your-work-with-git), you will create a file called `.gitignore` containing the line `node_modules`, which tells Git to leave that folder out automatically.
 
 ::: note One install per project folder
-A package is installed into the folder where you ran `npm install`. Because you installed prompt-sync in `coding-practice`, every file inside `coding-practice` (including everything in `phase-1/`, `phase-2/` and so on) can use it. A different project folder would need its own `npm install`. You will see this in the [project lesson](#/phase-01-storing-information/09-project-budget-buddy-v1).
+A package is installed into the folder where you ran `pnpm add`. Because you installed prompt-sync in `coding-practice`, every file inside `coding-practice` (including everything in `phase-1/`, `phase-2/` and so on) can use it. A different project folder would need its own `pnpm add`. You will see this in the [project lesson](#/phase-01-storing-information/09-project-budget-buddy-v1).
+:::
+
+::: quiz
+You ran `pnpm add prompt-sync` in `coding-practice`. Now you create `phase-1/clean.js`, which starts with this line (`strip-ansi` is one of the packages prompt-sync needs):
+
+```js
+const strip = require("strip-ansi");
+```
+
+What happens when you run `node phase-1/clean.js` from inside `coding-practice`?
+
+- [ ] It works, because `strip-ansi` was installed along with prompt-sync
+- [x] It fails with `Error: Cannot find module 'strip-ansi'`
+- [ ] It works, but only after you run `pnpm install` once more
+- [ ] pnpm notices and copies `strip-ansi` to the top of `node_modules` the first time Node asks for it
+
+`strip-ansi` is on your computer, but pnpm keeps it inside the hidden `node_modules/.pnpm` folder. Only packages **you** added get a link at the top of `node_modules`, and that is where `require` looks, so Node cannot find it. To use it on purpose, you would run `pnpm add strip-ansi`. Running `pnpm install` again changes nothing, because it installs only what `package.json` lists.
 :::
 
 ## Asking your first question
@@ -197,7 +228,25 @@ Notice the **space** at the end of `"What is your name? "`. Without it, the user
 :::
 
 ::: note If you see "Cannot find module 'prompt-sync'"
-It means Node could not find the package. Almost always, prompt-sync was installed in a different folder, or not at all. Go into `coding-practice`, run `npm install prompt-sync` again, and make sure your file is somewhere inside `coding-practice`.
+It means Node could not find the package. Almost always, prompt-sync was installed in a different folder, or not at all. Go into `coding-practice`, run `pnpm add prompt-sync` again, and make sure your file is somewhere inside `coding-practice`.
+:::
+
+::: quiz
+The user types two spaces, then `Soweto`, then one space, and presses **Enter**. What is the last line printed?
+
+```js
+const prompt = require("prompt-sync")();
+
+const town = prompt("Town: ");
+console.log(`${town.trim().toUpperCase()} has ${town.length} letters`);
+```
+
+- [ ] `SOWETO has 6 letters`
+- [ ] `  SOWETO  has 9 letters`
+- [ ] `Soweto has 6 letters`
+- [x] `SOWETO has 9 letters`
+
+`prompt` hands back exactly what was typed, spaces included: `"  Soweto "`. The first `${ }` trims and upper-cases a **copy**, but `town` itself never changes, so `town.length` still counts the three spaces: 9. To count only the letters, you would need `town.trim().length`.
 :::
 
 ## Every answer is a string
@@ -407,7 +456,7 @@ const prompt = require("prompt-sync")();
 :::
 
 ::: mistake
-**Running `npm install` in the wrong folder.** Always `cd` into the project folder (the one with `package.json`) first. Check with `ls` or `dir`.
+**Running `pnpm add` in the wrong folder.** Always `cd` into the project folder (the one with `package.json`) first. Check with `ls` or `dir`.
 
 **Forgetting the `()` on the magic line.** It is `require("prompt-sync")();`, with brackets at the end.
 
@@ -415,19 +464,40 @@ const prompt = require("prompt-sync")();
 
 **No space at the end of the question.** `prompt("Name?")` squashes the answer against the question. Use `prompt("Name? ")`.
 
-**Editing files in `node_modules`, or sending it to someone.** Leave it to npm. Share `package.json` and `package-lock.json` instead, and let the other person run `npm install`.
+**Editing files in `node_modules`, or sending it to someone.** Leave it to pnpm. Share `package.json` and `pnpm-lock.yaml` instead, and let the other person run `pnpm install`.
+
+**Typing `pnpm install prompt-sync`.** To add a *new* package, the word is `add`: `pnpm add prompt-sync`. `pnpm install` on its own is for installing what `package.json` already lists.
 
 **Thinking the program has frozen.** When `prompt` is waiting, the program pauses until you type and press **Enter**. Look for the question in the terminal.
 :::
 
+::: quiz
+The user types `3` and then `20`. What is the last line printed?
+
+```js
+const prompt = require("prompt-sync")();
+
+const bags = prompt("Bags: ");
+const price = Number(prompt("Price: R"));
+console.log(bags * price, bags + price, Number(bags + price));
+```
+
+- [ ] `60 23 23`
+- [ ] `60 320 23`
+- [x] `60 320 320`
+- [ ] `NaN 320 320`
+
+`bags` was never converted, so it is the text `"3"`. `*` converts it for you, so the first value is 60. `+` joins instead: `"3" + 20` is `"320"`. Wrapping the result in `Number()` afterwards is too late: the text is already `"320"`, so it becomes the number 320, not 23. Convert each answer as it arrives: `Number(prompt("Bags: "))`.
+:::
+
 ## Real-world uses
 
-- **Command-line tools** that programmers use every day ask questions exactly like this. `npm init` (without `-y`) asks for your project's name, version and description, one question at a time.
+- **Command-line tools** that programmers use every day ask questions exactly like this. `npm init`, the npm version of `pnpm init`, asks for your project's name, version and description, one question at a time.
 - **ATMs, ticket machines and USSD menus** (like `*120*...#` on your phone) follow the same pattern: show a question, wait, use the answer.
 - **Packages** are how all modern software is built. A typical web app depends on hundreds of packages for things like dates, security and payments. Knowing how to install one, and what `node_modules` and `package.json` are, is an everyday professional skill.
 
 ::: connect
-**This builds on:** [Converting between types](#/phase-01-storing-information/07-converting-between-types), because every answer is a string and needs `Number()`, and on `package.json` and `npm init` from [Your first program](#/phase-00-start-here/06-your-first-program).
+**This builds on:** [Converting between types](#/phase-01-storing-information/07-converting-between-types), because every answer is a string and needs `Number()`, and on `package.json` and `pnpm init` from [Your first program](#/phase-00-start-here/06-your-first-program).
 
 **This unlocks:** the [Budget Buddy project](#/phase-01-storing-information/09-project-budget-buddy-v1), next, which puts all of Phase 1 together into a program that asks about your money and works out what is left. In Phase 2, your programs start **checking** the answers, and in [Phase 3](#/phase-03-loops/02-while-loops) they keep asking until the answer is valid.
 :::
@@ -479,17 +549,18 @@ For 5 people, 2 × 1.25 = 2.5 eggs, which `Math.ceil` rounds up to 3.
 :::
 
 ::: recap
-- A **package** is code someone else wrote and shared. **npm** installs packages from the npm registry.
-- `npm install prompt-sync` (inside your project folder) downloads the package and its dependencies into `node_modules/`, adds it to `dependencies` in `package.json`, and records exact versions in `package-lock.json`.
-- Never edit or share `node_modules`. `npm install` can always recreate it from `package.json`.
+- A **package** is code someone else wrote and shared. **pnpm** is a package manager: it installs packages from the npm registry.
+- `pnpm add prompt-sync` (inside your project folder) installs the package and its dependencies into `node_modules/`, adds it to `dependencies` in `package.json`, and records exact versions in `pnpm-lock.yaml`.
+- Only the packages you asked for appear at the top of `node_modules`; the rest live in the hidden `node_modules/.pnpm` folder.
+- Never edit or share `node_modules`. `pnpm install` can always recreate it from `package.json` and `pnpm-lock.yaml`.
 - `const prompt = require("prompt-sync")();` is the "magic line" that gives you the `prompt` tool. Phase 8 explains it fully.
 - `prompt("Question? ")` shows the question, waits for **Enter**, and returns what was typed.
 - The answer is **always a string**. Use `Number(prompt(...))` for numbers. Letters give `NaN`, which you will learn to check for in Phase 2.
 - If the user presses Ctrl+C, `prompt` returns `null`. If they press Enter without typing, it returns `""`.
 :::
 
-::: interview What is the difference between `package.json`, `package-lock.json` and `node_modules`?
-`package.json` describes your project and lists the packages it needs. `package-lock.json` records the exact versions that were installed. `node_modules` holds the actual downloaded code. You share the first two, and anyone can recreate `node_modules` from them with `npm install`.
+::: interview What is the difference between `package.json`, `pnpm-lock.yaml` and `node_modules`?
+`package.json` describes your project and lists the packages it needs. `pnpm-lock.yaml` records the exact versions that were installed. `node_modules` holds the actual package code (or links to it). You share the first two, and anyone can recreate `node_modules` from them with `pnpm install`.
 :::
 
 ::: interview Why does `prompt()` return `"15"` rather than `15` when the user types 15?
@@ -497,12 +568,12 @@ Because a program cannot know what the user *meant*. Everything typed at a keybo
 :::
 
 ::: interview Why should you not share your `node_modules` folder?
-It can be huge, and it can be recreated exactly from `package.json` and `package-lock.json` by running `npm install`. Sharing it wastes space and can cause problems on a different computer.
+It can be huge, and it can be recreated exactly from `package.json` and `pnpm-lock.yaml` by running `pnpm install`. Sharing it wastes space and can cause problems on a different computer.
 :::
 
 ::: checkpoint
-- [ ] I ran `npm install prompt-sync` inside `coding-practice`
-- [ ] I found `node_modules`, `package-lock.json` and the new `dependencies` section in `package.json`
+- [ ] I ran `pnpm add prompt-sync` inside `coding-practice`
+- [ ] I found `node_modules`, `pnpm-lock.yaml` and the new `dependencies` section in `package.json`
 - [ ] I ran `greet.js`, answered its questions, and fixed the extra-spaces problem with `trim()`
 - [ ] I saw `"15" + 1` give `151` and fixed it with `Number(prompt(...))`
 - [ ] I typed letters instead of a number and saw `NaN`
@@ -511,7 +582,8 @@ It can be huge, and it can be recreated exactly from `package.json` and `package
 :::
 
 ::: resources
-- **npm Docs, "About packages and modules":** https://docs.npmjs.com/about-packages-and-modules. What a package is, from the people who run npm.
-- **npm, the prompt-sync page:** https://www.npmjs.com/package/prompt-sync. The package's own page, with its instructions and version history.
-- **npm Docs, "package.json":** https://docs.npmjs.com/cli/configuring-npm/package-json. The full reference. Look at the `dependencies` section.
+- **pnpm Docs, "pnpm add":** https://pnpm.io/cli/add. Everything the `add` command can do.
+- **pnpm Docs, "Motivation":** https://pnpm.io/motivation. Why pnpm keeps one shared copy of each package, and why only your own packages sit at the top of `node_modules`.
+- **npm registry, the prompt-sync page:** https://www.npmjs.com/package/prompt-sync. The package's own page, with its instructions and version history.
+- **pnpm Docs, "package.json":** https://pnpm.io/package_json. The reference. Look at the `dependencies` section.
 :::

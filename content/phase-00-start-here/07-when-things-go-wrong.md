@@ -104,6 +104,26 @@ Line three
 Node points at the spot where it *realised* something was wrong. Sometimes the real mistake is a little earlier: on the same line, or even the line before. If the line it points at looks fine, look at the line above it.
 :::
 
+::: quiz
+Aisha runs her program and sees this at the top of the error. Where should she look first?
+
+```text
+/Users/aisha/coding-practice/phase-0/stall.js:3
+console.log("Kota - R35);
+            ^^^^^^^^^^^^^
+
+SyntaxError: Invalid or unexpected token
+    at wrapSafe (node:internal/modules/cjs/loader:1497:18)
+```
+
+- [ ] Line 35 of `stall.js`, because `35` appears in the message
+- [ ] Line 1497 of `loader`, from the first `at` line
+- [x] Line 3 of `stall.js`, around the opening quote
+- [ ] The first line of `stall.js`, because Node reads the file from the top
+
+The number after the file name and colon, `stall.js:3`, is the line. The caret starts at the opening quote, and indeed the quote after `R35` is missing. The `35` inside the text is only part of her code, and the `at` lines describe Node's own insides, which you can skip.
+:::
+
 ## The two errors you will see most
 
 ### SyntaxError: "I can't even read this"
@@ -193,6 +213,24 @@ TypeError: console.Log is not a function
 
 A **TypeError** here means "`console` exists, but it has nothing called `Log` that can be run". The fix is the same: `console.log`, all lower case. You will meet `TypeError` more often once you start working with different kinds of values in [Phase 1](#/phase-01-storing-information/06-booleans-null-undefined).
 
+::: quiz
+What does this program print when you run it?
+
+```js
+console.log("Sawubona");
+console.log("Molo");
+Console.log("Dumela");
+console.log("Hallo);
+```
+
+- [ ] `Sawubona` and `Molo`, then `ReferenceError: Console is not defined`
+- [ ] `Sawubona`, `Molo` and `Dumela`, then a `SyntaxError` for line 4
+- [ ] `Sawubona` and `Molo`, then a `SyntaxError` for line 4
+- [x] No greetings at all, only `SyntaxError: Invalid or unexpected token` for line 4
+
+There are two mistakes, but only one gets reported. Node reads the **whole file** before running any of it, and the missing quote on line 4 breaks the grammar, so not a single line runs, and the `Console` problem on line 3 is never even reached. Fix line 4 and run again: *then* you get two greetings and the `ReferenceError`.
+:::
+
 ## A bracket too few, or too many
 
 Every opening bracket `(` needs a matching closing bracket `)`.
@@ -220,6 +258,17 @@ SyntaxError: Unexpected token ')'
 ```
 
 "Unexpected token" means "I found this, and it makes no sense here". The caret points right at the extra `)`.
+
+::: quiz
+Which of these lines gives `SyntaxError: Unexpected token ')'`?
+
+- [ ] `console.log("Eish";`
+- [x] `console.log("Eish"));`
+- [ ] `console.log(("Eish");`
+- [ ] `console.log("Eish)";`
+
+"Unexpected token" means Node found something that makes no sense where it is: here a spare `)` after the instruction was already finished. The other three are all one `)` **short**, and each gives `missing ) after argument list` instead. The last one is sneaky: its `)` is inside the quotes, so it is only part of the text.
+:::
 
 ## Curly quotes: the invisible error
 
@@ -275,6 +324,23 @@ For each one, also note: did any greeting print before the error?
 4. **`console.lg` on line 2:** `TypeError: console.lg is not a function`, line 2. `Sawubona` prints first, then it stops.
 
 The pattern: **SyntaxError means nothing runs.** ReferenceError and TypeError happen while the program is running, so the lines before them have already printed.
+:::
+
+::: quiz
+You run `node phase-0/greet.js` and get:
+
+```text
+Error: Cannot find module '/Users/thandi/phase-0/greet.js'
+```
+
+`greet.js` definitely exists in `coding-practice/phase-0`, spelled exactly like that. What is wrong?
+
+- [ ] There is a mistake inside `greet.js`
+- [ ] `greet.js` has not been saved yet
+- [ ] Node needs the full path, starting with `/Users`
+- [x] The terminal is in the home folder, not in `coding-practice`
+
+Read the path in the message: it is where Node looked, and `coding-practice` is missing from it. That means the relative path `phase-0/greet.js` was followed from your home folder. `cd coding-practice` and run it again. A mistake inside the file would give a different error, such as a `SyntaxError`, because Node would have found the file first.
 :::
 
 ## Comments: notes for humans
@@ -348,6 +414,25 @@ VS Code has a shortcut for this. Click on a line (or select several lines) and p
 
 ::: note Good comments explain why
 Comments that repeat what the code already says (`// print hello` above `console.log("hello")`) add nothing. Good comments explain what the code *cannot* say: *why* you did it this way, or what a section is for. You will write plenty of the useful kind when you plan Budget Buddy in [Phase 1](#/phase-01-storing-information/09-project-budget-buddy-v1).
+:::
+
+::: quiz
+What does this program print?
+
+```js
+// console.log("A");
+console.log("B"); // console.log("C");
+/* console.log("D");
+console.log("E"); */
+console.log("F");
+```
+
+- [x] `B`, then `F`
+- [ ] `B`, `C`, then `F`
+- [ ] `B`, `E`, then `F`
+- [ ] Nothing, because the `/*` comment spans two lines
+
+`//` switches off the rest of its line, so `A` and the `C` after the `B` instruction never run. The block comment runs from `/*` to `*/`, however many lines that takes, so `D` and `E` are both inside it. If you picked `E`, you treated `/*` like `//`, covering only one line.
 :::
 
 ## Searching for an error message

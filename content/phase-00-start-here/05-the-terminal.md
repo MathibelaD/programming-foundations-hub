@@ -26,7 +26,7 @@ Why do programmers bother?
 - **Your programs run there.** Node has no window or buttons. You run a JavaScript file by typing `node hello.js` in a terminal, and your program's output appears in the same terminal. For this whole course, the terminal is where your programs live.
 - **It is precise.** "Open the folder called `phase-1` inside `coding-practice`" is one short command, and there is no doubt about what happened.
 - **It is fast, once you know a few commands.** Making five folders takes five quick lines instead of twenty clicks.
-- **Many programming tools only work there.** npm and Git (which you will meet later) are used by typing commands.
+- **Many programming tools only work there.** pnpm (which you installed in the last lesson) and Git (which you will meet later) are used by typing commands.
 
 You will also hear the terminal called the **command line**, the **console** or the **shell**. For this course they all mean the same thing: the window where you type commands.
 
@@ -103,6 +103,17 @@ node --version
 - The words after it are **arguments**: extra information for the command (`--version`). Arguments that start with dashes are often called **options** or **flags**.
 
 You will see this shape everywhere: `cd phase-1`, `mkdir recipes`, `node hello.js`. Command first, then what to do it to.
+
+::: quiz
+You type `cd My Documents` (with a space) and press **Enter**. How does the terminal read that line?
+
+- [ ] Command `cd`, with one argument: `My Documents`
+- [ ] Command `cd My`, with one argument: `Documents`
+- [x] Command `cd`, with two arguments: `My` and `Documents`
+- [ ] Command `Documents`, because the last word is what you want
+
+Spaces separate the words of a command, so the terminal sees `cd` followed by **two** arguments, and it does not know you meant one folder name. That is why names with spaces cause trouble, and why quotes (`cd "My Documents"`) are needed to glue them into one argument.
+:::
 
 ## Where am I? `pwd`
 
@@ -226,6 +237,28 @@ That is not a disaster. It is the terminal telling you precisely what went wrong
 On **Linux**, `Documents` and `documents` are two different folders, and `cd documents` fails if the folder has a capital D. Windows and macOS are more forgiving about this. To be safe, always type names with exactly the same capitals as they really have. Your code will need the same habit.
 :::
 
+::: quiz
+On a Mac, your terminal starts in `/Users/thandi`. You run these commands one after another:
+
+```bash
+cd Documents
+cd ..
+cd Downloads
+cd ..
+cd ..
+pwd
+```
+
+What does `pwd` print?
+
+- [ ] `/Users/thandi`
+- [ ] `/Users/thandi/Downloads`
+- [ ] Nothing: the last `cd ..` fails, because you cannot go above your home folder
+- [x] `/Users`
+
+Trace it: into `Documents`, back to `thandi`, into `Downloads`, back to `thandi`, and then one more `cd ..` goes up to `/Users`, the folder that contains your home folder. Your home folder is where a terminal *starts*, not a wall. The last `cd ..` is the one people lose track of.
+:::
+
 ## Making folders: `mkdir`
 
 To create a new, empty folder inside the current one, use `mkdir`, short for **make directory**:
@@ -238,6 +271,17 @@ On macOS and Linux it prints nothing (it worked). On Windows PowerShell it print
 
 ::: warn Avoid spaces in folder and file names
 `mkdir my recipes` makes **two** folders, `my` and `recipes`, because spaces separate arguments. Programmers avoid spaces in names for this reason. Use a dash instead: `my-recipes`. (If you ever need to use a name with spaces, put quotes around it: `cd "My Documents"`.)
+:::
+
+::: quiz
+You are in your home folder. You run `mkdir budget buddy`, then `cd budget-buddy`. What happens?
+
+- [ ] One folder called `budget buddy` is made, and the `cd` works
+- [x] Two folders, `budget` and `buddy`, are made, and the `cd` fails with "no such file or directory"
+- [ ] One folder called `budget-buddy` is made, because the terminal swaps the space for a dash, and the `cd` works
+- [ ] `mkdir` shows an error, because folder names cannot contain spaces
+
+The space splits the line into two arguments, so `mkdir` makes one folder for each. Nothing is called `budget-buddy`, so `cd` cannot find it. The terminal never "fixes" your names: it does exactly what the words say.
 :::
 
 ## Clearing the screen: `clear`
@@ -334,6 +378,17 @@ The first line goes to `phase-1` from anywhere, in one step. The second goes up 
 
 ::: note Forward slashes or backslashes?
 Windows writes paths with backslashes (`\`), and macOS and Linux with forward slashes (`/`). PowerShell happily accepts **forward slashes** too, and so does Node. So in this course, commands such as `cd ~/coding-practice` and `node phase-1/variables.js` are written with forward slashes and work on all three systems.
+:::
+
+::: quiz
+Using the tree above, your terminal is in `coding-practice/phase-1`. Which **single** command takes you into `phase-0`?
+
+- [ ] `cd phase-0`
+- [ ] `cd ~/phase-0`
+- [x] `cd ../phase-0`
+- [ ] `cd ../../phase-0`
+
+`phase-0` is not inside `phase-1`, so `cd phase-0` fails. `..` goes up one level, to `coding-practice`, and from there `phase-0` is right in front of you. `~/phase-0` looks in your home folder, but `phase-0` is inside `coding-practice`, not directly in home. `../..` climbs one level too far, to your home folder.
 :::
 
 ## Stopping a running program: Ctrl+C
@@ -434,9 +489,20 @@ On Windows, `cd ..\..\music` also works, but forward slashes work too. When you 
 **Panicking at red text.** An error in the terminal is a message, not a catastrophe. Read it: it usually says exactly what is wrong.
 :::
 
+::: quiz
+You run `node counter.js`, and it starts printing numbers without ever stopping. You press **Ctrl+C**, then press **↑** and **Enter**. What happens?
+
+- [x] `node counter.js` runs again from the beginning, and keeps printing until you press Ctrl+C again
+- [ ] The program carries on from the number where you stopped it
+- [ ] Nothing: Ctrl+C stopped the program for good, so it cannot run again
+- [ ] The numbers that were printed are copied, ready to paste
+
+**↑** brings back the last command, and **Enter** runs it, so the program starts again, from the top, and never stops by itself. Ctrl+C only stopped that one run: the file is unchanged. In the terminal, Ctrl+C does not copy, which is why the last option is a trap.
+:::
+
 ## Real-world uses
 
-- Every professional JavaScript project is started, run and tested from a terminal: `npm install`, `npm start`, `npm test`.
+- Every professional JavaScript project is started, run and tested from a terminal: `pnpm install`, `pnpm start`, `pnpm test`.
 - Servers (the computers that run websites) usually have **no** graphical interface at all. Programmers manage them entirely by typing commands.
 - **Git**, the tool almost all programmers use to save versions of their code, is mostly used from the terminal. You will meet it in [Phase 8](#/phase-08-becoming-a-programmer/04-saving-your-work-with-git).
 - Automating boring jobs (renaming 500 photos, backing up a folder every night) starts with the same commands you learned today.

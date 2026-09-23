@@ -63,6 +63,27 @@ Hello, Amahle!
 
 The key point: the name `greet` is really a variable that holds a function. That opens up a new way of writing one.
 
+::: quiz
+What does this program print?
+
+```js
+function vatOn(amount) {
+  return amount * 0.15;
+}
+
+const a = vatOn;
+const b = vatOn(100);
+console.log(typeof a, typeof b);
+```
+
+- [ ] `number number`
+- [x] `function number`
+- [ ] `function function`
+- [ ] `undefined number`
+
+`const a = vatOn;` has no brackets, so nothing is called: `a` holds the function itself. `const b = vatOn(100);` calls it, so `b` holds the returned value, the number 15. If you picked `number number`, you read `vatOn` without brackets as a call. The brackets are what make it run.
+:::
+
 ## The function expression
 
 If a function is a value, you can create it right where a value goes, on the right-hand side of `=`:
@@ -235,6 +256,24 @@ const double = n => n * 2;      5. one parameter, no brackets
 5. **Change it, predict, run.** In `vat4`, put curly braces around `price * 0.15` but do *not* add `return`. Predict what `vat4(200)` gives now. Run it. Then read the next section.
 :::
 
+::: quiz
+What does this program print?
+
+```js
+const area = (w, h = 2) => w * h;
+const fence = w => 4 * w;
+
+console.log(area(3) + fence(area(1, 5)));
+```
+
+- [x] `26`
+- [ ] `14`
+- [ ] `11`
+- [ ] `NaN`
+
+`area(3)` uses the default `h = 2`, so it returns 6. `area(1, 5)` returns 5, and `fence(5)` returns 20. `6 + 20` is 26. If you picked 14, you used the default 2 in `area(1, 5)` as well, but an argument that is given always wins. If you picked 11, you forgot to pass the 5 through `fence`.
+:::
+
 ## The curly-brace trap
 
 This one catches **everyone**, including experienced programmers on a tired day:
@@ -262,6 +301,24 @@ const add = (a, b) => { return a + b; };  braces: write return yourself
 ```
 
 The rule, in one line: **no braces, automatic return. Braces, you write `return`.**
+
+::: quiz
+What does this program print?
+
+```js
+const net = (price) => { price - 20 };
+const gross = (price) => price + 20;
+
+console.log(gross(100), gross(net(100)));
+```
+
+- [ ] `120 100`
+- [x] `120 NaN`
+- [ ] `120 20`
+- [ ] `120 undefined`
+
+`gross` has no braces, so it returns `price + 20` automatically. `net` has braces but no `return`, so it works out `price - 20`, throws it away, and returns `undefined`. Then `gross(undefined)` is `undefined + 20`, which is `NaN`. If you picked `120 100`, you read `net` as if it returned 80: braces after the arrow mean you must write `return` yourself.
+:::
 
 ## Longer arrow functions
 
@@ -332,6 +389,17 @@ Zinhle is 19
 EISH!
 ```
 `half` fell into the curly-brace trap: braces, but no `return`. Fix it with `const half = (n) => n / 2;`. The other three are fine: `square` and `describe` use implicit returns, and `shout` uses braces *with* a `return`.
+:::
+
+::: quiz
+Which definition of `f` makes `console.log(f(5));` print exactly one line, `10`?
+
+- [ ] `const f = (n) => { n * 2 };`
+- [ ] `const f = n => console.log(n * 2);`
+- [ ] `const f = function (n) { n * 2; };`
+- [x] `const f = n => { return n * 2; };`
+
+Curly braces after the arrow mean "a normal body", and a normal body needs `return`. The last one has braces *and* `return`, so `f(5)` hands back 10. The first and third forget `return`, so they print `undefined`. The second is the sneaky one: it prints `10` from **inside** `f`, but `console.log` returns nothing, so the outer `console.log` then prints a second line, `undefined`.
 :::
 
 ## Which style should I use?
@@ -638,6 +706,28 @@ const formatMoney = (amount) => `R${amount.toFixed(2)}`;
 **Calling an arrow function before its line.** Arrow functions and function expressions are stored in `const`, so define them first.
 
 **Forgetting the semicolon after a function expression's closing brace.** `const f = function () { ... };` is one statement and ends with `;`. (JavaScript usually copes without it, but it is a good habit.)
+:::
+
+::: quiz
+What happens when you run this?
+
+```js
+console.log(double(3));
+console.log(triple(3));
+
+function double(n) {
+  return n * 2;
+}
+
+const triple = (n) => n * 3;
+```
+
+- [ ] It prints `6`, then `9`
+- [ ] It crashes with a `ReferenceError` before printing anything
+- [ ] It prints `6`, then `undefined`
+- [x] It prints `6`, then crashes with `ReferenceError: Cannot access 'triple' before initialization`
+
+`double` is a declaration, so JavaScript knows it before running anything, and the first line works. `triple` is an arrow stored in a `const`, and the second line tries to use that `const` before its line has run, so it crashes there. If you picked "before printing anything", remember that the program runs top to bottom: the first line already printed 6.
 :::
 
 ## Real-world uses

@@ -31,7 +31,8 @@ The lesson-by-lesson plan. File names are fixed so that links between lessons wo
 **04-setting-up-your-computer** — Setting up your computer
 - Install VS Code (what a code editor is, and why not Word or Notepad).
 - Install Node.js LTS (what Node is, and what LTS means). Steps for Windows, macOS and Linux.
-- Check it worked: `node --version`, `npm --version`.
+- Install pnpm (the package manager this course uses) with its one-line installer, open a new terminal, and run the two one-time `pnpm config set` lines (CommonJS projects, short `package.json`).
+- Check it worked: `node --version`, `pnpm --version`.
 - Helpful VS Code settings: auto save, font size, the integrated terminal (Ctrl+` / Cmd+`).
 - Show file extensions on Windows and macOS (why `.js` matters).
 - Troubleshooting: "node is not recognized" (restart the terminal, reinstall, PATH explained in one sentence).
@@ -46,10 +47,10 @@ The lesson-by-lesson plan. File names are fixed so that links between lessons wo
 
 **06-your-first-program** — Your first program (and what every file is for)
 - Create `~/coding-practice`, open it in VS Code (`code .` or File → Open Folder).
-- `npm init -y`: what npm is (a package manager, like an app store for code), what it did, and **`package.json` explained line by line** (name, version, main, scripts, license, …).
+- `pnpm init`: what a package manager is (like an app store for code), why pnpm, what it did, and **`package.json` explained line by line** (name, version, main, scripts, license, …).
 - Create `hello.js`, write `console.log("Hello, world!")`, and run it with `node hello.js`. Explain each part: `console`, `.log`, the parentheses, the quotes, the semicolon.
 - The edit → save → run loop. Forgetting to save is the number one "it didn't change!" cause.
-- Add a `"start": "node hello.js"` script and run `npm start`.
+- Add a `"start": "node hello.js"` script and run `pnpm start`.
 - The folder layout for the course: `phase-1/`, `phase-2/` and so on.
 - Bonus: the browser console as a playground (F12 → Console) and the Node REPL (type `node`, then `.exit`), and when to use each.
 
@@ -112,14 +113,14 @@ The lesson-by-lesson plan. File names are fixed so that links between lessons wo
 
 **08-getting-input-from-the-user** — Asking the user questions (and your first package)
 - Programs that only print are boring. Input makes them interactive.
-- Packages: code other people wrote. `npm install prompt-sync` in `coding-practice`. What changed: `node_modules/`, `package-lock.json`, `dependencies` in `package.json`. Why `node_modules` is never shared (and a `.gitignore` mention).
+- Packages: code other people wrote. `pnpm add prompt-sync` in `coding-practice`. What changed: `node_modules/` (with pnpm's `.pnpm` folder), `pnpm-lock.yaml`, `dependencies` in `package.json`. Why `node_modules` is never shared (and a `.gitignore` mention).
 - `const prompt = require("prompt-sync")();`: explain it line by line, and say it is fine to treat it as a magic line for now (Phase 8 explains `require`).
 - `prompt()` always returns a **string**, which links back to 01-07. Convert with `Number()`.
 - If the user presses Ctrl+C, `prompt` returns `null`. Note it; handle it later.
 - Exercises: greeting program, age next year, a simple calculator.
 
 **09-project-budget-buddy-v1** — Project: Budget Buddy v1
-- Create `~/budget-buddy`, `npm init -y`, `npm install prompt-sync`, `index.js`, and a `start` script.
+- Create `~/budget-buddy`, `pnpm init`, `pnpm add prompt-sync`, `index.js`, and a `start` script.
 - Ask for name, monthly income, and rent, food and transport amounts. Calculate total expenses and what is left. Print a formatted summary with `toFixed(2)` and template literals.
 - Plan it first in plain words (comments as a to-do list), then code it step by step, running after each step.
 - Stretch: savings percentage, and money per day left (`Math.floor`).

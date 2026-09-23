@@ -110,6 +110,28 @@ The first line prints the function itself. The second line *runs* `cheer` (which
 
 Keep this table in your head for the whole phase. Without brackets: *here is the recipe*. With brackets: *cook it now*.
 
+::: quiz
+What does this program print, in total?
+
+```js
+function greet() {
+  console.log("Dumela!");
+  return "done";
+}
+
+const a = greet;
+const b = greet();
+console.log(typeof a, typeof b);
+```
+
+- [ ] `Dumela!` twice, then `string string`
+- [x] `Dumela!` once, then `function string`
+- [ ] `Dumela!` once, then `function undefined`
+- [ ] Only `function string`
+
+`const a = greet;` has no brackets, so nothing runs: `a` is the function itself. `const b = greet();` runs it once, which prints `Dumela!`, and `b` gets the return value, the string `"done"`. If you picked "twice", you thought `a = greet` also ran the function. If you picked `undefined`, look again: this `greet` does have a `return`.
+:::
+
 ## Your first function that takes a function
 
 ```js
@@ -146,6 +168,30 @@ Walk through `doTwice(cheer)` slowly:
 3. `action();` runs it. `action();` runs it again.
 
 `doTwice` has no idea what it is doing twice. It does not know about cheering or clapping. Its only job is "do the thing you gave me, twice". That is exactly what we wanted: the *repeating* part is written once, and the *action* is handed in.
+
+::: quiz
+What happens when you run this?
+
+```js
+function doTwice(action) {
+  action();
+  action();
+}
+
+function beep() {
+  console.log("beep");
+}
+
+doTwice(beep());
+```
+
+- [ ] It prints `beep` twice.
+- [ ] It prints `beep` three times.
+- [ ] It crashes before printing anything.
+- [x] It prints `beep` once, then crashes with `TypeError: action is not a function`.
+
+The brackets in `beep()` run `beep` **straight away**, before `doTwice` starts. That prints `beep` once, and `beep` returns `undefined`. So `doTwice` receives `undefined` as `action`, and `action()` fails: you cannot call `undefined`. To hand over the function itself, write `doTwice(beep)` with no brackets.
+:::
 
 ## Callbacks: "we'll call you"
 
@@ -281,6 +327,31 @@ Both work, and both are common.
 - **Write an inline arrow** (`repeat(3, (round) => ...)`) when the action is short and used only once. You can see the whole thing in one place.
 
 If an inline arrow grows past three or four lines, that is a hint to pull it out and give it a name.
+:::
+
+::: quiz
+What does this print?
+
+```js
+function repeat(times, action) {
+  for (let i = 1; i <= times; i++) {
+    action(i);
+  }
+}
+
+let total = 0;
+repeat(4, (n) => {
+  total = total + n * n;
+});
+console.log(total);
+```
+
+- [ ] `14`
+- [x] `30`
+- [ ] `16`
+- [ ] `10`
+
+`repeat` calls the callback with 1, 2, 3 and 4 (the loop uses `<=`). Each call adds `n * n`, so the total is 1 + 4 + 9 + 16 = 30. The callback can change `total` because it can see the variables around it. If you picked `14`, you stopped at 3. If you picked `16`, you kept only the last square instead of adding them all up.
 :::
 
 ## The key moment: `processEach`
@@ -600,6 +671,32 @@ Node points at the `action(item);` line inside `processEach`. The real mistake i
 **Thinking the parameter name must match.** `processEach` calls `action(item)`, but your callback can call its parameter `price`, `name`, `player`, anything. Pick the name that describes one item of *this* list.
 
 **Worrying about "where does `person` come from?".** Nobody declared it with `let`. It is a parameter of the arrow function, and it gets its value when `processEach` calls the arrow with `action(array[i], i)`. If this feels like magic, follow the call with your finger: `processEach` → loop → `action(...)` → your arrow runs with the item.
+:::
+
+::: quiz
+What does this print?
+
+```js
+function processEach(array, action) {
+  for (let i = 0; i < array.length; i++) {
+    action(array[i], i);
+  }
+}
+
+const codes = ["JHB", "CPT", "DUR"];
+let out = "";
+processEach(codes, (index, code) => {
+  out = out + index;
+});
+console.log(out);
+```
+
+- [ ] `012`
+- [ ] `JHB0CPT1DUR2`
+- [ ] `undefinedundefinedundefined`
+- [x] `JHBCPTDUR`
+
+`processEach` always calls `action(item, index)`, in that order. The callback's parameters are filled by **position**, not by name. So the first parameter, which the callback happens to call `index`, receives the item (`"JHB"`, then `"CPT"`, then `"DUR"`). If you picked `012`, you trusted the name. Names are only labels you choose; the order decides what goes in.
 :::
 
 ## Real-world uses

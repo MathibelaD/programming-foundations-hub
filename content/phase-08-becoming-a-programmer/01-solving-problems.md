@@ -57,6 +57,27 @@ Two new terms from the table:
 Because when you type before you understand, you end up solving a *different* problem from the one you were given, and you only find out after an hour. Five minutes of step 1 regularly saves an hour of step 4. Every experienced programmer has learned this the hard way.
 :::
 
+::: quiz
+A friend wrote this function to work out the average price in a list. Before trusting it, you want to test the edge cases. Which input shows a problem?
+
+```js
+function averageOf(prices) {
+  let total = 0;
+  for (const price of prices) {
+    total = total + price;
+  }
+  return total / prices.length;
+}
+```
+
+- [ ] `averageOf([10, 20, 30])`
+- [x] `averageOf([])`
+- [ ] `averageOf([5])`
+- [ ] `averageOf([100, 200])`
+
+With an empty list the loop never runs, so `total` stays `0`, and `0 / 0` is `NaN`. That is exactly the kind of input an edge case list should include. A list with one item, `[5]`, is also an edge case, and it was worth testing, but it works: `5 / 1` is `5`. The other two are ordinary inputs that give `20` and `150`.
+:::
+
 ## Worked example 1: FizzBuzz
 
 FizzBuzz is a famous little problem, used in job interviews for years. Here is how it is usually worded:
@@ -201,6 +222,32 @@ The function has a clear name and one job. The loop is three lines. There are no
 4. You should see 15 lines, ending with `13`, `14`, `FizzBuzz`.
 5. Change the loop to go to `100`, run it, and scroll up to check 30, 45 and 60.
 6. **Now predict, then run:** the problem changes. Multiples of 7 should print `"Bang"`, and anything that is a multiple of 3, 5 *and* 7 should print `"FizzBuzzBang"`. Where do the new checks go in the chain, and why? Decide before you type.
+:::
+
+::: quiz
+A game uses a FizzBuzz-style rule: multiples of 4 say `"Hop"`, multiples of 6 say `"Skip"`, and multiples of both say `"HopSkip"`. What does this print?
+
+```js
+function label(n) {
+  if (n % 4 === 0) {
+    return "Hop";
+  } else if (n % 6 === 0) {
+    return "Skip";
+  } else if (n % 4 === 0 && n % 6 === 0) {
+    return "HopSkip";
+  }
+  return String(n);
+}
+
+console.log(label(18), label(20), label(24));
+```
+
+- [ ] `Skip Hop HopSkip`
+- [ ] `18 Hop HopSkip`
+- [x] `Skip Hop Hop`
+- [ ] `Skip 20 Hop`
+
+18 is a multiple of 6 but not of 4, so it is `Skip`. 20 is a multiple of 4, so `Hop`. 24 is a multiple of both, but the chain stops at the **first** true check, `24 % 4 === 0`, so it also says `Hop` and the "both" check never runs. If you picked `HopSkip` for 24, you read the code as the rule was *meant* to work, not as it is written. The fix is the same as in FizzBuzz: put the "both" check first.
 :::
 
 ## Worked example 2: a word frequency counter
@@ -382,6 +429,28 @@ In real life, build step D took me three attempts. My first `cleanText` forgot t
 3. Replace `text` with a paragraph of your own: song lyrics, a news paragraph, a WhatsApp message you wrote. Run it.
 4. **Predict, then run:** what happens to a word with an apostrophe, like `don't`? Look at `LETTERS` and decide before you run it. (It becomes `dont`, because `'` is not in the list. Is that acceptable? That is a *design decision*, and it is yours to make.)
 5. Change `printTop(counts, 3)` to show the top 5.
+:::
+
+::: quiz
+What does this print? (Look carefully: there are **two** spaces between the first two words.)
+
+```js
+const text = "Eat  eat EAT";
+const counts = {};
+
+for (const word of text.toLowerCase().split(" ")) {
+  counts[word] = (counts[word] || 0) + 1;
+}
+
+console.log(counts);
+```
+
+- [x] `{ eat: 3, '': 1 }`
+- [ ] `{ eat: 3 }`
+- [ ] `{ Eat: 1, eat: 1, EAT: 1, '': 1 }`
+- [ ] `{ eat: 2, '': 2 }`
+
+`toLowerCase` runs first, so all three words become `eat` and are counted together: 3. The double space makes `split(" ")` produce an empty string `''` between the first two words, and the tally counts that too. If you picked `{ eat: 3 }`, you assumed the text was clean. That is why the worked example logs what `split` really gives, and removes empty strings with `filter`.
 :::
 
 ## Two habits that make the method work
@@ -668,6 +737,36 @@ Change R387: 1 x R200, 1 x R100, 1 x R50, 1 x R20, 1 x R10, 1 x R5, 1 x R2
 No change needed.
 Not enough: you are R50 short.
 ```
+:::
+
+::: quiz
+Someone copies the change-maker, but types the notes and coins from smallest to biggest. What does this print?
+
+```js
+const COINS = [1, 2, 5, 10, 20, 50, 100, 200];
+
+function makeChange(amount) {
+  const result = [];
+  let left = amount;
+  for (const value of COINS) {
+    const howMany = Math.floor(left / value);
+    if (howMany > 0) {
+      result.push(`${howMany} x R${value}`);
+      left = left - howMany * value;
+    }
+  }
+  return result;
+}
+
+console.log(makeChange(48));
+```
+
+- [ ] `[ '2 x R20', '1 x R5', '1 x R2', '1 x R1' ]`
+- [ ] `[ '1 x R1', '1 x R2', '1 x R5', '2 x R20' ]`
+- [ ] `[]`
+- [x] `[ '48 x R1' ]`
+
+The first value tried is `1`. `Math.floor(48 / 1)` is 48, so the whole amount is paid in R1 coins and `left` becomes `0`. After that, nothing else fits. The second option is the tempting one: it has the right coins in reverse order, but the code never goes back to use bigger coins once the R1s have used up the amount. The order of the array *is* the plan: biggest first.
 :::
 
 ## Real-world uses

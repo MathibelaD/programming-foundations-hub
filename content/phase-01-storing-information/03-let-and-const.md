@@ -135,6 +135,24 @@ An **initializer** is the `= value` part. `const` insists on having one.
 6. Delete the broken line, so the file works again.
 :::
 
+::: quiz
+What do you see when you run this?
+
+```js
+const FARE = 18;
+console.log("Fare:", FARE);
+FARE = FARE + 2;
+console.log("New fare:", FARE);
+```
+
+- [ ] `Fare: 18` and then `New fare: 20`
+- [ ] Only `TypeError: Assignment to constant variable.`, with nothing printed before it
+- [x] `Fare: 18`, then `TypeError: Assignment to constant variable.`
+- [ ] `Fare: 18` and then `New fare: 18`
+
+A `const` cannot be given a new value, so line 3 fails. But a `TypeError` happens *while* the program runs, so line 2 has already printed `Fare: 18`. Only a `SyntaxError` stops everything before the first line runs. The program also does not quietly keep the old value and carry on: it stops at the error, so `New fare` never prints.
+:::
+
 ## Which one should I use?
 
 Here is the rule that most professional JavaScript programmers follow:
@@ -208,6 +226,26 @@ Ayanda scored 15
 `name` never changes, so `const` is fine. `score` changes twice, and it is a `let`, so that is allowed too. There would only be an error if the program tried to give `name` a new value.
 :::
 
+::: quiz
+You want to use `const` wherever you can. Which of these variables has to stay `let`?
+
+```js
+let deposit = 500;
+let months = 6;
+let saved = deposit * months;
+let bonus = 250;
+saved = saved + bonus;
+console.log("Saved:", saved);
+```
+
+- [ ] `saved` and `bonus`
+- [x] Only `saved`
+- [ ] `deposit`, `months` and `saved`, because `saved` is worked out from them
+- [ ] None of them; they can all be `const`
+
+Only `saved` is given a new value with `=` later on (line 5), so only `saved` needs `let`. Being *used* in a calculation does not change a variable: `deposit`, `months` and `bonus` are only read, never replaced. If you picked "none", try it: making `saved` a `const` gives `TypeError: Assignment to constant variable.` on line 5.
+:::
+
 ## What about `var`?
 
 In older JavaScript tutorials and code, you will see a third word:
@@ -270,6 +308,17 @@ SyntaxError: Unexpected token 'class'
 
 ::: note Why "token"?
 A **token** is one "word" of code: a name, a number, a symbol like `=` or `-`. "Unexpected token" means "I got to this piece and it does not fit here". It almost always means a typo or a naming problem on that line.
+:::
+
+::: quiz
+Only one of these lines runs without an error. Which one?
+
+- [ ] `let 1stPrize = 500;`
+- [ ] `let first-prize = 500;`
+- [ ] `let new = 500;`
+- [x] `let $prize_1 = 500;`
+
+A name may contain letters, digits, `_` and `$`, as long as it does not start with a digit, so `$prize_1` is allowed. It looks odd, but it is legal (a bad name, but a legal one). `1stPrize` starts with a digit, `first-prize` is read as "first minus prize", and `new` is a reserved word that JavaScript keeps for itself. All three give a `SyntaxError`.
 :::
 
 ## Naming habits: what makes a name good
@@ -479,6 +528,24 @@ Kwame 72
 **Names that say nothing.** `x`, `data`, `thing`, `temp`. Your future self will not remember what they meant.
 
 **Copying `var` from an old tutorial.** Use `const` or `let` instead.
+:::
+
+::: quiz
+What does this print?
+
+```js
+const busFare = 20;
+const trips = 2;
+const BusFare = busFare * trips;
+console.log(busFare);
+```
+
+- [x] `20`
+- [ ] `40`
+- [ ] `SyntaxError: Identifier 'busFare' has already been declared`
+- [ ] `TypeError: Assignment to constant variable.`
+
+Names are case-sensitive, so `BusFare` with a capital B is a brand-new, separate variable. It holds 40, but the program prints `busFare`, which is still 20. Nothing was declared twice and no `const` was changed, so there is no error. This is why sticking to one camelCase spelling matters: a single capital letter makes a different box.
 :::
 
 ## Real-world uses

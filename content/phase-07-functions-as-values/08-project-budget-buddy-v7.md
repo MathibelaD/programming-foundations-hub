@@ -304,6 +304,37 @@ Choose 1-6: 5
 
 If you see `TypeError: Cannot read properties of undefined`, you have lost the `return totals;` line.
 
+::: quiz
+Someone changes `categoryTotals` to use a starting object made **outside** the function:
+
+```js
+const start = {};
+function categoryTotals(expenses) {
+  return expenses.reduce((totals, expense) => {
+    totals[expense.category] = (totals[expense.category] || 0) + expense.amount;
+    return totals;
+  }, start);
+}
+
+const list = [
+  { description: "Pap", amount: 50, category: "food" },
+  { description: "Taxi", amount: 20, category: "transport" },
+];
+categoryTotals(list);
+const second = categoryTotals(list);
+console.log(second.food);
+```
+
+What does this print?
+
+- [ ] `50`
+- [x] `100`
+- [ ] `NaN`
+- [ ] `undefined`
+
+`reduce` does not copy the starting value. Both calls use the **same** `start` object as their tally, so the second call adds on top of what the first call left there: 50 + 50. With `{}` written inside the call, as in the lesson, every call gets a brand-new empty object. If you picked `50`, you expected each call to start fresh.
+:::
+
 ## Step 4: make room in the menu
 
 We are about to add three reports. Let us add them to the menu first, with a "Coming soon" message, so that each later step only has to fill one in.
@@ -486,6 +517,32 @@ Remove the `[...` and `]` from `topExpenses`, so it sorts `expenses` directly. R
 You should see the list come out biggest first, because `sort` changed the real array. Now put the copy back, and run it again to check the list is back to normal. (Nothing was saved to the file, because only adding and removing save. That is lucky. In a bigger program, the scrambled order could easily have been saved.)
 :::
 
+::: quiz
+Someone forgets the copy in `topExpenses`:
+
+```js
+const topExpenses = (expenses, howMany) =>
+  expenses.sort((a, b) => b.amount - a.amount).slice(0, howMany);
+
+const list = [
+  { description: "Bread", amount: 20 },
+  { description: "Rent", amount: 3000 },
+  { description: "Data", amount: 150 },
+];
+const top = topExpenses(list, 1);
+console.log(top.length, list[1].description);
+```
+
+What does this print?
+
+- [ ] `1 Rent`
+- [ ] `3 Data`
+- [x] `1 Data`
+- [ ] `1 Bread`
+
+`slice(0, 1)` makes a new one-item array, so `top.length` is 1. But `sort` ran on `list` itself and rearranged it to Rent, Data, Bread, so `list[1]` is now Data. If you picked `1 Rent`, you expected `list` to keep its order. In Budget Buddy, that is what would make "remove expense number 2" remove the wrong one.
+:::
+
 ## Step 7: the largest expense, reusing topExpenses
 
 The summary's "Largest" line uses `largestExpense`, the "keep the best so far" loop from Phase 6:
@@ -587,6 +644,30 @@ Search for: pizza
 
 ::: note A curious case: searching for nothing
 If you press Enter without typing a word, the search shows **every** expense. That is because every string "includes" the empty string `""`. It is a reasonable result (no filter means everything), so we leave it. If you wanted, you could check for an empty `word` first and print a message instead.
+:::
+
+::: quiz
+Using `searchExpenses` from this step, what does this print?
+
+```js
+const list = [
+  { description: "Taxi to work", amount: 36 },
+  { description: "Airtime", amount: 29 },
+  { description: "TAXI home", amount: 36 },
+];
+console.log(
+  searchExpenses(list, "TAXI").length,
+  searchExpenses(list, "").length,
+  searchExpenses(list, "work").length
+);
+```
+
+- [ ] `1 0 1`
+- [ ] `2 0 1`
+- [ ] `1 3 1`
+- [x] `2 3 1`
+
+Both the description and the word are lower-cased, so `"TAXI"` matches `"Taxi to work"` and `"TAXI home"`: 2. Every string includes the empty string, so `""` matches all 3. Only one description contains `"work"`. If you picked a `0` in the middle, you expected an empty search to find nothing. If you picked `1` first, you forgot that both sides are lower-cased.
 :::
 
 ## Step 9: the loops we kept

@@ -171,6 +171,22 @@ No error, only `undefined`: "this card has no field with that label". Keys are *
 6. Add `console.log(student.teacher);`. Predict, then run. (You should get `undefined`, because there is no `teacher` key.)
 :::
 
+::: quiz
+What does this print?
+
+```js
+const shoe = { size: 7, brand: "Bata", Price: 450 };
+console.log(shoe.price + 50);
+```
+
+- [ ] `500`
+- [ ] `undefined50`
+- [x] `NaN`
+- [ ] `TypeError: Cannot read properties of undefined`
+
+The key was created as `Price`, with a capital P, and keys are case-sensitive. So `shoe.price` is `undefined`, and `undefined + 50` is `NaN` (not a number). If you picked `500`, you read past the capital letter. There is no crash: a missing key quietly gives `undefined`.
+:::
+
 ## Changing, adding and deleting properties
 
 Objects are not frozen. You can change a value, add a brand-new property, or remove one:
@@ -326,6 +342,23 @@ Here is where brackets shine. An object can work as a little lookup table, a **d
 
 Without an object, that program would be a long `if`/`else if` chain or a `switch` with a case for every country. The object turns it into one line: `capitals[country]`.
 
+::: quiz
+What does this print?
+
+```js
+const stock = { apples: 12, pears: 5, key: 99 };
+const key = "pears";
+console.log(stock.key + stock[key]);
+```
+
+- [ ] `10`
+- [ ] `NaN`
+- [ ] `17`
+- [x] `104`
+
+`stock[key]` looks inside the variable `key`, finds `"pears"`, and gets `5`. But `stock.key` means "the property literally called `key`", and this object really has one: `99`. So it is `99 + 5`. If you picked `10`, you thought the dot also reads the variable. It never does. If you picked `NaN`, you forgot this object has its own `key` property.
+:::
+
 ## Objects inside objects, and arrays inside objects
 
 A property's value can be anything, including an array or another object:
@@ -383,6 +416,27 @@ TypeError: Cannot read properties of undefined (reading 'city')
 
 Line 2 is fine: no `address`, so `undefined`. Line 3 tries to get `.city` **of** `undefined`, and `undefined` has no properties at all. Node points its `^` at `.city`. Learn to read this message: "Cannot read properties of undefined (reading 'city')" means "the thing **before** `.city` was `undefined`". So check `person.address`, not `city`.
 
+::: quiz
+Here is an order:
+
+```js
+const order = {
+  id: 17,
+  items: ["pap", "wors"],
+  customer: { name: "Lerato", address: { city: "Polokwane" } },
+};
+```
+
+Which one of these lines stops the program with a `TypeError`?
+
+- [ ] `console.log(order.customer.address.city[20]);`
+- [ ] `console.log(order.items[5]);`
+- [x] `console.log(order.customer.phone.length);`
+- [ ] `console.log(order.delivery);`
+
+`order.customer.phone` is `undefined` (there is no `phone`), and then `.length` asks for a property **of** `undefined`, which crashes with `Cannot read properties of undefined (reading 'length')`. The other three each read one missing thing from something that does exist (a string, an array, an object), so they only print `undefined`. Reading past the end of a string or array is not an error.
+:::
+
 ## Looping over an object
 
 Sometimes you want to visit every property without knowing the keys in advance. There are two common ways. Here is the first, `for...in`:
@@ -434,6 +488,28 @@ Average: 72.66666666666667
 ```
 
 `Object.keys` is handy when you need to know **how many** properties there are, or when you want to use an array tool such as `.length` or `.includes`. We will use it in Budget Buddy. Both ways are fine, so use whichever reads more clearly to you.
+
+::: quiz
+What does this print?
+
+```js
+const votes = { Thabo: 3, Zanele: 5, Pieter: 2 };
+let result = "";
+for (const name in votes) {
+  if (votes[name] > 2) {
+    result = result + name[0];
+  }
+}
+console.log(result + Object.keys(votes).length);
+```
+
+- [x] `TZ3`
+- [ ] `TZ2`
+- [ ] `TZP3`
+- [ ] `ThaboZanele3`
+
+`for...in` gives each **key** (`"Thabo"`, `"Zanele"`, `"Pieter"`), and `votes[name]` is its number. Pieter has 2, and `2 > 2` is `false`, so only `T` and `Z` are added. `name[0]` is the first letter of the key, not the whole key. `Object.keys(votes)` still has all three keys, so the length is `3`, not the 2 that passed the test.
+:::
 
 ## The dot, finally explained
 
@@ -675,6 +751,23 @@ console.log(order.customer.name);
 **Mixing up `for...of` and `for...in`.** *Of* for arrays (items), *in* for objects (keys).
 
 **Trusting a quiet `undefined`.** A misspelt key does not crash. If a value comes out as `undefined`, check the spelling and capitals of the key first.
+:::
+
+::: quiz
+What does this print?
+
+```js
+const word = "braai";
+const biggest = Math.max;
+console.log(typeof word.length, typeof word.toUpperCase, biggest(3, 9));
+```
+
+- [ ] `number string 9`
+- [x] `number function 9`
+- [ ] `string function 9`
+- [ ] `number function NaN`
+
+`word.length` is a plain property holding the number 5. `word.toUpperCase` has no brackets, so it is not called: you get the method itself, which is a function. `Math.max` without brackets is also the function itself, so `biggest` is another name for it, and `biggest(3, 9)` gives `9`. The trap is thinking `toUpperCase` gives a string: only `toUpperCase()` with brackets does.
 :::
 
 ## Real-world uses

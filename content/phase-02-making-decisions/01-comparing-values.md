@@ -143,6 +143,17 @@ A good habit: whenever you write `>` or `<`, say the rule out loud in plain word
 6. **Now experiment.** Change `moneyInPocket` to `25`. Will "Can I pay the fare?" still be `true`? Say your answer out loud, then run it. Then try `24`.
 :::
 
+::: quiz
+A spaza shop gives a free loaf of bread to anyone who spends R200 or more. Nomsa spends exactly R200, so `const spent = 200;`. Which line prints `true` for her?
+
+- [ ] `console.log(spent > 200);`
+- [ ] `console.log(200 > spent);`
+- [x] `console.log(200 <= spent);`
+- [ ] `console.log(spent < 200);`
+
+`200 <= spent` asks "is 200 less than or equal to what she spent?". 200 is equal to 200, so the answer is `true`. It is the same rule as `spent >= 200`, written the other way round. `spent > 200` is the tempting one, but "more than 200" leaves out 200 itself, so Nomsa would miss her bread. That is a boundary bug.
+:::
+
 ## `=` stores, `===` asks
 
 This is the single most important idea in this lesson, and it trips up everyone at first.
@@ -205,6 +216,25 @@ true
 ```
 
 The two PINs are different, so "same?" is `false` and "different?" is `true`. For any two values, `===` and `!==` always give opposite answers.
+
+::: quiz
+What does this print?
+
+```js
+let score = 7;
+
+console.log(score === 10);
+console.log(score = 10);
+console.log(score === 10);
+```
+
+- [x] `false`, then `10`, then `true`
+- [ ] `false`, then `false`, then `false`
+- [ ] `false`, then `10`, then `false`
+- [ ] `false`, then `true`, then `true`
+
+The middle line has a single `=`, so it is not a question. It stores 10 in `score`, and the value of that assignment is 10, which is what gets printed. After that, `score` really is 10, so the last line is `true`. If you picked `false, 10, false`, you treated the middle line as if it left `score` alone. Only `===` leaves things alone. A single `=` always changes the box.
+:::
 
 ## Why not `==`?
 
@@ -283,6 +313,25 @@ true
 :::
 
 Without `Number()`, "Exactly 21?" says `false` even when you type 21, because the text `"21"` is not the number `21`. (Curiously, `>=` and `<` still seem to work, because those two quietly convert text to numbers. Do not rely on that. Convert first, every time.)
+
+::: quiz
+What does this print?
+
+```js
+const typed = "250"; // what prompt gave back
+
+console.log(typed === 250);
+console.log(Number(typed) === 250);
+console.log(typed + 50 === 300);
+```
+
+- [ ] `false`, then `true`, then `true`
+- [ ] `true`, then `true`, then `true`
+- [ ] `false`, then `false`, then `false`
+- [x] `false`, then `true`, then `false`
+
+`typed` is text, so it is never exactly the same as the number 250. `Number(typed)` is the number 250, so the second line is `true`. The last line is the trap: `+` with a string joins text, so `typed + 50` is `"25050"`, not 300. Convert first, then do maths, then compare.
+:::
 
 ## Comparing text
 
@@ -382,6 +431,31 @@ true
 4. All capitals come before all small letters, so `"B"` is less than `"a"`.
 :::
 
+::: quiz
+What does this print?
+
+```js
+const city = " Polokwane";
+
+console.log(city === "Polokwane");
+console.log(city.trim() === "polokwane");
+console.log("Polokwane" < "Pretoria");
+console.log("100" < "25");
+```
+
+- [ ] `false`, `true`, `true`, `false`
+- [x] `false`, `false`, `true`, `true`
+- [ ] `true`, `false`, `true`, `false`
+- [ ] `false`, `false`, `false`, `true`
+
+1. The space at the start is a character, so `" Polokwane"` is not `"Polokwane"`.
+2. `.trim()` removes the space, but the capital P is still there, and `"P"` is not `"p"`.
+3. Both start with P, so JavaScript compares the second letters: `o` comes before `r`, so `true`.
+4. Text is compared one character at a time: `"1"` comes before `"2"`, so `"100"` counts as smaller than `"25"`.
+
+If you picked `true` for line 2, you forgot that `.trim()` only removes spaces. It does not change capitals.
+:::
+
 ## Keeping the answer in a variable
 
 A comparison produces a value, so you can store it in a variable like any other value:
@@ -412,6 +486,26 @@ console.log(qualifiesForFreeDelivery);
 ```
 
 The second one tells you what the question *means*. As you learned in [let and const](#/phase-01-storing-information/03-let-and-const), boolean names usually start with `is`, `has` or `can`: `isAdult`, `hasPaid`, `canVote`, `isPowerOn`. In the next lesson you will use variables like these straight inside `if`.
+
+::: quiz
+What does this print?
+
+```js
+const balance = 80;
+const isBroke = balance < 100;
+const isVeryBroke = balance < 50;
+
+console.log(isBroke === isVeryBroke);
+console.log(typeof isVeryBroke);
+```
+
+- [ ] `true`, then `boolean`
+- [ ] `false`, then `string`
+- [x] `false`, then `boolean`
+- [ ] `false`, then `number`
+
+`isBroke` holds `true` (80 is less than 100) and `isVeryBroke` holds `false` (80 is not less than 50). You can compare two booleans with `===` like any other values, and `true === false` is `false`. `typeof` looks at the value in the box, which is a boolean, not the number 80 that was used to work it out. If you picked `true`, you compared what the names *mean* ("both sound broke") instead of the actual values.
+:::
 
 ## Two special cases worth knowing
 

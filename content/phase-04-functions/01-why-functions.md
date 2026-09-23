@@ -169,6 +169,28 @@ This idea has a name among programmers: **DRY**, short for "**Don't Repeat Yours
 6. Add a fourth customer who buys `Chips x1          R25.00`. How many lines did you need to add?
 :::
 
+::: quiz
+What does this program print?
+
+```js
+function announce() {
+  console.log("Sale on today!");
+}
+
+announce;
+announce();
+console.log("Doors open at 9");
+announce;
+```
+
+- [ ] `Sale on today!`, `Sale on today!`, `Doors open at 9`
+- [ ] `Sale on today!`, `Doors open at 9`, `Sale on today!`
+- [x] `Sale on today!`, `Doors open at 9`
+- [ ] An error, because `announce;` has no brackets
+
+Only `announce();`, with the brackets, is a call. `announce;` on its own names the recipe card without cooking from it, so nothing happens and there is no error either. If you picked an option with `Sale on today!` more than once, you counted the lines without brackets as calls.
+:::
+
 ## What really happens when you call a function
 
 This is worth slowing down for, because it explains the order in which things print.
@@ -235,6 +257,29 @@ Put your function declarations **near the top** of the file and your calls **bel
 4. Now delete **all** the calls but keep the function. Predict what prints. Run it.
 :::
 
+::: quiz
+What does this program print, in order?
+
+```js
+console.log("Gate opens");
+
+function checkTicket() {
+  console.log("Ticket scanned");
+}
+
+console.log("Queue moves");
+checkTicket();
+console.log("Enjoy the match");
+```
+
+- [ ] `Gate opens`, `Ticket scanned`, `Queue moves`, `Enjoy the match`
+- [ ] `Gate opens`, `Ticket scanned`, `Queue moves`, `Ticket scanned`, `Enjoy the match`
+- [ ] `Gate opens`, `Queue moves`, `Enjoy the match`
+- [x] `Gate opens`, `Queue moves`, `Ticket scanned`, `Enjoy the match`
+
+The declaration sits in the middle of the file, but declaring a function runs nothing. `Ticket scanned` only prints when the call `checkTicket();` is reached, after `Queue moves`. Then the program comes back and prints `Enjoy the match`. If you picked the first option, you let the declaration run where it was written.
+:::
+
 ## Functions can call other functions
 
 A function body can contain anything you already know: variables, `if`, loops, and calls to other functions.
@@ -270,6 +315,33 @@ Round 2: Eagles 2 - 2 Sharks
 ```
 
 `printTitle` uses `printLine` twice. The detours nest: the program jumps into `printTitle`, which jumps into `printLine`, which comes back to `printTitle`, which later comes back to the main program. Small functions built from even smaller functions is how all big programs are made.
+
+::: quiz
+How many lines of dashes (`-----`) does this program print?
+
+```js
+function dash() {
+  console.log("-----");
+}
+
+function box() {
+  dash();
+  console.log("| R50 |");
+  dash();
+}
+
+box();
+dash();
+box();
+```
+
+- [ ] 3
+- [x] 5
+- [ ] 4
+- [ ] 6
+
+Each `box()` call makes two detours into `dash`, so the two `box()` calls give 4 dash lines. The `dash()` call in the middle adds 1 more: 5 in total. If you picked 3, you counted each call at the bottom as one line, and forgot that `box` calls `dash` twice on the inside.
+:::
 
 ## Loops inside functions, and functions inside loops
 
@@ -316,6 +388,30 @@ Hip hip... HOORAY!
 Hip hip... HOORAY!
 Hip hip... HOORAY!
 ```
+
+::: quiz
+How many lines does this program print in total?
+
+```js
+function stars() {
+  for (let i = 0; i < 3; i++) {
+    console.log("*");
+  }
+}
+
+for (let round = 1; round <= 2; round++) {
+  stars();
+  console.log("round done");
+}
+```
+
+- [x] 8
+- [ ] 5
+- [ ] 6
+- [ ] 10
+
+The outer loop runs twice (`round` is 1, then 2). Each time, `stars()` prints 3 stars (`i` is 0, 1, 2) and then `round done` prints once: 4 lines per round, so 8 lines. If you picked 5, you ran `stars` only once. If you picked 10, you gave `stars` 4 stars: `i < 3` stops when `i` reaches 3.
+:::
 
 ## Functions that ask questions
 

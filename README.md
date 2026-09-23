@@ -32,7 +32,7 @@ This course does the opposite:
 | 7 | Array Methods | How do I do less work? (callbacks, forEach, map, filter, find, reduce, sort) |
 | 8 | Becoming a Programmer | How do I solve new problems, debug, organise code, and what next? |
 
-Each lesson includes hands-on "try it" steps, guided and independent exercises, predict-the-output questions, broken code to fix, common mistakes, self-check questions, a checkpoint list, and optional links to go deeper.
+Lessons open **one step at a time** (or as a whole page, if you prefer), and each key step ends with a **knowledge check**: a multiple-choice question with new code, so it tests understanding rather than memory. Each lesson also includes hands-on "try it" steps, guided and independent exercises, predict-the-output questions, broken code to fix, common mistakes, self-check questions, a checkpoint list, and optional links to go deeper.
 
 ## Running the course
 
@@ -44,7 +44,7 @@ You need Python 3 (already on macOS and most Linux systems) to serve the pages.
 
 Then open http://localhost:4174. Progress is saved in your browser, and there is no account and no backend.
 
-To write the code in the lessons, you need [Node.js](https://nodejs.org/) (LTS) and [VS Code](https://code.visualstudio.com/). Phase 0 walks through installing both.
+To write the code in the lessons, you need [Node.js](https://nodejs.org/) (LTS), [pnpm](https://pnpm.io/) and [VS Code](https://code.visualstudio.com/). Phase 0 walks through installing all three.
 
 ## Project layout
 
@@ -54,7 +54,7 @@ content/                   the lessons, one folder per phase, written in Markdow
 content/project.json       Budget Buddy's stages
 solutions/budget-buddy/    reference code for every Budget Buddy stage
 tools/build.py             regenerates content/index.json and search.json
-tools/check.py             lints lessons: blocks, links, and the concept ladder
+tools/check.py             lints lessons: blocks, quizzes, links, and the concept ladder
 AUTHORING.md               how lessons are written (rules, template, concept ladder)
 CURRICULUM.md              the lesson-by-lesson plan
 ```
@@ -64,6 +64,6 @@ CURRICULUM.md              the lesson-by-lesson plan
 Read [AUTHORING.md](AUTHORING.md), then:
 
 ```bash
-python3 tools/check.py     # no nested/unclosed blocks, no broken links, no concepts used too early
+python3 tools/check.py     # no nested/unclosed blocks, well-formed quizzes, no broken links, no concepts used too early
 python3 tools/build.py     # rebuild the index
 ```

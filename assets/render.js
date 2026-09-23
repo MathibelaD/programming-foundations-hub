@@ -25,7 +25,8 @@
     'try':      { label: 'Try it on your computer', collapsible: false },
     connect:    { label: 'How this connects', collapsible: false },
     analogy:    { label: 'Real-world picture', collapsible: false },
-    resources:  { label: 'Go deeper (optional)', collapsible: false }
+    resources:  { label: 'Go deeper (optional)', collapsible: true },
+    quiz:       { label: 'Knowledge check', collapsible: false }
   };
 
   var OPEN = /^:::[ \t]*([a-z][a-z-]*)[ \t]*(.*)$/;
@@ -123,7 +124,47 @@
     return nodes;
   }
 
+  /* --- ::: quiz --------------------------------------------------------
+     Question (markdown), then "- [ ] option" lines with one "- [x]", then
+     the explanation. The page wires up the buttons (app.js). */
+  var QUIZ_OPTION = /^- \[( |x)\] (.*)$/;
+
+  function splitQuiz(lines) {
+    var parts = { question: [], options: [], explain: [] }, section = 'question', fence = null;
+    lines.forEach(function (line) {
+      var f = line.match(FENCE), o = !fence && line.match(QUIZ_OPTION);
+      if (fence) { if (f && line.trim().indexOf(fence) === 0) fence = null; }
+      else if (f) fence = f[1];
+      else if (o && section !== 'explain') { section = 'options'; parts.options.push({ correct: o[1] === 'x', text: o[2] }); return; }
+      else if (section === 'options' && line.trim()) section = 'explain';
+      if (section !== 'options') parts[section].push(line);
+    });
+    return parts;
+  }
+
+  function renderQuiz(node) {
+    var q = splitQuiz(node.lines);
+    var title = node.title ? '<span class="cx-title">' + esc(node.title) + '</span>' : '';
+    return '<section class="cx cx-quiz" data-quiz>' +
+      '<header class="cx-head"><span class="cx-kind">' + KINDS.quiz.label + '</span>' + title + '</header>' +
+      '<div class="cx-body">' +
+        '<div class="quiz-q">' + md(q.question.join('\n')) + '</div>' +
+        '<div class="quiz-opts" role="radiogroup">' + q.options.map(function (o, i) {
+          return '<button type="button" class="quiz-opt" role="radio" aria-checked="false" data-i="' + i + '"' +
+            (o.correct ? ' data-correct' : '') + '><span class="quiz-letter">' + 'ABCDE'.charAt(i) + '</span>' +
+            '<span class="quiz-text">' + marked.parseInline(o.text) + '</span></button>';
+        }).join('') + '</div>' +
+        '<div class="quiz-bar">' +
+          '<button type="button" class="btn primary quiz-check" disabled>Check answer</button>' +
+          '<span class="quiz-feedback" aria-live="polite"></span>' +
+          '<button type="button" class="linkish quiz-reveal" hidden>Show the answer</button>' +
+        '</div>' +
+        '<div class="quiz-explain" hidden>' + md(q.explain.join('\n')) + '</div>' +
+      '</div></section>';
+  }
+
   function renderBlock(node) {
+    if (node.kind === 'quiz') return renderQuiz(node);
     var meta = KINDS[node.kind];
     var body = '<div class="cx-body">' + md(node.lines.join('\n')) + '</div>';
     var title = node.title ? '<span class="cx-title">' + esc(node.title) + '</span>' : '';

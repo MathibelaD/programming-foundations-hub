@@ -169,6 +169,17 @@ Notice that everyday English "or" sometimes means "one or the other, but not bot
 
 Look at the line `const hasLicence = licenceAnswer === "yes";`. It turns the user's typed answer into a boolean, which makes the `if` read like the real rule. That is a trick from [Comparing values](#/phase-02-making-decisions/01-comparing-values), and it is worth using often.
 
+::: quiz
+A taxi association gives a free ride to learners under 18 and to pensioners aged 60 or more. Which condition is `true` for exactly those people?
+
+- [ ] `age < 18 && age >= 60`
+- [ ] `age <= 18 || age > 60`
+- [x] `age < 18 || age >= 60`
+- [ ] `age > 18 || age <= 60`
+
+A person only needs to be in one of the two groups, so the two sides are joined with `||`. The English sentence says "and", which is the trap: `age < 18 && age >= 60` asks for someone who is under 18 and 60 or older at the same time. Nobody is, so it is always `false`. `age <= 18 || age > 60` is close, but it wrongly lets in an 18-year-old and leaves out someone who is exactly 60.
+:::
+
 ## `!`: not
 
 `!` goes in **front** of a single value and flips it: `true` becomes `false`, and `false` becomes `true`.
@@ -212,6 +223,26 @@ Got a real number: 150
 
 ::: note Where have we seen `!` before?
 In `!==` ("not exactly the same"). The `!` means "not" in both places.
+:::
+
+::: quiz
+What does this print?
+
+```js
+const hasTicket = false;
+const isVip = true;
+
+console.log(!hasTicket && isVip);
+console.log(!isVip || hasTicket);
+console.log(!!hasTicket);
+```
+
+- [ ] `false`, `true`, `false`
+- [ ] `true`, `false`, `true`
+- [ ] `false`, `false`, `false`
+- [x] `true`, `false`, `false`
+
+`!` flips only the value straight after it. Line 1: `!hasTicket` is `true`, and `isVip` is `true`, so `&&` gives `true`. Line 2: `!isVip` is `false`, and `hasTicket` is `false`, so `||` gives `false`. Line 3: two `!`s flip twice, which lands back where you started: `false`. If you picked `true` for the last line, you flipped once and stopped.
 :::
 
 ## Range checks: is a number between two others?
@@ -308,6 +339,25 @@ true
 5. 8 is `< 10`, so it is outside the range.
 :::
 
+::: quiz
+What does this print?
+
+```js
+const age = 4;
+
+console.log(6 <= age <= 12);
+console.log(age >= 6 || age <= 12);
+console.log(age >= 6 && age <= 12);
+```
+
+- [x] `true`, `true`, `false`
+- [ ] `false`, `false`, `false`
+- [ ] `false`, `true`, `false`
+- [ ] `true`, `false`, `false`
+
+Line 1 is the maths-style trap: `6 <= 4` is `false`, then JavaScript compares `false <= 12`, turns `false` into 0, and `0 <= 12` is `true`. Line 2 uses `||`, so one true side is enough, and 4 is at most 12: `true`. That is the other trap, because with `||` every number counts as "in range". Only line 3, two full comparisons joined with `&&`, correctly says that a 4-year-old is not between 6 and 12. If you picked `false` for line 1, you read it the way a person would, not the way JavaScript does.
+:::
+
 ## Checking input properly, in one line
 
 In the last lesson, validating an amount took an `else if` chain. Now you can say "it is bad if it is not a number **or** it is negative" in one condition:
@@ -345,6 +395,28 @@ You will use exactly this condition in [Budget Buddy v2](#/phase-02-making-decis
 
 ::: note JavaScript stops as soon as it knows
 With `||`, if the left side is `true`, the answer must be `true`, so JavaScript does not even look at the right side. With `&&`, if the left side is `false`, the answer must be `false`, so again it stops early. This is called **short-circuiting**. For now it mostly means one thing: put the check that must happen first (such as "is it a number at all?") on the **left**.
+:::
+
+::: quiz
+Which answer, typed at the question, makes this print `Booked`?
+
+```js
+const prompt = require("prompt-sync")();
+const seats = Number(prompt("How many seats (1 to 10)? "));
+
+if (Number.isNaN(seats) || seats < 1 || seats > 10) {
+  console.log("Rejected");
+} else {
+  console.log("Booked");
+}
+```
+
+- [ ] `ten`
+- [x] `10`
+- [ ] `0`
+- [ ] `10.5`
+
+`10` is a number, it is not below 1, and it is not above 10, so all three "bad" questions are `false`. Three `false`s joined with `||` give `false`, so the `else` runs. `ten` becomes `NaN`, `0` is below 1 and `10.5` is above 10, so each of those makes one side `true`, and one `true` is enough for `||`. If you rejected 10, check the boundary: the rule says `> 10`, not `>= 10`.
 :::
 
 ## Brackets make your meaning clear
@@ -562,6 +634,26 @@ Weekday
 **Typing one `&` or one `|`.** Single `&` and `|` are different operators for working with the bits inside numbers. They will not give an error, but they will give strange results. Always type two.
 
 **Stacking up `!`s.** `!(!isOpen)` is a headache. If a condition needs a lot of "not", rewrite it the positive way, or give the pieces clear names.
+:::
+
+::: quiz
+What does this print?
+
+```js
+const isMember = true;
+const total = 100;
+const isRemote = true;
+
+console.log(isMember || total >= 500 && !isRemote);
+console.log((isMember || total >= 500) && !isRemote);
+```
+
+- [ ] `false`, then `false`
+- [x] `true`, then `false`
+- [ ] `true`, then `true`
+- [ ] `false`, then `true`
+
+`&&` happens before `||`, so line 1 is read as `isMember || (total >= 500 && !isRemote)`. `isMember` is `true`, and one `true` side is enough for `||`, so it prints `true`. In line 2 the brackets force the `||` first, which gives `true`. Then `true && !isRemote` is `true && false`, which is `false`. If you picked `false` for both, you read line 1 as if it had the brackets of line 2.
 :::
 
 ## Real-world uses

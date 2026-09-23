@@ -190,6 +190,24 @@ This is the key that unlocks everything in the rest of this phase. If the index 
 5. **Now experiment.** Add a line that prints Friday's fare. Before you run it, decide which index Friday is. (Monday is 0…) Then add a sixth fare, `30`, for a Saturday trip, to the end of the list. What will "Number of trips" print now? Predict, then run.
 :::
 
+::: quiz
+What does this program print?
+
+```js
+const days = ["Mon", "Tue", "Wed", "Thu", "Fri"];
+let n = 1;
+n = n + 2;
+console.log(days[n] + days[n - 3]);
+```
+
+- [ ] `WedMon`
+- [x] `ThuMon`
+- [ ] `Wedundefined`
+- [ ] `ThuTue`
+
+`n` ends up as 3. `days[3]` is the **fourth** item, `"Thu"`, and `days[n - 3]` is `days[0]`, the first item, `"Mon"`. `+` glues the two strings: `ThuMon`. If you picked `Wed`, you counted from 1. An index is a distance from the start, so index 3 is three steps along.
+:::
+
 ## How many items? `.length`
 
 You probably noticed `taxiFares.length` in the last example. Every array knows how many items it holds. You ask for it with `.length`, exactly like you did for strings:
@@ -210,6 +228,22 @@ Output:
 ```
 
 Notice there are **no brackets** after `length`. It is not something you "run". It is a value the array always keeps up to date, like a label on the locker row saying "4 lockers".
+
+::: quiz
+What does this program print?
+
+```js
+const queue = ["Zola", "Ben", "", "Kagiso"];
+console.log(queue.length, queue[0].length, queue[2].length);
+```
+
+- [ ] `3 4 6`
+- [ ] `4 4 undefined`
+- [x] `4 4 0`
+- [ ] `4 1 0`
+
+The empty string `""` is still an item in its own locker, so the array has 4 items. `queue[0]` is `"Zola"`, a string with 4 letters. `queue[2]` is `""`, a string with 0 letters. If you picked `3 4 6`, you skipped the empty string, which moved `"Kagiso"` into index 2. Empty or not, every value between the commas counts.
+:::
 
 ## The last item: `arr[arr.length - 1]`
 
@@ -260,6 +294,24 @@ undefined
 - `snacks[4]` asks for the fifth locker, and there is no fifth locker. See the next section.
 :::
 
+::: quiz
+What does this program print?
+
+```js
+const stops = ["Park Station", "Braamfontein", "Rosebank", "Sandton"];
+const last = stops.length;
+console.log(stops[last - 2]);
+console.log(stops[last]);
+```
+
+- [ ] `Braamfontein`, then `Sandton`
+- [ ] `Sandton`, then `undefined`
+- [ ] `Rosebank`, then `Sandton`
+- [x] `Rosebank`, then `undefined`
+
+Watch the name: `last` holds the **length**, 4, not the last index. So `stops[last - 2]` is `stops[2]`, which is `"Rosebank"`, and `stops[last]` is `stops[4]`, one locker past the end, which gives `undefined`. If you picked `Sandton` for the second line, you treated the length as the last index. The last index is always `length - 1`.
+:::
+
 ## Reading past the end gives `undefined`
 
 What happens if you ask for a locker that does not exist?
@@ -302,6 +354,24 @@ Output:
 ```
 
 It is still one array with 8 items. Only the display has changed.
+:::
+
+::: quiz
+What does this program print?
+
+```js
+const prices = [25, 40, 15];
+const total = prices[1] + prices[2] + prices[3];
+console.log(total);
+```
+
+- [x] `NaN`
+- [ ] `80`
+- [ ] `55`
+- [ ] `undefined`
+- [ ] An error, because `prices[3]` does not exist
+
+The prices are at indexes 0, 1 and 2. `prices[3]` reads past the end and quietly gives `undefined`, with no error. `40 + 15 + undefined` is `NaN`. If you picked 80, you added the first, second and third prices counting from 1, but the code skips index 0 and reads one past the end.
 :::
 
 ## What can go in an array?
@@ -438,6 +508,22 @@ This mistake has a name: an **off-by-one error**, being out by exactly one. It i
 **Forgetting the commas.** `[14 22 18]` is a `SyntaxError`. Each item must be separated with a comma: `[14, 22, 18]`.
 
 **Expecting an error when you read past the end.** JavaScript gives `undefined` instead, and the problem shows up later as `NaN` or a blank. When a value is mysteriously `undefined`, check your index.
+:::
+
+::: quiz
+What does this program print?
+
+```js
+const answers = [true, "false", 0, null];
+console.log(typeof answers, typeof answers[1], answers.length);
+```
+
+- [ ] `array string 4`
+- [ ] `object boolean 4`
+- [ ] `array boolean 3`
+- [x] `object string 4`
+
+`typeof` says `"object"` for an array: that is the historical quirk. `answers[1]` is `"false"` in quotes, which is a string, not a boolean. And `null` is a real value in its own locker, so there are 4 items. If you picked `array`, it is a very reasonable guess, but JavaScript does not have `"array"` as a `typeof` answer.
 :::
 
 ## Real-world uses

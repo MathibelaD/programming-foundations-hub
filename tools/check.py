@@ -8,6 +8,7 @@ Checks
 - internal links (#/phase-xx/NN-slug) point at lessons that exist
 - the concept ladder: code blocks do not use features before the phase that teaches them
 - front matter has title, summary, minutes and stage
+- ::: quiz blocks have a question, 3-5 options with exactly one marked [x], and an explanation
 
 Run:  python3 tools/check.py
 """
@@ -20,6 +21,7 @@ OPEN = re.compile(r"^:::[ \t]*([a-z][a-z-]*)[ \t]*(.*)$")
 CLOSE = re.compile(r"^:::[ \t]*$")
 FENCE = re.compile(r"^(```|~~~)")
 LINK = re.compile(r"\]\(#/([a-z0-9-]+/[a-z0-9-]+)(?:#[^)]*)?\)")
+QUIZ_OPTION = re.compile(r"^- \[( |x)\] \S")
 ANSWERABLE = {"exercise", "challenge", "predict", "debug", "project", "hint", "solution", "refactor", "try"}
 
 # (first phase allowed, regex, description). Only checked inside ```js fences.
@@ -45,6 +47,34 @@ LADDER_EXEMPT = {
     "phase-08-becoming-a-programmer/06-what-to-learn-next",
     "phase-08-becoming-a-programmer/07-glossary",
 }
+
+
+def check_quiz(lines, say, start):
+    """lines: the body of one ::: quiz block. Question, then '- [ ]' options, then the explanation."""
+    parts, fence = {"question": [], "options": [], "explain": []}, None
+    section = "question"
+    for line in lines:
+        f = FENCE.match(line)
+        if fence:
+            if f and line.strip().startswith(fence):
+                fence = None
+        elif f:
+            fence = f.group(1)
+        elif QUIZ_OPTION.match(line) and section != "explain":
+            section = "options"
+        elif section == "options" and line.strip():
+            section = "explain"
+        parts[section].append(line)
+    opts = [l for l in parts["options"] if QUIZ_OPTION.match(l)]
+    if not "".join(parts["question"]).strip():
+        say(start, "quiz has no question")
+    if not 3 <= len(opts) <= 5:
+        say(start, f"quiz has {len(opts)} options (want 3-5)")
+    right = sum(1 for l in opts if l.startswith("- [x]"))
+    if right != 1:
+        say(start, f"quiz marks {right} options correct (want exactly 1)")
+    if not "".join(parts["explain"]).strip():
+        say(start, "quiz has no explanation after the options")
 
 
 def lessons():
@@ -76,7 +106,10 @@ def main():
                     say(1, f"front matter missing '{key}'")
 
         current, prev_kind, fence, lang, opened_at = None, None, None, "", 0
+        block_lines = []
         for i, line in enumerate(text.split("\n"), 1):
+            if current:
+                block_lines.append(line)
             f = FENCE.match(line)
             if fence:
                 if f and line.strip().startswith(fence):
@@ -96,6 +129,8 @@ def main():
             if CLOSE.match(line):
                 if not current:
                     say(i, "stray ::: close with no open block")
+                if current == "quiz":
+                    check_quiz(block_lines[:-1], say, opened_at)
                 prev_kind, current = current, None
                 continue
             m = OPEN.match(line)
@@ -107,7 +142,7 @@ def main():
                 standalone = kind == "solution" and m.group(2).strip()
                 if kind in ("hint", "solution") and prev_kind not in ANSWERABLE and not standalone:
                     say(i, f"::: {kind} follows '{prev_kind}', not an exercise-like block")
-                current, opened_at = kind, i
+                current, opened_at, block_lines = kind, i, []
                 continue
             if line.strip() and not current:
                 prev_kind = None

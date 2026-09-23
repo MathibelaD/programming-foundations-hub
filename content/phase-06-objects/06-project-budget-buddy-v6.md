@@ -61,7 +61,7 @@ Open `~/budget-buddy/index.js` in VS Code and a terminal inside the `budget-budd
 node index.js
 ```
 
-(or `npm start`, if you set up the start script in Phase 1).
+(or `pnpm start`, if you set up the start script in Phase 1).
 
 ## Step 1: three small helpers
 
@@ -419,6 +419,27 @@ Choose 1-6: 5
   other: R21.99
 ```
 
+::: quiz
+Using `categoryTotals` exactly as written in this step, what does this print?
+
+```js
+const totals = categoryTotals([
+  { description: "Bus", amount: 20, category: "transport" },
+  { description: "Bread", amount: 19, category: "Food" },
+  { description: "Taxi", amount: 18, category: "transport" },
+  { description: "Milk", amount: 25, category: "food" },
+]);
+console.log(Object.keys(totals).length, totals.food);
+```
+
+- [ ] `2 44`
+- [x] `3 25`
+- [ ] `3 44`
+- [ ] `2 25`
+
+`categoryTotals` uses the category exactly as it is, and `"Food"` and `"food"` are different keys. So there are three keys (`transport`, `Food`, `food`), and `totals.food` only has the milk. This is why step 2 lower-cases the category when an expense is added. If you picked `2 44`, you assumed the tally ignores capitals. It does not.
+:::
+
 ## Step 6: save after every change
 
 Everything works, until you quit. Time to give Budget Buddy a memory, using what you learned in [Saving data with JSON](#/phase-06-objects/05-saving-data-with-json).
@@ -557,6 +578,30 @@ Last of all, change the comment on the first line of the file to say which stage
 ```js
 // Budget Buddy — stage 6: real records, saved to disk
 ```
+
+::: quiz
+Suppose someone put the save line **above** the push in `addExpense`:
+
+```js
+function addExpense(budget) {
+  const description = askForText("What was it for? ", "Something");
+  const amount = askForAmount("Amount: R");
+  const category = askForText("Category (e.g. food, transport): ", "other").toLowerCase();
+  saveBudget(budget);
+  budget.expenses.push(createExpense(description, amount, category));
+  console.log(`  Added ${description} for ${formatMoney(amount)}.`);
+}
+```
+
+`budget.json` holds Naledi's budget with 2 expenses. You start the program, add one expense, choose **Quit**, then start the program again. What does the welcome line say?
+
+- [ ] `Welcome back, Naledi! You have 3 saved expense(s).`
+- [x] `Welcome back, Naledi! You have 2 saved expense(s).`
+- [ ] `Welcome back, Naledi! You have 0 saved expense(s).`
+- [ ] It asks for your name again, because the file was replaced.
+
+The save happens while the list still has 2 expenses, and only then is the third pushed. Quitting does not save, so the file still says 2, and the new expense is lost. The expense list on screen looked right while the program was running, which is what makes this bug sneaky. Save **after** the change, never before.
+:::
 
 ## Try the finished program
 

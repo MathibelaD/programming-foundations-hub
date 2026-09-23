@@ -7,7 +7,7 @@
       "phases": "Phase 1",
       "goal": "Use variables, numbers, strings and user input to work out what is left of your money.",
       "deliverables": [
-        "A budget-buddy folder created with npm init",
+        "A budget-buddy folder created with pnpm init",
         "prompt-sync installed as a dependency",
         "Asks for your name, monthly income and three expenses",
         "Prints a neat summary with the money left over, to two decimal places"
@@ -89,11 +89,11 @@
       "goal": "Split the program into modules, fix any bugs, track it in Git, and write a README.",
       "deliverables": [
         "Code split into files: storage.js, money.js, reports.js, index.js",
-        "An npm start script",
+        "A start script, run with pnpm start",
         "A Git repository with meaningful commits",
         "A README explaining how to run it"
       ],
-      "run": "npm start"
+      "run": "pnpm start"
     }
   ]
 }

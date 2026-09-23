@@ -1,6 +1,6 @@
 ---
 title: Your first program (and what every file is for)
-summary: Create your practice folder, set it up with npm init, write and run hello.js, and understand every line of every file involved.
+summary: Create your practice folder, set it up with pnpm init, write and run hello.js, and understand every line of every file involved.
 minutes: 50
 stage: Phase 0
 ---
@@ -8,13 +8,13 @@ stage: Phase 0
 ## What you will learn
 
 - How to create your course folder, `coding-practice`, and open it in VS Code
-- What **npm** is, what `npm init -y` does, and what every line of **`package.json`** means
+- What **pnpm** does for a project, what `pnpm init` does, and what every line of **`package.json`** means
 - How to write and run your first program, and what each piece of `console.log("Hello, world!");` does
 - The **edit → save → run** loop, and the number one reason "nothing changed"
-- How to add a `start` script and run it with `npm start`
+- How to add a `start` script and run it with `pnpm start`
 - Two playgrounds for quick experiments: the Node **REPL** and the browser console
 
-**Before this:** [The terminal without fear](#/phase-00-start-here/05-the-terminal). You should be able to use `cd`, `mkdir` and `pwd`.
+**Before this:** [The terminal without fear](#/phase-00-start-here/05-the-terminal). You should be able to use `cd`, `mkdir` and `pwd`, and you should have installed pnpm and run its two settings lines in [Setting up your computer](#/phase-00-start-here/04-setting-up-your-computer).
 
 ## The problem: a place for everything
 
@@ -75,43 +75,54 @@ On the left you should now see a panel called **Explorer** with `CODING-PRACTICE
 
 From now on, use **VS Code's built-in terminal** (**Ctrl+`**). When you open it with a folder open, it starts **inside that folder** automatically, which saves you a `cd` every time.
 
-## Step 3: `npm init -y`
+## Step 3: `pnpm init`
 
-**npm** stands for **Node Package Manager**. It came with Node when you installed it. A **package manager** is a tool for managing **packages**: bundles of code that other people have written and shared, so you do not have to write everything yourself.
+You installed **pnpm** in [Setting up your computer](#/phase-00-start-here/04-setting-up-your-computer). It is a **package manager**: a tool for managing **packages**, bundles of code that other people have written and shared, so you do not have to write everything yourself.
 
 ::: analogy An app store for code
-npm is like the app store on your phone, but for code. There are millions of free packages: one that asks the user questions, one that works with dates, one that draws charts. When you want one, you ask npm, and it downloads and installs it into your project. You will install your first package, `prompt-sync`, in [Phase 1](#/phase-01-storing-information/08-getting-input-from-the-user).
+pnpm is like the app store on your phone, but for code. There are millions of free packages in a public library called the **npm registry**: one that asks the user questions, one that works with dates, one that draws charts. When you want one, you ask pnpm, and it downloads it and connects it to your project. You will install your first package, `prompt-sync`, in [Phase 1](#/phase-01-storing-information/08-getting-input-from-the-user).
 :::
 
-Before npm can install anything into a project, the folder needs a small settings file called **`package.json`**, which describes the project. The command `npm init` creates it. The `-y` on the end means "**yes** to everything": use sensible defaults instead of asking you ten questions.
+Before pnpm can add anything to a project, the folder needs a small settings file called **`package.json`**, which describes the project. The command `pnpm init` creates it, filled in with sensible starting values. ("init" is short for **initialise**: set something up for the first time.) It does not ask you any questions.
 
 ::: try Create package.json
 1. Make sure VS Code's terminal is open and the prompt shows you are in `coding-practice`. (If not, run `cd ~/coding-practice`.)
 2. Type this and press **Enter**:
    ```bash
-   npm init -y
+   pnpm init
    ```
 3. You should see something like this (with your own home folder in the first line):
    ```text
-   Wrote to /Users/thandi/coding-practice/package.json:
+   Wrote to /Users/thandi/coding-practice/package.json
 
    {
      "name": "coding-practice",
      "version": "1.0.0",
+     "description": "",
      "main": "index.js",
      "scripts": {
        "test": "echo \"Error: no test specified\" && exit 1"
      },
      "keywords": [],
      "author": "",
-     "license": "ISC",
-     "description": ""
+     "license": "ISC"
    }
    ```
 4. Look at the Explorer panel in VS Code. A file called `package.json` has appeared. Click it to open it. It contains exactly the text that was printed.
 :::
 
-Depending on your version of npm, the lines might be in a slightly different order. That makes no difference.
+Depending on your version of pnpm, the lines might be in a slightly different order. That makes no difference. But if you see an extra line `"type": "module",`, the first `pnpm config set` line from [Setting up your computer](#/phase-00-start-here/04-setting-up-your-computer) was missed. Delete that line from `package.json`, save, and run `pnpm config set init-type commonjs --global` so your next project is right.
+
+::: quiz
+Thandi opens a new terminal, which starts in her home folder, `/Users/thandi`. She forgets to `cd` anywhere and runs `pnpm init`. What happens?
+
+- [ ] pnpm finds her `coding-practice` folder and writes `package.json` there
+- [x] A `package.json` appears in `/Users/thandi`, with `"name": "thandi"`
+- [ ] An error, because a home folder cannot be a project
+- [ ] pnpm asks which folder she wants to use
+
+`pnpm init` always works in the **current folder**, the one `pwd` would show, and it takes the project's name from that folder's name. So her home folder becomes a "project" called `thandi`. No error warns her, which is why checking the prompt (or `pwd`) first is a good habit.
+:::
 
 ## `package.json`, line by line
 
@@ -120,21 +131,47 @@ Depending on your version of npm, the lines might be in a slightly different ord
 | Line | What it means |
 |---|---|
 | `{` | The start of the description. Everything up to the matching `}` at the end belongs to it. |
-| `"name": "coding-practice",` | The project's **name**. npm took it from the folder's name. Names in `package.json` use lower case and dashes, no spaces. |
+| `"name": "coding-practice",` | The project's **name**. pnpm took it from the folder's name. Names in `package.json` use lower case and dashes, no spaces. |
 | `"version": "1.0.0",` | The project's **version number**. The three numbers mean *major.minor.patch*: a big change, a small new feature, a small fix. It only matters if you share your project. You can ignore it. |
+| `"description": "",` | A one-sentence description of the project. `""` means empty. |
 | `"main": "index.js",` | The project's **main file**, the one other code would use first if this project were installed as a package. We will not use it (you do not even have an `index.js`), so leave it. |
 | `"scripts": { ... },` | Shortcut **commands** for this project. Each one has a name and the command it runs. You will add your own in a moment. |
 | `"test": "echo \"Error: no test specified\" && exit 1"` | A placeholder script called `test`. It prints `Error: no test specified` and then reports failure. It is there to remind you that you have not written any automated tests. Leave it. |
-| `"keywords": [],` | Words that help people find the project if you publish it on npm. `[]` means an empty list. |
+| `"keywords": [],` | Words that help people find the project if you publish it to the npm registry. `[]` means an empty list. |
 | `"author": "",` | Your name, if you want. `""` means empty. You can type your name between the quotes. |
-| `"license": "ISC",` | The **licence**: the legal rules for anyone who copies your code. ISC is a simple, permissive one. It only matters if you share your code publicly. |
-| `"description": ""` | A one-sentence description of the project. Empty for now. |
+| `"license": "ISC"` | The **licence**: the legal rules for anyone who copies your code. ISC is a simple, permissive one. It only matters if you share your code publicly. |
 | `}` | The end of the description. |
 
 Notice the **commas**. Every line inside the curly brackets ends in a comma **except the last one** before a closing `}`. JSON is extremely strict about this, stricter than JavaScript. A missing or extra comma breaks the whole file. Keep that in mind when you edit it below.
 
 ::: note You do not need to memorise this
-You will rarely write `package.json` by hand. npm creates and updates it for you. What matters is that you know **what it is for**, so it never feels like a mysterious file you are afraid to open. The two parts you will actually use in this course are `scripts` (today) and `dependencies` (which npm adds in Phase 1, when you install a package).
+You will rarely write `package.json` by hand. pnpm creates and updates it for you. What matters is that you know **what it is for**, so it never feels like a mysterious file you are afraid to open. The two parts you will actually use in this course are `scripts` (today) and `dependencies` (which pnpm adds in Phase 1, when you install a package).
+:::
+
+::: quiz
+Lerato edited her `package.json`. It now breaks every pnpm command. Which line is the problem?
+
+```json
+{
+  "name": "coding-practice",
+  "version": "1.0.0",
+  "description": "My practice files",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Lerato Mokoena",
+  "license": "ISC",
+}
+```
+
+- [ ] Line 4: a description cannot contain spaces
+- [ ] Line 10: the author's name cannot contain a space
+- [ ] Line 2: the name must be exactly the same as her user name
+- [x] Line 11: the comma after `"ISC"`, because it is now the last line before `}`
+
+The text between quotes may contain spaces: it is only the *labels* like `"name"` that are fixed. The trouble is the comma rule: every line inside `{ }` ends in a comma **except the last one**. Here `"license": "ISC",` is the last line, but it still has a comma, so JSON expects another label that never comes. Delete that comma.
 :::
 
 ## Step 4: your first program
@@ -209,6 +246,22 @@ Output:
 
 You will learn what you can *do* with numbers, and why quotes matter so much, in [Phase 1](#/phase-01-storing-information/01-values-and-output).
 
+::: quiz
+What does this program print?
+
+```js
+console.log("Sipho;");
+console.log("Lerato")
+```
+
+- [x] `Sipho;` on the first line and `Lerato` on the second
+- [ ] `Sipho` on the first line and `Lerato` on the second
+- [ ] `Sipho;` and then an error, because line 2 has no semicolon
+- [ ] `Sipho;Lerato` on one line
+
+Everything between the quotes is text, and it is printed exactly, so the `;` inside the quotes appears. The semicolon that ends an instruction is the one *outside* the brackets. Line 2 has none, which is bad style but still works, because JavaScript guesses where the instruction ends. Each `console.log` prints its own line.
+:::
+
 ## The edit → save → run loop
 
 Programming is a loop of three steps, repeated all day long:
@@ -237,9 +290,9 @@ Programming is a loop of three steps, repeated all day long:
 5. **Now experiment.** Add two more `console.log` lines with anything you like: your name, your town, your favourite food. Before running, say out loud exactly what the terminal will show, line by line. Then run it. Were you right?
 :::
 
-## Step 5: a `start` script and `npm start`
+## Step 5: a `start` script and `pnpm start`
 
-Remember the `scripts` section of `package.json`? It holds shortcut commands for your project. The most common one is called `start`: the command that starts the project. Real projects use it so that anyone can run them by typing `npm start`, without needing to know which file is the main one.
+Remember the `scripts` section of `package.json`? It holds shortcut commands for your project. The most common one is called `start`: the command that starts the project. Real projects use it so that anyone can run them by typing `pnpm start`, without needing to know which file is the main one.
 
 ::: try Add a start script
 1. Open `package.json` in VS Code.
@@ -253,17 +306,16 @@ Remember the `scripts` section of `package.json`? It holds shortcut commands for
 3. Save the file.
 4. In the terminal (still in `coding-practice`), type this and press **Enter**:
    ```bash
-   npm start
+   pnpm start
    ```
 5. You should see:
    ```text
-
-   > coding-practice@1.0.0 start
-   > node hello.js
-
+   $ node hello.js
    Hello, world!
    ```
-   The first lines are npm telling you what it is doing: in the project `coding-practice`, version `1.0.0`, it is running the `start` script, which is `node hello.js`. Then comes your program's output.
+   The first line is pnpm telling you which command it is running for the `start` script: `node hello.js`. (The `$` is a traditional sign for "a command typed at the terminal".) Then comes your program's output.
+
+   The very first time, pnpm may print two extra lines before that, such as `Already up to date` and `Done in 60ms using pnpm v12.6.0`. That is pnpm checking the project has everything it needs. It is not an error.
 :::
 
 The whole `package.json` should now look like this:
@@ -272,6 +324,7 @@ The whole `package.json` should now look like this:
 {
   "name": "coding-practice",
   "version": "1.0.0",
+  "description": "",
   "main": "index.js",
   "scripts": {
     "start": "node hello.js",
@@ -279,17 +332,35 @@ The whole `package.json` should now look like this:
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
-  "description": ""
+  "license": "ISC"
 }
 ```
 
-If `npm start` shows an error containing `EJSONPARSE` and `Expected ',' or '}'`, you are missing the comma at the end of the `"start"` line. npm even tells you the line number. Add the comma, save, and try again.
+If you forget the comma at the end of the `"start"` line, `pnpm start` shows an error like this:
 
-`start` is special: you can run it with only `npm start`. Any other script needs the word `run`: `npm run` followed by the script's name. You will try that in an exercise below.
+```text
+Error: ERR_PNPM_PACKAGE_MANIFEST_SERIALIZATION_ERROR
+
+  × Failed to parse /Users/thandi/coding-practice/package.json: expected `,` or `}` at line 8 column 5
+```
+
+It looks frightening, but read it slowly: it names the file (`package.json`), says what it expected (a `,` or a `}`), and gives the **line number**. The problem is usually at the end of the line **before** the one it names. Add the comma, save, and try again.
+
+The standard way to run **any** script is `pnpm run` followed by the script's name: `pnpm run start`, `pnpm run test`, and so on. For `start`, the short form `pnpm start` is so common that everyone uses it. pnpm also lets you leave out `run` for your own script names, as long as the name is not already one of pnpm's own commands. You will try that in an exercise below.
 
 ::: note Two ways to run the same thing
-`npm start` and `node hello.js` do the same job here. In lessons, we will mostly type `node` and a file name directly, because you will be running many different files. Budget Buddy, your course project, will use `npm start`, like a real app.
+`pnpm start` and `node hello.js` do the same job here. In lessons, we will mostly type `node` and a file name directly, because you will be running many different files. Budget Buddy, your course project, will use `pnpm start`, like a real app.
+:::
+
+::: quiz
+Your `start` script is `"start": "node hello.js"`, and it works. Then you rename `hello.js` to `greet.js` in VS Code, but do not touch `package.json`. What does `pnpm start` do now?
+
+- [ ] Runs `greet.js`, because it is the only program in the folder
+- [ ] Says `Missing script: start`
+- [x] Runs `node hello.js`, which fails because Node cannot find `hello.js`
+- [ ] Nothing: pnpm updated `package.json` for you when you renamed the file
+
+The script is only a saved command. pnpm finds the `start` script (so it is not "missing") and runs exactly the command written there, `node hello.js`. Node then looks for `hello.js`, which no longer exists, and fails with `Cannot find module`. Nothing updates `package.json` automatically: change the script to `node greet.js` yourself.
 :::
 
 ## Step 6: the folder layout for the course
@@ -323,6 +394,17 @@ Lessons will say things like "create `phase-1/variables.js`" and "run `node phas
 - Run it from **inside `coding-practice`** (not inside `phase-1`). The path `phase-1/variables.js` is a **relative path**: starting from `coding-practice`, go into `phase-1`, and find `variables.js`.
 
 Keep your terminal in `coding-practice` and you will rarely need to `cd` anywhere.
+
+::: quiz
+You used `cd phase-0` to go into the `phase-0` folder, and now you run `node phase-0/about-me.js`. What happens?
+
+- [ ] It runs `about-me.js` as normal
+- [x] `Cannot find module`, because Node looks for `coding-practice/phase-0/phase-0/about-me.js`
+- [ ] Node goes back up to `coding-practice` automatically, then runs the file
+- [ ] `Cannot find module`, because Node looks for `about-me.js` directly in `coding-practice`
+
+`phase-0/about-me.js` is a **relative path**: it starts from where you are *now*. You are already inside `phase-0`, so Node looks for another `phase-0` folder inside it, which does not exist. Either `cd ..` back to `coding-practice` first, or run `node about-me.js` from where you are.
+:::
 
 ## Bonus: two playgrounds for quick experiments
 
@@ -404,11 +486,11 @@ If you got `Cannot find module`, check that you ran the command from inside `cod
 :::
 
 ::: exercise Level 2 — On your own · Your own script
-Add a second script to `package.json`, called `about`, that runs `phase-0/about-me.js`. Then run it using npm.
+Add a second script to `package.json`, called `about`, that runs `phase-0/about-me.js`. Then run it using pnpm.
 :::
 
 ::: hint
-Copy the shape of the `"start"` line, with a different name and a different command. Remember the comma rules. For any script that is not called `start`, the command is `npm run` followed by the script's name.
+Copy the shape of the `"start"` line, with a different name and a different command. Remember the comma rules. The always-safe way to run a script is `pnpm run` followed by the script's name.
 :::
 
 ::: solution
@@ -423,19 +505,16 @@ The `scripts` section:
 ```
 Then run:
 ```bash
-npm run about
+pnpm run about
 ```
 Output (with your own lines):
 ```text
-
-> coding-practice@1.0.0 about
-> node phase-0/about-me.js
-
+$ node phase-0/about-me.js
 My name is Kagiso.
 I live in Polokwane.
 My favourite food is chakalaka.
 ```
-If you typed `npm about` without `run`, npm says `Unknown command: "about"` and helpfully suggests `npm run about`. Only `start` (and a few other special names, like `test`) work without `run`.
+`pnpm about` (without `run`) also works, because `about` is not one of pnpm's own commands. But imagine you had called the script `add` or `install`: those are pnpm's own commands, so `pnpm add` would do pnpm's job, not run your script. `pnpm run` always means "run my script", so it is the safe habit.
 :::
 
 ::: challenge A text birthday card
@@ -477,47 +556,49 @@ Avoid the backslash `\` in your card for now: inside quotes it has a special mea
 
 **Naming the file `hello.js.txt` or `Hello.JS`.** Use exactly `hello.js`, all lower case. Turning on file extensions (from [Setting up your computer](#/phase-00-start-here/04-setting-up-your-computer)) helps you spot this.
 
-**Breaking `package.json` with a missing or extra comma.** npm reports `EJSONPARSE` and a line number. Every line inside `{ }` ends in a comma except the last one.
+**Breaking `package.json` with a missing or extra comma.** pnpm reports `ERR_PNPM_PACKAGE_MANIFEST_SERIALIZATION_ERROR`, `Failed to parse`, and a line number. Every line inside `{ }` ends in a comma except the last one.
+
+**A `"type": "module",` line in `package.json`.** It means pnpm's `init-type` setting was not done. Delete the line and run `pnpm config set init-type commonjs --global`. If you leave it, `require` (which you meet in Phase 1) will crash with `require is not defined in ES module scope`.
 
 **Typing JavaScript at the terminal prompt, or terminal commands in the REPL.** Check the prompt. A lonely `>` means you are in the REPL.
 
-**Running `npm init -y` in your home folder by mistake.** You get a `package.json` in the wrong place. Delete that stray `package.json` (not the folder!) in File Explorer or Finder, then `cd ~/coding-practice` and run it again.
+**Running `pnpm init` in your home folder by mistake.** You get a `package.json` in the wrong place. Delete that stray `package.json` (not the folder!) in File Explorer or Finder, then `cd ~/coding-practice` and run it again.
 :::
 
 ## Real-world uses
 
-- **Every** Node.js project in the world starts with a `package.json`, created by `npm init` or by a tool that runs it for you.
-- `npm start` is the standard way to run a project. When you download someone else's JavaScript project, `npm start` is usually the first thing you try.
+- **Every** Node.js project in the world starts with a `package.json`, created by `pnpm init`, `npm init`, or a tool that does the same job.
+- `pnpm start` (or `npm start`, in projects that use npm) is the standard way to run a project. When you download someone else's JavaScript project, it is usually the first thing you try.
 - Professional developers keep a REPL or browser console open all day to test small ideas before putting them into real files.
 - Printing messages with `console.log` is how programmers check what their code is doing. You will use it for exactly that in [Debugging](#/phase-08-becoming-a-programmer/02-debugging).
 
 ::: connect
-**This builds on:** [the terminal](#/phase-00-start-here/05-the-terminal) (you used `cd`, `mkdir`, relative paths and the up arrow) and [setting up your computer](#/phase-00-start-here/04-setting-up-your-computer) (VS Code, Node and npm).
+**This builds on:** [the terminal](#/phase-00-start-here/05-the-terminal) (you used `cd`, `mkdir`, relative paths and the up arrow) and [setting up your computer](#/phase-00-start-here/04-setting-up-your-computer) (VS Code, Node and pnpm).
 
 **This unlocks:** everything from here on. Every lesson now follows the loop you just learned: create a file in `coding-practice/phase-N/`, type, save, run with `node`. Next, [When things go wrong](#/phase-00-start-here/07-when-things-go-wrong) teaches you to read the error messages you will inevitably meet. In [Phase 1](#/phase-01-storing-information/08-getting-input-from-the-user), `package.json` gets its first dependency.
 :::
 
 ::: recap
 - `coding-practice` is your course folder, with one sub-folder per phase (`phase-0`, `phase-1`, …). Run files from inside `coding-practice`.
-- **npm** is Node's package manager, an app store for code. `npm init -y` creates `package.json` with default answers.
+- **pnpm** is a package manager, an app store for code. `pnpm init` creates `package.json` with default values.
 - `package.json` describes the project: `name`, `version`, `main`, `scripts`, `keywords`, `author`, `license` and `description`. It is JSON, which is strict about commas.
 - `console.log("...")` shows a line of text. `console` is the output, `.log` writes a line, the brackets hold what to show, the quotes mark the text, and `;` ends the instruction.
 - `node file.js` runs a file. Instructions run top to bottom.
 - **Edit → save → run.** Unsaved changes do not run.
-- `"start": "node hello.js"` in `scripts` lets you run the project with `npm start`. Other scripts use `npm run name`.
+- `"start": "node hello.js"` in `scripts` lets you run the project with `pnpm start`. Any script runs with `pnpm run name`, the always-safe form.
 - The **REPL** (`node` on its own, leave with `.exit`) and the browser console are for quick one-line experiments. Real work goes in files.
 :::
 
-::: interview What does `npm init -y` do, and what does the `-y` mean?
-It creates a `package.json` file in the current folder, which turns the folder into a Node project that npm can manage. The `-y` means "yes to all the questions": use the default answers instead of asking.
+::: interview What does `pnpm init` do, and which folder does it affect?
+It creates a `package.json` file in the **current** folder (the one `pwd` shows), filled in with default values. That turns the folder into a project that pnpm can manage. Run it in the wrong folder and the file lands in the wrong place.
 :::
 
 ::: interview You change `hello.js`, run `node hello.js`, and see the old output. What is the most likely reason?
 The file was not saved. Node reads the saved file from disk, not what is on the screen. Look for the dot on the file's tab, save with Ctrl+S (Cmd+S on macOS), and run it again.
 :::
 
-::: interview Why can you type `npm start` but need `npm run about`?
-`start` is one of npm's special script names, so it has its own short command. Any other script, like `about`, is run with `npm run` followed by the script's name.
+::: interview `pnpm about` and `pnpm run about` both work. Why do we still teach `pnpm run`?
+`pnpm run name` always means "run my script called name". The short form only works when the name is not one of pnpm's own commands. A script called `add` or `install` would clash: `pnpm add` would run pnpm's own `add` command instead of your script. `pnpm run` never clashes.
 :::
 
 ::: interview When would you use the Node REPL instead of a file?
@@ -526,10 +607,10 @@ To quickly try one or two lines and see what they do. Anything longer, or anythi
 
 ::: checkpoint
 - [ ] I created `~/coding-practice` and opened it in VS Code
-- [ ] I ran `npm init -y` and can explain what at least five lines of `package.json` are for
+- [ ] I ran `pnpm init` and can explain what at least five lines of `package.json` are for
 - [ ] I wrote `hello.js` myself and ran it with `node hello.js`
 - [ ] I saw the old output when I forgot to save, then the new output after saving
-- [ ] I added a `start` script and ran it with `npm start`
+- [ ] I added a `start` script and ran it with `pnpm start`
 - [ ] I created `phase-0` and `phase-1`, and ran `node phase-0/about-me.js`
 - [ ] I opened the Node REPL, ran a line, and left with `.exit`
 :::
@@ -537,5 +618,6 @@ To quickly try one or two lines and see what they do. Anything longer, or anythi
 ::: resources
 - **javascript.info, "Hello, world!":** https://javascript.info/hello-world. A short page on running JavaScript. (Its examples use a web page. The idea is the same.)
 - **javascript.info, "Developer console":** https://javascript.info/devtools. How to open the browser console in every browser.
-- **npm docs, "package.json":** https://docs.npmjs.com/cli/v10/configuring-npm/package-json. The official description of every field. Very detailed: dip in, do not read it all.
+- **pnpm docs, "package.json":** https://pnpm.io/package_json. The official description of the fields pnpm uses. Very detailed: dip in, do not read it all.
+- **pnpm docs, `pnpm init` and `pnpm run`:** https://pnpm.io/cli/init and https://pnpm.io/cli/run. Short reference pages for the two commands you used today.
 :::

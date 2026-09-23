@@ -65,6 +65,25 @@ true
 
 Why does that matter? Imagine a list of expenses in the order you entered them. You sort it to show the biggest first, and now your "list expenses" screen shows them in the wrong order, and "remove expense number 2" removes the wrong one. We will fix this properly in a minute.
 
+::: quiz
+What does this print?
+
+```js
+const queue = ["Zama", "Bheki", "Anna"];
+const line = queue;
+const order = line.sort();
+order.push("Yusuf");
+console.log(queue);
+```
+
+- [ ] `[ 'Zama', 'Bheki', 'Anna' ]`
+- [ ] `[ 'Anna', 'Bheki', 'Zama' ]`
+- [ ] `[ 'Zama', 'Bheki', 'Anna', 'Yusuf' ]`
+- [x] `[ 'Anna', 'Bheki', 'Zama', 'Yusuf' ]`
+
+`queue`, `line` and `order` are three names for **one** array. `sort` rearranges that array in place and returns it (not a copy), and `push` adds to it. So `queue` shows both changes. If you picked `[ 'Anna', 'Bheki', 'Zama' ]`, you knew `sort` changes the original but thought `order` was a separate array.
+:::
+
 ## Surprise 2: numbers are sorted as text
 
 ```js
@@ -98,6 +117,21 @@ Output:
 For names that are all written with a capital first letter, this does not matter. If your data mixes capitals, one fix is to compare lower-cased versions (you will see how to write your own comparison below). You may later meet a method called `localeCompare`, which handles this and accented letters properly. It is a name to look up when you need it.
 
 So, to sort numbers correctly, you need to tell `sort` how to compare them.
+
+::: quiz
+What does this print?
+
+```js
+console.log([8, 70, 600, 5000].sort());
+```
+
+- [ ] `[ 8, 70, 600, 5000 ]`
+- [x] `[ 5000, 600, 70, 8 ]`
+- [ ] `[ 8, 5000, 600, 70 ]`
+- [ ] `[ 70, 8, 600, 5000 ]`
+
+With no compare function, `sort` compares the numbers as **text**, first character first: `"5"` < `"6"` < `"7"` < `"8"`. By luck that looks exactly like "biggest first", but it is not sorting by size. Add a `9` and it would come last. If you picked `[ 8, 70, 600, 5000 ]`, you expected `sort` to know these are numbers. For numbers, always pass `(a, b) => a - b`.
+:::
 
 ## The compare function, in plain words
 
@@ -178,6 +212,23 @@ Remember it like this:
 - `(a, b) => b - a` : **biggest first** (descending, "high to low")
 
 If you forget which is which, try it on a small list and look. Professionals do that too.
+
+::: quiz
+What does this print?
+
+```js
+const ages = [30, 4, 18, 4, 60];
+ages.sort((a, b) => b - a);
+console.log(ages[1], ages[ages.length - 1]);
+```
+
+- [x] `30 4`
+- [ ] `4 60`
+- [ ] `18 4`
+- [ ] `30 60`
+
+`b - a` means **biggest first**, so `ages` becomes `[60, 30, 18, 4, 4]`. Index 1 is `30` and the last item is `4`. If you picked `4 60`, you read `b - a` as smallest first. Remember: `a - b` is low to high, `b - a` is high to low. If unsure, try it on three numbers.
+:::
 
 ## Copy first, then sort
 
@@ -315,6 +366,28 @@ Both surprises are in this one.
 Surprise 2: with no compare function, the numbers are sorted as text. `"100"` starts with `"1"`, `"20"` with `"2"`, `"3"` with `"3"`, so that is the dictionary order. Surprise 1: `sort` changed `numbers` itself, and `sorted` is the same array, so both lines are identical. The fix for both: `const sorted = [...numbers].sort((a, b) => a - b);`.
 :::
 
+::: quiz
+What does this print?
+
+```js
+const players = [
+  { name: "Thabo", points: 12 },
+  { name: "Riya", points: 30 },
+  { name: "Sam", points: 21 },
+];
+const ranked = [...players].sort((a, b) => b.points - a.points);
+ranked[0].points = 0;
+console.log(players[1].points, ranked[0].name, players[0].name);
+```
+
+- [ ] `30 Riya Thabo`
+- [ ] `0 Riya Riya`
+- [x] `0 Riya Thabo`
+- [ ] `30 Thabo Thabo`
+
+The copy protected the **order**: `players[0]` is still Thabo. But `[...players]` is a shallow copy, so both arrays hold the same three objects. `ranked[0]` is the Riya object, which is also `players[1]`, and setting its points to 0 shows up in both lists. If you picked `30 Riya Thabo`, you thought the spread copied the objects too. It only copied the list of addresses.
+:::
+
 ## Chaining: methods that read like a sentence
 
 `map`, `filter` and `sort` all give back an **array**. And arrays have methods. So you can call another method straight on the result, without storing it in a variable first. This is called **chaining**.
@@ -411,6 +484,27 @@ TypeError: Cannot read properties of undefined (reading 'reduce')
 ```
 
 `forEach` returns `undefined`, and you cannot call `.reduce` on `undefined`. `forEach` can only ever be the **last** link in a chain. Here, `map` was meant.
+
+::: quiz
+What does this print?
+
+```js
+const marks = [55, 90, 40, 75, 90];
+const result = marks
+  .filter((mark) => mark >= 50)
+  .map((mark) => mark - 50)
+  .sort()
+  .slice(0, 2);
+console.log(result);
+```
+
+- [ ] `[ 5, 25 ]`
+- [ ] `[ 40, 40 ]`
+- [ ] `[ 5, 40 ]`
+- [x] `[ 25, 40 ]`
+
+Follow the assembly line. `filter` drops 40: `[55, 90, 75, 90]`. `map` takes 50 off each: `[5, 40, 25, 40]`. `sort()` with no compare function sorts as text, and `"2"` < `"4"` < `"5"`, so you get `[25, 40, 40, 5]`. `slice(0, 2)` keeps the first two. If you picked `[ 5, 25 ]`, you sorted by size in your head. The `sort()` in the chain needs `(a, b) => a - b`.
+:::
 
 ## Loop or method?
 

@@ -165,9 +165,9 @@ Untracked files:
   (use "git add <file>..." to include in what will be committed)
 	hello.js
 	node_modules/
-	package-lock.json
 	package.json
 	phase-1/
+	pnpm-lock.yaml
 
 nothing added to commit but untracked files present (use "git add" to track)
 ```
@@ -178,10 +178,10 @@ Something is wrong in that list, though: `node_modules/`.
 
 ### `.gitignore`: files Git should never save
 
-`node_modules` holds the packages you installed with npm, such as `prompt-sync`. You should not save it in Git, because:
+`node_modules` holds the packages you installed with pnpm, such as `prompt-sync`. You should not save it in Git, because:
 
 - It can be huge (thousands of files for bigger projects), and it is not *your* code.
-- Anyone can recreate it exactly by running `npm install`, because `package.json` lists what is needed. You met this idea in [Asking the user questions](#/phase-01-storing-information/08-getting-input-from-the-user).
+- Anyone can recreate it exactly by running `pnpm install`, because `package.json` lists what is needed and `pnpm-lock.yaml` records the exact versions. You met this idea in [Asking the user questions](#/phase-01-storing-information/08-getting-input-from-the-user).
 
 A file called **`.gitignore`** lists files and folders that Git should pretend do not exist.
 
@@ -201,14 +201,14 @@ Untracked files:
   (use "git add <file>..." to include in what will be committed)
 	.gitignore
 	hello.js
-	package-lock.json
 	package.json
 	phase-1/
+	pnpm-lock.yaml
 
 nothing added to commit but untracked files present (use "git add" to track)
 ```
 
-`node_modules/` has gone from the list, and `.gitignore` itself has appeared. The `.gitignore` file *should* be saved, so that the rule is kept with the project.
+`node_modules/` has gone from the list, and `.gitignore` itself has appeared. The `.gitignore` file *should* be saved, so that the rule is kept with the project. So should `pnpm-lock.yaml`: it is small, and it lets anyone who copies the project get exactly the same package versions you have.
 
 ::: note Files starting with a dot
 On macOS and Linux, files whose names start with `.` are **hidden** in the normal file browser and in `ls`. VS Code shows them, and `ls -a` shows them in the terminal. This is why you may not see `.git` or `.gitignore` in Finder.
@@ -233,9 +233,9 @@ Changes to be committed:
   (use "git rm --cached <file>..." to unstage)
 	new file:   .gitignore
 	new file:   hello.js
-	new file:   package-lock.json
 	new file:   package.json
 	new file:   phase-1/variables.js
+	new file:   pnpm-lock.yaml
 ```
 
 "Changes to be committed" is the staging area: the box is packed, but not sealed yet.
@@ -250,12 +250,12 @@ git commit -m "Add practice files from phases 0 and 1"
 
 ```text
 [main (root-commit) 8b842d1] Add practice files from phases 0 and 1
- 5 files changed, 5 insertions(+)
+ 5 files changed, 62 insertions(+)
  create mode 100644 .gitignore
  create mode 100644 hello.js
- create mode 100644 package-lock.json
  create mode 100644 package.json
  create mode 100644 phase-1/variables.js
+ create mode 100644 pnpm-lock.yaml
 ```
 
 Your numbers will be different. `8b842d1` is the start of this commit's unique ID, called its **hash**. `root-commit` means it is the very first one. Now:
@@ -281,6 +281,25 @@ nothing to commit, working tree clean
 7. Run `git commit -m "Add all my practice files so far"`.
 8. Run `git status`. You should see `nothing to commit, working tree clean`.
 9. **Predict, then run:** open `hello.js`, add a line, and save it. What will `git status` say now? Which word will appear next to `hello.js`? Run it and see.
+:::
+
+::: quiz
+In a repository with a clean working tree, you create two new files, `notes.txt` and `app.js`. Then you run:
+
+```bash
+git add app.js
+git commit -m "Add app"
+git status
+```
+
+What does `git status` show?
+
+- [ ] `nothing to commit, working tree clean`
+- [ ] `notes.txt` under "Changes to be committed"
+- [x] `notes.txt` under "Untracked files"
+- [ ] `app.js` and `notes.txt` under "Untracked files"
+
+Only `app.js` was added, so only `app.js` went into the commit. `notes.txt` was never added, so Git still sees it as a file it has never saved: untracked. If you picked "working tree clean", you assumed `git commit` saves everything in the folder. It only saves what is in the staging area.
 :::
 
 ## The second commit, and every one after
@@ -329,6 +348,17 @@ git commit -m "Say hello twice"
 
 That is the whole everyday cycle: **change, status, add, commit**. Everything else in Git builds on it.
 
+::: quiz
+`menu.js` is already committed. You add a line to it and run `git add menu.js`. Then you add a **second** line to `menu.js`, save, and run `git commit -m "Add menu options"`. What happens?
+
+- [ ] The commit contains both new lines
+- [ ] The commit fails, because `menu.js` changed after `git add`
+- [ ] The commit contains only the second line
+- [x] The commit contains only the first line, and `git status` still shows `menu.js` as modified
+
+`git add` puts a copy of the file *as it is at that moment* into the staging area. The second line was typed afterwards, so it is not in that copy, and the commit leaves it out. It is still in your file, though, so `git status` lists `menu.js` as modified. This is why the habit is: finish the change, `git add`, then commit straight away. And `git diff` before committing shows you anything you have not added yet.
+:::
+
 ## `git log`: the history
 
 ```bash
@@ -364,6 +394,17 @@ aecd305 Say hello twice
 8b842d1 Add practice files from phases 0 and 1
 ```
 
+::: quiz
+In a new repository you commit `menu.js` with the message `Add menu`, then commit `report.js` with the message `Add report option`. Then you change `report.js` and run `git add report.js`, but you do not commit. What does `git log --oneline` show?
+
+- [x] Two lines, with `Add report option` at the top
+- [ ] Two lines, with `Add menu` at the top
+- [ ] Three lines, with your staged change at the top
+- [ ] One line, `Add report option`
+
+`git log` lists commits, newest first. You made two commits, so there are two lines, and the newer one, `Add report option`, is at the top. The staged change is not a commit yet: it only becomes part of the history when you run `git commit`. `git status` is where it shows up, under "Changes to be committed".
+:::
+
 ## Undoing a change you have not committed yet
 
 Suppose you edit `hello.js`, break it, and want it back exactly as it was at the last commit. `git status` even told you how:
@@ -375,6 +416,17 @@ git restore hello.js
 The file goes back to how it was in the last commit. **Careful:** this throws your uncommitted changes to that file away for good. That is exactly what you want when you have made a mess, and exactly what you do not want by accident.
 
 Going back to *older* commits is possible too, but it is a step further than this lesson. For now, the big win is this: **once something is committed, it is safe.** However badly you break things, the committed version is still in the history.
+
+::: quiz
+At 10:00 you commit `price.js`. At 10:30 you fix a typo in it and commit again. At 11:00 you change it some more, break it, and do not commit. Then you run `git restore price.js`. What is in `price.js` now?
+
+- [ ] The version from 10:00, the first commit
+- [x] The version from 10:30, with the typo fixed
+- [ ] The broken 11:00 version, because it was never committed
+- [ ] Nothing: the file is deleted, because it had uncommitted changes
+
+`git restore` puts a file back to how it was in the **last** commit, and the last commit is the 10:30 one. Your 11:00 changes are thrown away. It does not go back to the very first commit: every commit is a new save point, and `restore` uses the most recent one. That is one more reason to commit each time something works.
+:::
 
 ## Writing good commit messages
 
@@ -528,7 +580,7 @@ Yes: VS Code's Source Control panel runs the same Git commands for you. The **+*
 :::
 
 ::: interview Why should `node_modules` be in `.gitignore`?
-It is not your code, it can be very large, and it can be recreated exactly at any time with `npm install`, because `package.json` lists the packages the project needs. Saving it would bloat the repository for no benefit.
+It is not your code, it can be very large, and it can be recreated exactly at any time with `pnpm install`, because `package.json` lists the packages the project needs and `pnpm-lock.yaml` records their exact versions. Saving it would bloat the repository for no benefit.
 :::
 
 ::: interview What is the difference between Git and GitHub?

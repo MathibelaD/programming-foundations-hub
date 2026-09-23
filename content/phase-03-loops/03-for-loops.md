@@ -113,6 +113,23 @@ That is a very long table, so from now on we will use the shorter kind from the 
 
 It is identical to the `while` trace from the last lesson. That is the point: **a `for` loop does the same thing as a `while` loop.** Only the layout is different.
 
+::: quiz
+What does this print?
+
+```js
+for (let n = 2; n < 20; n = n * 3) {
+  console.log(n);
+}
+```
+
+- [ ] `6`, `18`
+- [x] `2`, `6`, `18`
+- [ ] `2`, `6`, `18`, `54`
+- [ ] `2`, `6`
+
+The start sets `n` to 2, and the body prints it before the step ever runs. The step then makes 6, which passes the check and prints, then 18, which also passes. The next step makes 54, and `54 < 20` is `false`, so 54 is never printed. `6, 18` is the answer you get if you run the step before the body because it is written first. It runs after.
+:::
+
 ## The same countdown, as a for
 
 ```js
@@ -219,6 +236,17 @@ Why would anyone start at 0? For counting push-ups, you would not. You would sta
 If you want to print "Push-up 1" to "Push-up 5", start at 1 and use `<=`. If you are going through positions in text, start at 0 and use `<`. Both are correct. Choose the one that makes the code say what you mean.
 :::
 
+::: quiz
+Each of these loops has the body `console.log(p);`. Which one prints 0, 25, 50, 75, 100 and then stops?
+
+- [ ] `for (let p = 0; p < 100; p += 25)`
+- [ ] `for (let p = 25; p <= 100; p += 25)`
+- [ ] `for (let p = 0; p <= 100; p + 25)`
+- [x] `for (let p = 0; p <= 100; p += 25)`
+
+It must start at 0, include 100 (so `<=`), and really change `p` (so `+=`). The first one stops before 100, because `100 < 100` is `false`. The second starts at 25. The third is the sneaky one: `p + 25` works out a number but never stores it, so `p` stays 0 and the loop prints 0 for ever. Only `+=` (or `p = p + 25`) changes the counter.
+:::
+
 ## Walking through the letters of a word
 
 You learned in [Strings](#/phase-01-storing-information/05-strings) that `word[0]` is the first character of `word`, `word[1]` is the second, and `word.length` is how many characters there are. The number in the square brackets is the character's **index**, its position counting from 0.
@@ -284,6 +312,25 @@ Here is something worth noticing. This loop works for **any** word, of any lengt
 
 ::: note Keep this shape in your head
 `for (let i = 0; i < something.length; i++)` is one of the most common lines in all of programming. Right now `something` is a string. In [Phase 5](#/phase-05-arrays/03-looping-through-arrays) it will be a list of expenses, of names or of marks, and the loop will look *exactly* the same. You are learning it early.
+:::
+
+::: quiz
+What does this print?
+
+```js
+const word = "Karoo";
+
+for (let i = 1; i < word.length; i += 2) {
+  console.log(word[i]);
+}
+```
+
+- [x] `a`, `o`
+- [ ] `K`, `r`, `o`
+- [ ] `a`, `o`, `undefined`
+- [ ] `K`, `a`, `r`, `o`, `o`
+
+`word.length` is 5, so the positions are 0 to 4. `i` starts at 1 (`a`), jumps to 3 (`o`), then to 5, and `5 < 5` is `false`. The `K` is at position 0, which this loop skips because it starts at 1. `K, r, o` is what you get if you count the letters from 1, like a person would. Indexes count from 0.
 :::
 
 ## Building a string in a loop
@@ -362,6 +409,28 @@ The start is `word.length - 1` (the last position, 4), the condition is `i >= 0`
 5. Below it, type in the rainfall bar program (use a different variable name, like `rainBar`, if `bar` is already taken in the file). Change `rain` to `12`, predict, run.
 :::
 
+::: quiz
+What does this print?
+
+```js
+const town = "Durban";
+let result = "";
+
+for (let i = 0; i < town.length; i++) {
+  result = town[i] + result;
+}
+
+console.log(result);
+```
+
+- [ ] `Durban`
+- [ ] `n`
+- [x] `nabruD`
+- [ ] `D`
+
+Each letter is put in **front** of what is already there, because `town[i]` comes first in `town[i] + result`. So `result` grows as `D`, `uD`, `ruD`, and so on, and ends as `nabruD`. The loop walks forwards, but the string comes out backwards. `Durban` is what `result = result + town[i]` would give. The order of the two sides of `+` decides where the new piece goes.
+:::
+
 ## Where does the counter go afterwards?
 
 One real difference between `while` and `for`: the `let` in a `for` loop's start creates a counter that **belongs to the loop**. When the loop ends, it is gone:
@@ -393,6 +462,27 @@ ReferenceError: count is not defined
 Node points its `^` at `count` on the last line. In the `while` version, `count` was made *before* the loop, so it was still there afterwards, and we could print `count is now 6`. In a `for` loop, it only exists inside the loop. That is usually what you want: the counter was only needed for the loop, and now it is tidied away. (This idea is called **scope**, and it has [its own lesson](#/phase-04-functions/04-scope) in Phase 4.)
 
 If you need to know something after a loop has finished, like how many weeks it took, keep it in a variable created *before* the loop.
+
+::: quiz
+What does this print?
+
+```js
+let total = 0;
+
+for (let i = 1; i <= 3; i++) {
+  total = total + i;
+}
+
+console.log(total, i);
+```
+
+- [ ] `6 4`
+- [x] `ReferenceError: i is not defined`
+- [ ] `6 3`
+- [ ] `6 undefined`
+
+`i` was created with `let` in the start slot of the `for`, so it only exists inside the loop. After the `}` there is no `i` at all. Using a name that does not exist is a `ReferenceError`, and it stops the program before anything is printed, so you do not even see the 6. `6 4` is what you would get from a `while` loop with a counter made before it. `undefined` is for a box that exists but is empty. Here there is no box.
+:::
 
 ## for or while? How to choose
 

@@ -259,9 +259,9 @@ Use it whenever a word in a lesson, an error message or an article looks unfamil
 
 **Node.js**: The program that runs JavaScript outside a web browser, on your own computer. You use it with `node file.js`. *See [What is programming?](#/phase-00-start-here/02-what-is-programming).*
 
-**node_modules**: The folder where npm puts installed packages. Never shared or saved in Git, because `npm install` can recreate it. *See [Asking the user questions](#/phase-01-storing-information/08-getting-input-from-the-user).*
+**node_modules**: The folder where pnpm puts the packages your project installs. The real files live in a hidden `.pnpm` folder inside it; only the packages you asked for appear at the top. Never shared or saved in Git, because `pnpm install` can recreate it. *See [Asking the user questions](#/phase-01-storing-information/08-getting-input-from-the-user).*
 
-**npm**: Node's package manager, which installs packages (`npm install`) and runs scripts (`npm start`). Like an app store for code. *See [Your first program](#/phase-00-start-here/06-your-first-program).*
+**npm**: The package manager that comes with Node. It does the same jobs as pnpm (installing packages and running scripts); this course uses pnpm instead, so you can ignore it. The **npm registry**, the public online library of packages, is where both npm and pnpm download packages from. *See [Setting up your computer](#/phase-00-start-here/04-setting-up-your-computer).*
 
 **null**: A value that means "deliberately empty". You set it on purpose. *See [Booleans, null and undefined](#/phase-01-storing-information/06-booleans-null-undefined).*
 
@@ -277,13 +277,17 @@ Use it whenever a word in a lesson, an error message or an article looks unfamil
 
 ## P
 
-**Package**: Code someone else wrote and shared, which you install with npm, such as `prompt-sync`. *See [Asking the user questions](#/phase-01-storing-information/08-getting-input-from-the-user).*
+**Package**: Code someone else wrote and shared on the npm registry, which you install with `pnpm add`, such as `prompt-sync`. *See [Asking the user questions](#/phase-01-storing-information/08-getting-input-from-the-user).*
 
-**package.json**: The file that describes a Node project: its name, version, scripts and dependencies. Created by `npm init -y`. *See [Your first program](#/phase-00-start-here/06-your-first-program).*
+**package.json**: The file that describes a Node project: its name, version, scripts and dependencies. Created by `pnpm init`. *See [Your first program](#/phase-00-start-here/06-your-first-program).*
 
 **Parameter**: A placeholder name in a function's definition that receives an argument when the function is called. In `function greet(name)`, `name` is the parameter. *See [Parameters and arguments](#/phase-04-functions/02-parameters-and-arguments).*
 
 **Path**: The address of a file or folder. An absolute path starts from the top of the drive; a relative path starts from where you are now. *See [The terminal](#/phase-00-start-here/05-the-terminal).*
+
+**pnpm**: The package manager this course uses (pronounced "p-n-p-m"). It creates projects (`pnpm init`), installs packages (`pnpm add prompt-sync`, or `pnpm install` for everything in `package.json`) and runs scripts (`pnpm start`). It keeps one shared copy of each package on your computer, so it is fast and saves space. *See [Setting up your computer](#/phase-00-start-here/04-setting-up-your-computer).*
+
+**pnpm-lock.yaml**: A file pnpm writes and updates that records the exact version of every package installed. Save it in Git so everyone gets the same versions, and never edit it by hand. *See [Asking the user questions](#/phase-01-storing-information/08-getting-input-from-the-user).*
 
 **Program**: A written list of instructions that a computer follows exactly, in order. *See [What is programming?](#/phase-00-start-here/02-what-is-programming).*
 
@@ -323,7 +327,7 @@ Use it whenever a word in a lesson, an error message or an article looks unfamil
 
 **Scope**: Where in the code a variable exists and can be used. Variables made inside a function or block only exist there. *See [Scope](#/phase-04-functions/04-scope).*
 
-**Script (npm)**: A named command in `package.json` under `scripts`, run with `npm start` or `npm run name`. *See [Your first program](#/phase-00-start-here/06-your-first-program).*
+**Script**: A named command in `package.json` under `scripts`, run with `pnpm run name` (or the shortcut `pnpm name`, such as `pnpm start`). *See [Your first program](#/phase-00-start-here/06-your-first-program).*
 
 **Shadowing**: When a variable inside a function or block has the same name as one outside, hiding the outer one while inside. *See [Scope](#/phase-04-functions/04-scope).*
 

@@ -139,6 +139,26 @@ Output:
 4. **See the boxes:** open [Python Tutor in JavaScript mode](https://pythontutor.com/javascript.html), paste in the same code, and click "Visualize Execution". Step forward line by line. You will see `mondayList` and `fridayList` drawn as two arrows pointing at **one** array. That drawing is the house-and-address picture.
 :::
 
+::: quiz
+What does this print?
+
+```js
+let price = 30;
+const cart = { total: price };
+const saved = cart;
+price = 50;
+saved.total = saved.total + 5;
+console.log(cart.total);
+```
+
+- [ ] `55`
+- [ ] `30`
+- [x] `35`
+- [ ] `50`
+
+`{ total: price }` copies the **number** 30 into the object, so changing `price` to 50 later has no effect on it. But `saved = cart` copies only the address: one object, two names. Adding 5 through `saved` changes the object `cart` points at, so `30 + 5 = 35`. If you picked `55`, you thought the property stays linked to `price`. If you picked `30`, you thought `saved` was a separate copy.
+:::
+
 ## A realistic bug
 
 Here is how this bites in a real program. An app has default settings, and every new user starts with them:
@@ -243,6 +263,29 @@ This is why [pure functions](#/phase-04-functions/06-designing-with-functions) a
 Mutating is not always wrong. In Budget Buddy v5, `removeExpense(expenses)` called `expenses.splice(...)` inside a function, and that worked **because** the function and the main program shared the same array. The removal needed to happen to the real list. The rule is not "never mutate". The rule is: **know which one you are doing**, and give the function a name that says so (`removeExpense` clearly changes things; `halfPrices` sounds like it gives you something new).
 :::
 
+::: quiz
+What does this print?
+
+```js
+function addFee(order, fee) {
+  fee = fee * 2;
+  order.total = order.total + fee;
+}
+
+const myOrder = { total: 100 };
+let delivery = 15;
+addFee(myOrder, delivery);
+console.log(myOrder.total, delivery);
+```
+
+- [x] `130 15`
+- [ ] `130 30`
+- [ ] `100 15`
+- [ ] `115 15`
+
+`fee` gets a **copy** of the number 15. Doubling it to 30 changes only the copy inside the function, so `delivery` stays `15`. `order` gets a copy of the **address**, so `order.total = ...` changes the real object: `100 + 30 = 130`. If you picked `130 30`, you treated the number like an object. If you picked `100 15`, you treated the object like a number.
+:::
+
 ## Changing the house vs changing the address
 
 There is one more piece to the picture, and it clears up a lot. Look at this:
@@ -317,6 +360,29 @@ TypeError: Assignment to constant variable.
 ```
 
 `push` changes the house, which `const` allows. `box = ["c"]` tries to write a new address on a `const` slip, which it does not. Node points at the `=` on line 4.
+
+::: quiz
+What does this print?
+
+```js
+function reset(scores) {
+  scores.push(0);
+  scores = [];
+  scores.push(100);
+}
+
+const mine = [7, 8];
+reset(mine);
+console.log(mine);
+```
+
+- [ ] `[ 100 ]`
+- [x] `[ 7, 8, 0 ]`
+- [ ] `[ 7, 8 ]`
+- [ ] `[ 7, 8, 0, 100 ]`
+
+The first `push` goes to the house that `mine` also points at, so `0` is added to the real array. Then `scores = []` only writes a new address on the function's own slip. From that moment `scores` is a different, new array, and `push(100)` goes there. `mine` never sees it. If you picked `[ 100 ]`, you thought reassigning the parameter replaces the caller's array. It cannot.
+:::
 
 ## Making a real copy: spread
 
@@ -447,6 +513,27 @@ Cape Town
 ```
 
 For most everyday code a shallow copy is all you need. Remember that it is shallow, so this does not surprise you later. (The next lesson shows another way to copy everything, all the way down.)
+
+::: quiz
+What does this print?
+
+```js
+const recipe = { name: "Chakalaka", spices: ["curry", "chilli"] };
+const mild = { ...recipe, name: "Mild chakalaka" };
+
+mild.spices.pop();
+mild.spices = [...mild.spices, "paprika"];
+
+console.log(recipe.name, recipe.spices);
+```
+
+- [ ] `Chakalaka [ 'curry', 'chilli' ]`
+- [x] `Chakalaka [ 'curry' ]`
+- [ ] `Chakalaka [ 'curry', 'paprika' ]`
+- [ ] `Mild chakalaka [ 'curry' ]`
+
+Spread copies one level only, so `mild.spices` and `recipe.spices` start as the **same** array. `pop()` goes to that shared house and removes `"chilli"` for both. The next line builds a **new** array and writes its address on `mild.spices` only, so `"paprika"` never reaches `recipe`. The name was copied as text and then replaced in `mild` only. If you kept `'chilli'`, you forgot that the copy is shallow. If you added `'paprika'`, you forgot that `=` writes a new address instead of changing the house.
+:::
 
 ## `===` compares addresses, not contents
 
@@ -627,6 +714,26 @@ if (saved === current) {
 **Forgetting that spread is shallow.** Objects and arrays *inside* the copy are still shared. Spread the inner level too if you are going to change it.
 
 **Thinking `const` means "cannot change".** `const` stops you pointing the name at a different array or object. The contents can still change.
+:::
+
+::: quiz
+Given this code:
+
+```js
+const a = { n: 1 };
+const b = { ...a };
+const c = a;
+const list = [a, b];
+```
+
+Which of these lines prints `true`?
+
+- [ ] `console.log(a === b);`
+- [ ] `console.log([a] === [a]);`
+- [ ] `console.log(b.n === a.n && b === a);`
+- [x] `console.log(list[0] === c);`
+
+`list[0]` holds the address of `a`, and `c` holds that same address, so it is the same house: `true`. `b` is a spread copy, a different house with the same contents, so `a === b` is `false` (and that makes the third line `false` too, even though `b.n === a.n`). `[a] === [a]` builds two new arrays, and two new arrays are always two different houses.
 :::
 
 ## Real-world uses

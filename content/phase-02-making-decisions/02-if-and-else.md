@@ -197,6 +197,31 @@ Delivery: R0
 Notice the pattern: `delivery` was created *before* the `if` with a starting value, and the `if` changed it. You will see why that is the right place to create it later in this lesson.
 :::
 
+::: quiz
+What does this print?
+
+```js
+let fare = 18;
+const wallet = 20;
+
+if (wallet >= fare) {
+  console.log("Pay");
+  fare = fare + 5;
+} else {
+  console.log("Walk");
+}
+
+console.log(fare);
+```
+
+- [ ] `Pay`, then `18`
+- [ ] `Pay`, then `Walk`, then `23`
+- [x] `Pay`, then `23`
+- [ ] `Walk`, then `18`
+
+20 is at least 18, so the `if` block runs: it prints `Pay` and changes `fare` to 23. The condition is asked once, before the block. Changing `fare` inside the block does not make JavaScript go back and try the `else`, so `Walk` is never printed. The last line is outside both blocks, so it always runs, and it shows the new value, 23.
+:::
+
 ## `else if`: more than two paths
 
 Some decisions have more than two outcomes. Turning a percentage into a symbol on a school report is a good example:
@@ -316,6 +341,29 @@ A mark of 92 gets a D. The first question, "is 92 >= 50?", is `true`, so the D b
 4. **Now break it on purpose.** Move the `mark >= 50` check to the very top of the chain. Type `95`. What symbol do you get, and why?
 :::
 
+::: quiz
+A traffic officer's app uses this chain, with `const speed = ...;` above it. Which speed makes it print `Fine: R1000`?
+
+```js
+if (speed > 60) {
+  console.log("Fine: R500");
+} else if (speed > 80) {
+  console.log("Fine: R1000");
+} else if (speed > 120) {
+  console.log("Fine: R2500");
+} else {
+  console.log("No fine");
+}
+```
+
+- [ ] `85`
+- [ ] `100`
+- [ ] `130`
+- [x] No speed can make it print that
+
+The chain stops at the first `true` question. Any speed above 80 is also above 60, so the first block (`Fine: R500`) always wins, and the R1000 and R2500 questions are never reached. 85 and 100 feel right because they are "more than 80", but JavaScript never gets that far. The fix is to start with the biggest threshold: `speed > 120` first, then `speed > 80`, then `speed > 60`.
+:::
+
 ## Separate `if`s versus an `else if` chain
 
 Beginners often write several separate `if` statements where they meant one chain. They look similar but behave differently:
@@ -364,6 +412,34 @@ Hot: shorts and a hat.
 ```
 
 Ask yourself: "Could more than one of these be right at the same time?" If yes, separate `if`s. If exactly one should win, an `else if` chain.
+
+::: quiz
+What does this print?
+
+```js
+const points = 120;
+let reward = "none";
+
+if (points >= 50) {
+  reward = "coffee";
+}
+if (points >= 100) {
+  reward = "muffin";
+}
+if (points >= 200) {
+  reward = "lunch";
+}
+
+console.log(reward);
+```
+
+- [ ] `coffee`
+- [x] `muffin`
+- [ ] `lunch`
+- [ ] `none`
+
+These are three separate `if`s, so all three questions are asked. 120 passes the first (`reward` becomes `coffee`) and the second (`reward` becomes `muffin`), and fails the third. Each passing `if` overwrites the value before it, so the last one to pass wins. `coffee` is what an `else if` chain would give, because a chain stops at the first `true`. Separate `if`s never stop early.
+:::
 
 ## Blocks and indentation
 
@@ -447,6 +523,28 @@ child
 ```
 
 `let ticket;` makes an empty box *outside* the blocks, so it still exists after them. Each block only fills it. Notice that it is `let`, not `const`, because the value is given later.
+
+::: quiz
+What does this print?
+
+```js
+const age = 20;
+let ticket = "child";
+
+if (age >= 18) {
+  let ticket = "adult";
+}
+
+console.log(ticket);
+```
+
+- [ ] `adult`
+- [ ] `ReferenceError: ticket is not defined`
+- [ ] `SyntaxError: Identifier 'ticket' has already been declared`
+- [x] `child`
+
+The `let` inside the block makes a **new**, separate box that only lives inside the block. It happens to have the same name. `"adult"` goes into the inner box, and that box is thrown away at the `}`. The outer `ticket` was never touched, so it still says `child`. There is no error, because the two boxes live in different places. The fix is to remove the word `let` inside the block, so that the line changes the box that already exists: `ticket = "adult";`.
+:::
 
 ## Checking that input is a number
 

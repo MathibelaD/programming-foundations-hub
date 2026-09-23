@@ -126,6 +126,24 @@ On their own, booleans look a bit dull. They become powerful in [Phase 2](#/phas
 `true` (no quotes) is a boolean. `"true"` (with quotes) is a four-letter string that happens to spell the word. They print the same, which makes this confusing, but they are different types and behave differently. You will see this bite when reading answers typed by a user, which always arrive as text.
 :::
 
+::: quiz
+What does this print?
+
+```js
+const pin = "4071";
+const isFourDigits = pin.length > 3;
+const startsWithZero = pin.startsWith("0");
+console.log(isFourDigits, startsWithZero, pin.includes("07"));
+```
+
+- [ ] `4 false true`
+- [ ] `true true true`
+- [x] `true false true`
+- [ ] `true false false`
+
+`pin.length > 3` is a question (is 4 more than 3?), so `isFourDigits` stores the answer, `true`, not the length. The PIN starts with `4`, so `startsWith("0")` is `false`, even though there is a 0 inside it. And `"07"` does appear, in the middle of `4071`, so `includes` gives `true`. If you picked `4`, you stored the length instead of the answer to the question.
+:::
+
 ## Two kinds of "nothing": `undefined` and `null`
 
 Sometimes a variable has no real value. JavaScript has two different ways to say so, and the difference is about **who** decided it was empty.
@@ -198,6 +216,26 @@ You will also see `null` come *back* to you from other people's code, as a way o
 | When you see it | A variable with no value yet, a character or item that does not exist | A value that is known to be empty, like "no winner yet" |
 | Should you write it? | Rarely | Yes, when "empty" is a real answer |
 
+::: quiz
+What is the **last** line this prints?
+
+```js
+let seat;
+let driver = null;
+console.log(seat, driver);
+seat = driver;
+driver = "Bongani";
+console.log(seat, driver);
+```
+
+- [x] `null Bongani`
+- [ ] `Bongani Bongani`
+- [ ] `undefined Bongani`
+- [ ] `null null`
+
+Line 4 copies what `driver` holds *at that moment*, `null`, into `seat`, so `seat` is no longer `undefined`. Line 5 then puts `"Bongani"` into `driver` only. `seat` does not follow it, because copying a value is a one-off, exactly like `let b = a;` in [Variables](#/phase-01-storing-information/02-variables). `Bongani Bongani` is the "link" mistake.
+:::
+
 ## Asking a value what it is: `typeof`
 
 Every value has a **type**, also called a **data type**: the kind of value it is. JavaScript can tell you any value's type with `typeof`. Write `typeof` followed by a value:
@@ -251,6 +289,21 @@ object
 ```
 
 That is **wrong**, and everyone agrees it is wrong. `null` is its own type. This is a bug from the very first version of JavaScript in 1995. By the time people noticed, millions of websites depended on it, so it could never be fixed without breaking them. Now every JavaScript programmer learns it as a piece of trivia. ("Object" is a type you will meet in [Phase 6](#/phase-06-objects/01-what-is-an-object). `null` is not one.)
+
+::: quiz
+What does this print?
+
+```js
+console.log(typeof "12" + 2, typeof ("12" + 2), typeof (12 + 2));
+```
+
+- [ ] `number string number`
+- [ ] `string string number`
+- [ ] `string number number`
+- [x] `string2 string number`
+
+Without brackets, `typeof` goes first: `typeof "12"` is the string `"string"`, and then `+ 2` joins onto it, giving `string2`. With brackets, the sum happens first: `"12" + 2` joins to `"122"`, a string, and `12 + 2` is 14, a number. If you started with `number`, you judged `"12"` by the digits inside it instead of by its quotes.
+:::
 
 ## All the types so far
 
@@ -463,6 +516,25 @@ Nickname has 4 letters
 **Thinking `0` or `""` means "nothing".** `0` is a real number, and `""` is a real (empty) string. They are values, not `null` or `undefined`.
 
 **Ignoring "Cannot read properties of undefined".** It means a value you expected to be there is missing. Find which one, and why.
+:::
+
+::: quiz
+What do you see when you run this?
+
+```js
+let nickname = null;
+const town = "Tzaneen";
+console.log(town.length);
+console.log(nickname.length);
+console.log("Done");
+```
+
+- [ ] `7`, then `0`, then `Done`
+- [x] `7`, then `TypeError: Cannot read properties of null (reading 'length')`, and no `Done`
+- [ ] `7`, then `undefined`, then `Done`
+- [ ] Only the `TypeError`, because Node finds the problem before running anything
+
+`null` has nothing inside it, not even a length, so line 4 stops the program with a `TypeError`. Line 3 has already run, so `7` is printed first, and `Done` never appears. `0` is the length of the empty string `""`, but `null` is not an empty string. And a `TypeError` happens while the program runs; only a `SyntaxError` stops it before the first line.
 :::
 
 ## Real-world uses

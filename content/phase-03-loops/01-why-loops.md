@@ -96,6 +96,24 @@ A loop whose condition never becomes "no" never stops. It is called an **infinit
 Because the computer needs to decide, every time round, whether to go again. You already know how to write yes/no questions in code: `lapsDone < 4` gives `true` or `false`. That is exactly what you learned in [Comparing values](#/phase-02-making-decisions/01-comparing-values). A loop condition is the same kind of comparison you used with `if`. The difference is that `if` asks the question **once**, and a loop asks it **again and again**.
 :::
 
+::: quiz
+A coach writes this plan for Thandi. How many laps does she run?
+
+```text
+set laps to 0
+while laps is less than 4:
+    run one lap
+    say "Well done!"
+```
+
+- [ ] 4
+- [ ] 5
+- [ ] 0
+- [x] She never stops, because nothing changes `laps`
+
+The plan has a start (`laps` is 0) and a condition (fewer than 4), but no step towards stopping. Nothing in the repeated part changes `laps`, so the question "is 0 fewer than 4?" gets "yes" every time. That is an infinite loop. 4 is what the coach *meant*, and it is the answer you get if you quietly fill in the missing step in your head. The computer never does that for you.
+:::
+
 ## Look closely at repeated code
 
 Here is "print 1 to 5" written a different way, using a variable. It uses nothing you have not seen before.
@@ -154,6 +172,32 @@ This is the key insight. When you see the same lines copied again and again, wit
 :::
 
 You should have seen `Finished. count is now 11`. Did you predict 10? Many people do. After printing 10, the program *still* adds one, so `count` ends one past the last number printed. Keep that in mind, because it comes up again when we write real loops.
+
+::: quiz
+What does the last line print?
+
+```js
+let n = 10;
+
+console.log(n);
+n = n - 3;
+
+console.log(n);
+n = n - 3;
+
+console.log(n);
+n = n - 3;
+
+console.log("End:", n);
+```
+
+- [ ] `End: 4`
+- [x] `End: 1`
+- [ ] `End: 7`
+- [ ] `End: -2`
+
+The numbers printed are 10, 7 and 4. But after printing 4, the program still takes 3 away, so `n` is 1 when the last line runs. `End: 4` is the tempting answer, because 4 was the last number you saw. The step always comes after the print, so the variable ends one step past the last value printed.
+:::
 
 ## The words programmers use
 
@@ -253,6 +297,26 @@ print months
 It prints `5`. Five months.
 
 Notice that `months` is a **counter**, even though the condition does not mention it. The condition is about `savings`. This loop is a "keep going until something is true" loop, and the counter tells us, afterwards, how many iterations it took.
+:::
+
+::: quiz
+Trace this plan. What is printed, and how many times is the condition checked?
+
+```text
+set pages to 0
+set days to 0
+while pages is less than 100:
+    add 30 to pages
+    add 1 to days
+print days
+```
+
+- [x] `4`, and the condition is checked 5 times
+- [ ] `3`, and the condition is checked 3 times
+- [ ] `4`, and the condition is checked 4 times
+- [ ] `3`, and the condition is checked 4 times
+
+`pages` goes 0, 30, 60, 90, 120. At 90 it is still less than 100, so there is one more iteration, which takes `days` to 4 and `pages` to 120. The condition is checked five times: four "yes" answers and the final "no". If you said 3, you stopped at 90 because it looked close to 100. A loop does not stop near the target. It stops at the first check where the answer is "no".
 :::
 
 ## Two kinds of loop: "how many?" and "until"

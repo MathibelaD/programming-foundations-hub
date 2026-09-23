@@ -136,6 +136,26 @@ Output:
 
 The names `contact` and `index` are your choice. JavaScript fills them in by **position**: the first parameter gets the item, the second gets the index. If you wrote `(index, contact)` by mistake, `index` would hold the name and `contact` would hold the number.
 
+::: quiz
+What does this print?
+
+```js
+const words = ["kop", "hand", "voet"];
+let out = "";
+words.forEach((word, i, all) => {
+  out = out + word[i] + all.length;
+});
+console.log(out);
+```
+
+- [ ] `khv3`
+- [ ] `k0a1e2`
+- [x] `k3a3e3`
+- [ ] `kop3hand3voet3`
+
+`forEach` passes the item, its index and the whole array. So `word[i]` is letter 0 of `"kop"` (`k`), letter 1 of `"hand"` (`a`) and letter 2 of `"voet"` (`e`). `all` is the whole array every time, so `all.length` is always `3`. If you picked `k0a1e2`, you added the index instead of the array's length.
+:::
+
 ## Write your own forEach
 
 To prove there is nothing hidden in `forEach`, let us upgrade `processEach` so it passes all three arguments, exactly like the real one:
@@ -262,6 +282,35 @@ Total: R244.49
 
 The callback can see `total` because of [scope](#/phase-04-functions/04-scope): a function can see the variables around it. This works. In [reduce](#/phase-07-functions-as-values/06-reduce) you will meet a method designed especially for totals.
 
+::: quiz
+What does this print?
+
+```js
+const orders = [
+  { item: "Kota", price: 35, paid: true },
+  { item: "Vetkoek", price: 12, paid: false },
+  { item: "Bunny chow", price: 60, paid: true },
+];
+
+let owed = 0;
+let count = 0;
+orders.forEach((order) => {
+  if (!order.paid) {
+    owed += order.price;
+  }
+  count++;
+});
+console.log(count, owed);
+```
+
+- [x] `3 12`
+- [ ] `1 12`
+- [ ] `3 95`
+- [ ] `2 95`
+
+`count++` is outside the `if`, so it runs for every order: 3. `owed` only grows when `!order.paid` is `true`, which is only the vetkoek, so it is 12. If you picked `3 95`, you missed the `!`: it means "not paid", so the paid kota and bunny chow are skipped.
+:::
+
 ## forEach gives you nothing back
 
 `forEach` does its work and returns `undefined`. It is for **doing** something with each item (printing, adding to a total, saving), not for **making** something.
@@ -371,6 +420,29 @@ Found Ferdi, stopping.
 
 (In lesson 05 you will meet [find and some](#/phase-07-functions-as-values/05-find-some-every), which *do* stop early. They are built for "look for something" jobs.)
 
+::: quiz
+What does this print?
+
+```js
+const readings = [4, 7, -1, 9, -3, 2];
+let sum = 0;
+readings.forEach((reading) => {
+  if (reading < 0) {
+    return;
+  }
+  sum += reading;
+});
+console.log(sum);
+```
+
+- [ ] `11`
+- [ ] `18`
+- [ ] `SyntaxError: Illegal return statement`
+- [x] `22`
+
+`return` inside a `forEach` callback only ends **that one call**. `forEach` then moves on to the next reading, so it works like `continue`: the two negative readings are skipped and 4 + 7 + 9 + 2 = 22. If you picked `11`, you treated `return` like `break`. `return` is allowed in the callback because the callback is a function; it is `break` that gives an error.
+:::
+
 ## Changing items inside forEach
 
 This one catches people. Doubling every score like this does **not** work:
@@ -424,6 +496,35 @@ Output:
 ```
 
 This works, but next lesson shows a cleaner way that does not change the original at all.
+
+::: quiz
+What does this print?
+
+```js
+const cart = [
+  { name: "Rice", qty: 1 },
+  { name: "Oil", qty: 2 },
+];
+const counts = [1, 2];
+
+cart.forEach((line) => {
+  line.qty = line.qty + 1;
+  line = { name: "Gone", qty: 0 };
+});
+counts.forEach((n) => {
+  n = n + 1;
+});
+
+console.log(cart[1].name, cart[1].qty, counts[1]);
+```
+
+- [ ] `Gone 0 3`
+- [ ] `Oil 3 3`
+- [x] `Oil 3 2`
+- [ ] `Oil 2 2`
+
+`line` holds the address of a real object in `cart`, so `line.qty = ...` changes that object: Oil becomes 3. The next line, `line = { ... }`, only puts a new address on the callback's own `line`; the array still points at the Oil object. The numbers in `counts` are copied into `n`, so changing `n` changes nothing. If you picked `Gone 0 3`, you thought assigning to the parameter replaces the item in the array.
+:::
 
 ## forEach or for...of?
 

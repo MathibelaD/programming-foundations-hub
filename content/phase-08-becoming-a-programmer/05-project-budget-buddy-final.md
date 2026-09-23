@@ -21,7 +21,7 @@ In this final project lesson you will not add a single new feature. Instead you 
 | `storage.js` | Saving to and loading from `budget.json` |
 | `reports.js` | Calculations on the list of expenses |
 
-- Start with **`npm start`**
+- Start with **`pnpm start`**
 - Have a **README** that tells anyone what it is and how to run it
 
 And it will behave **exactly** the same as it does now. Changing the structure of code without changing what it does is called **refactoring**, and you first met it in [Budget Buddy v4](#/phase-04-functions/07-project-budget-buddy-v4).
@@ -33,7 +33,7 @@ And it will behave **exactly** the same as it does now. Changing the structure o
 Open your `budget-buddy` folder in VS Code. You should have:
 
 - `index.js`: your Budget Buddy v7
-- `package.json` and `package-lock.json`
+- `package.json` and `pnpm-lock.yaml`
 - `node_modules/` (with `prompt-sync` inside)
 - `budget.json`, if you have run the program and added some expenses
 
@@ -86,7 +86,7 @@ Before changing anything, make a save point of the working version.
    node_modules/
    budget.json
    ```
-   `node_modules/` stays out for the usual reason: `npm install` can recreate it. `budget.json` stays out because it is **your personal data**, not part of the program. Someone else who downloads Budget Buddy should start with their own empty budget, not see your grocery bill.
+   `node_modules/` stays out for the usual reason: `pnpm install` can recreate it. `budget.json` stays out because it is **your personal data**, not part of the program. Someone else who downloads Budget Buddy should start with their own empty budget, not see your grocery bill.
 3. Start the repository and check what Git sees:
    ```bash
    git init
@@ -102,8 +102,8 @@ Before changing anything, make a save point of the working version.
      (use "git add <file>..." to include in what will be committed)
    	.gitignore
    	index.js
-   	package-lock.json
    	package.json
+   	pnpm-lock.yaml
 
    nothing added to commit but untracked files present (use "git add" to track)
    ```
@@ -115,6 +115,17 @@ Before changing anything, make a save point of the working version.
    ```
 
 Now, whatever happens next, `git restore index.js` gets you back to a working program.
+
+::: quiz
+Before running `git init`, you made a spare copy of your data called `budget-backup.json`. The folder now contains `.gitignore`, `index.js`, `package.json`, `pnpm-lock.yaml`, `budget.json`, `budget-backup.json` and `node_modules/`. The `.gitignore` is the one above. Which of these files does `git status` list as untracked?
+
+- [ ] Only `.gitignore`, `index.js`, `package.json` and `pnpm-lock.yaml`
+- [x] `.gitignore`, `budget-backup.json`, `index.js`, `package.json` and `pnpm-lock.yaml`
+- [ ] All of them except `node_modules/`
+- [ ] `.gitignore`, `budget-backup.json`, `index.js`, `node_modules/`, `package.json` and `pnpm-lock.yaml`
+
+The line `budget.json` in `.gitignore` matches that exact file name and nothing else, so `budget-backup.json` is still listed, and your personal data would go into the next commit. `node_modules/` stays hidden as usual. If you picked the first option, you assumed Git ignores anything that looks similar. It does not: to keep the backup out too, add its name as another line in `.gitignore` (or delete the backup).
+:::
 
 ## Step 2: move the money helpers into `money.js`
 
@@ -338,6 +349,17 @@ git commit -m "Move calculations into reports.js"
 ```
 :::
 
+::: quiz
+Suppose that in step 4 you made one slip: the `require` line in `index.js` lists every name from `reports.js` **except** `topExpenses`. `reports.js` itself is exactly as shown above. You run `node index.js`. What happens?
+
+- [ ] It crashes straight away, before showing the menu
+- [ ] Option 4 (summary) and option 7 (top 3) both crash
+- [ ] Everything works, because `topExpenses` is in `module.exports`
+- [x] Option 4 works, but option 7 crashes with `ReferenceError: topExpenses is not defined`
+
+Option 4 calls `largestExpense`, which `index.js` did import. `largestExpense` lives in `reports.js` and calls `topExpenses` there, where that name exists. So option 4 works. Option 7 calls `topExpenses` from inside `index.js`, where the name was never created, so it crashes the moment you choose it. Exporting a function only makes it *available*; each file must still take it out with `require`. And the program starting fine proves nothing, which is why you test every option.
+:::
+
 ## Step 5: tidy `index.js`
 
 Scroll through `index.js` now. It is still under 190 lines, but every one of them is about talking to the user. Two small tidy-ups:
@@ -379,24 +401,22 @@ Open `package.json`. You added a `start` script back in [Budget Buddy v1](#/phas
 }
 ```
 
-Yours may have a couple of extra lines that `npm init -y` added, such as `"keywords": []`, `"author": ""` or a `"test"` script. You can keep them or remove them; either is fine. Your `prompt-sync` version number may be slightly different too. Be careful with commas: every line inside `{ }` needs a comma after it, **except the last one**.
+Yours may have a couple of extra lines that `pnpm init` added, such as `"keywords": []`, `"author": ""` or a `"test"` script. You can keep them or remove them; either is fine. Your `prompt-sync` version number may be slightly different too. Be careful with commas: every line inside `{ }` needs a comma after it, **except the last one**.
 
 Now start the program the way other people will:
 
 ```bash
-npm start
+pnpm start
 ```
 
-You should see npm announce the script, then Budget Buddy:
+You should see pnpm show the command it is running, after a `$`, then Budget Buddy:
 
 ```text
-> budget-buddy@1.0.0 start
-> node index.js
-
+$ node index.js
 === Budget Buddy ===
 ```
 
-Why bother, when `node index.js` works? Because `npm start` is a **convention**: someone who has never seen your project knows they can type it. They do not need to know which file is the main one.
+Why bother, when `node index.js` works? Because `start` is a **convention**: almost every Node project has one, and `pnpm start` (or `npm start`, for people who use npm) runs it. Someone who has never seen your project knows they can type it. They do not need to know which file is the main one.
 
 Commit:
 
@@ -404,6 +424,26 @@ Commit:
 git add package.json
 git commit -m "Add description and start script to package.json"
 ```
+
+::: quiz
+Later, you add a second script to Budget Buddy's `package.json`:
+
+```json
+  "scripts": {
+    "start": "node index.js",
+    "update": "node update-categories.js"
+  },
+```
+
+Which command runs `update-categories.js`?
+
+- [ ] `pnpm update`
+- [ ] `pnpm start update`
+- [ ] `node update`
+- [x] `pnpm run update`
+
+`update` is also one of pnpm's own commands (it updates your installed packages), so `pnpm update` would do pnpm's job and never run your script. `pnpm run update` always means "run my script called `update`". `pnpm start update` runs the `start` script, and `node update` looks for a file called `update`, not a script. When in doubt, use `pnpm run`.
+:::
 
 ## Step 7: write a README
 
@@ -426,11 +466,11 @@ A small money tracker that runs in the terminal. I built it while learning to pr
 
 ## How to run it
 
-You need [Node.js](https://nodejs.org/) installed.
+You need [Node.js](https://nodejs.org/) and [pnpm](https://pnpm.io/installation) installed.
 
 ```bash
-npm install
-npm start
+pnpm install
+pnpm start
 ```
 
 ## How the code is organised
@@ -445,7 +485,7 @@ npm start
 
 Make it yours: change the first line, add your name, or a line about what you learned. To see it nicely formatted in VS Code, open `README.md` and press **Ctrl+Shift+V** (Windows and Linux) or **Cmd+Shift+V** (macOS) for the preview.
 
-Notice the "How to run it" section says `npm install` first. Because `node_modules` is not in Git, anyone who copies your project runs `npm install` to download `prompt-sync`, exactly as listed in `package.json`.
+Notice the "How to run it" section says `pnpm install` first. Because `node_modules` is not in Git, anyone who copies your project runs `pnpm install` to download `prompt-sync`, at exactly the version recorded in `pnpm-lock.yaml`. (Strictly, `pnpm start` would notice the missing `node_modules` and install the packages itself before running, but writing both steps is the usual habit.)
 
 Commit:
 
@@ -477,11 +517,11 @@ Read it from the bottom up. It tells the story of this lesson, one working step 
 ::: project Your finished Budget Buddy
 Before you open the full solution, check your project against this list:
 
-1. The folder contains `index.js`, `money.js`, `storage.js`, `reports.js`, `package.json`, `README.md` and `.gitignore` (plus `package-lock.json`, `node_modules/` and your `budget.json`).
+1. The folder contains `index.js`, `money.js`, `storage.js`, `reports.js`, `package.json`, `README.md` and `.gitignore` (plus `pnpm-lock.yaml`, `node_modules/` and your `budget.json`).
 2. `money.js`, `storage.js` and `reports.js` each end with a `module.exports` line, and contain **no** `prompt` and **no** `console.log`.
 3. `index.js` requires all three with `./`, and no longer requires `fs`.
 4. Every menu option, 1 to 9, works exactly as it did in v7.
-5. `npm start` runs the program.
+5. `pnpm start` runs the program.
 6. `git status` says `nothing to commit, working tree clean`, and `git log --oneline` shows a commit for each step.
 7. `git status` never lists `node_modules/` or `budget.json`.
 :::
@@ -808,11 +848,11 @@ A small money tracker that runs in the terminal. I built it while learning to pr
 
 ## How to run it
 
-You need [Node.js](https://nodejs.org/) installed.
+You need [Node.js](https://nodejs.org/) and [pnpm](https://pnpm.io/installation) installed.
 
 ```bash
-npm install
-npm start
+pnpm install
+pnpm start
 ```
 
 ## How the code is organised
@@ -920,8 +960,8 @@ Then `git add .` and `git commit -m "Add edit an expense"`. Notice that `editExp
 - Put a project under **Git before** a big change, and **commit after each working step**.
 - Split by job: `index.js` talks to the user; `money.js`, `storage.js` and `reports.js` take data in and give answers back.
 - Move **one module at a time**, then run and test **every option that uses what you moved**, because a missing function only shows up when it is called.
-- `.gitignore` keeps out `node_modules/` (recreated by `npm install`) and `budget.json` (personal data).
-- `npm start` is the conventional way to run a Node project, and a **README** tells newcomers what the project is and how to run it.
+- `.gitignore` keeps out `node_modules/` (recreated by `pnpm install`) and `budget.json` (personal data).
+- `pnpm start` is the conventional way to run a Node project, and a **README** tells newcomers what the project is and how to run it.
 :::
 
 ::: interview Why test menu options after moving a function, rather than only checking that the program starts?
@@ -941,13 +981,14 @@ It holds the user's personal data, not the program. It changes every time the pr
 - [ ] I created `money.js`, tested options 1 and 4, and committed
 - [ ] I created `storage.js`, checked saving and loading still worked, and committed
 - [ ] I created `reports.js`, tested options 1 and 4 to 8, and committed
-- [ ] `npm start` runs Budget Buddy
+- [ ] `pnpm start` runs Budget Buddy
 - [ ] I wrote a README and committed it
 - [ ] `git log --oneline` tells the story of my refactor, one step per commit
 :::
 
 ::: resources
-- **npm Docs, "scripts":** https://docs.npmjs.com/cli/using-npm/scripts. Everything `package.json` scripts can do, including `start`.
+- **pnpm Docs, "pnpm run":** https://pnpm.io/cli/run. How pnpm runs the scripts in `package.json`, including `start`.
+- **pnpm Docs, "Working with Git":** https://pnpm.io/git. Why `pnpm-lock.yaml` goes into Git and `node_modules` does not.
 - **GitHub Docs, "About READMEs":** https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-readmes. What makes a helpful README.
 - **Markdown Guide, "Basic Syntax":** https://www.markdownguide.org/basic-syntax/. Headings, lists, links and code in Markdown, with examples.
 :::
