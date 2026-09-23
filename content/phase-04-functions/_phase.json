@@ -1,0 +1,6 @@
+{
+ "order": 4,
+ "title": "Functions: Naming Your Steps",
+ "blurb": "Packaging steps into reusable, named functions: parameters, return values, scope, and arrow functions.",
+ "goal": "Break a problem into small functions that take inputs and return outputs, and write the same function as a declaration and as an arrow function."
+}

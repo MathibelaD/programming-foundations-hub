@@ -1,0 +1,6 @@
+{
+ "order": 2,
+ "title": "Making Decisions",
+ "blurb": "Comparisons, if/else, combining conditions with and/or/not, and choosing between many options.",
+ "goal": "Write programs that behave differently depending on the input, and check that what the user typed makes sense."
+}

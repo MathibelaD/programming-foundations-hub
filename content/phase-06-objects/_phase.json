@@ -1,0 +1,6 @@
+{
+ "order": 6,
+ "title": "Grouping Data: Objects",
+ "blurb": "Describing one thing with many properties, lists of objects, copies versus references, and saving data to a file.",
+ "goal": "Model real-world things as objects, work with lists of objects, and save a program's data to a file and load it back."
+}

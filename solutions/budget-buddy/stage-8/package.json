@@ -1,0 +1,13 @@
+{
+  "name": "budget-buddy",
+  "version": "1.0.0",
+  "description": "A small command-line money tracker, built while learning to program.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "prompt-sync": "^4.2.0"
+  }
+}

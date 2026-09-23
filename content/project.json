@@ -1,0 +1,99 @@
+{
+  "name": "Budget Buddy — the project you build",
+  "summary": "One small program that grows as you learn. Budget Buddy is a money tracker that runs in your terminal. It starts by asking for your income and one expense, and ends as a menu-driven app that stores expenses, groups them into categories, reports on your spending, and saves everything to a file. Each phase adds one layer using the ideas you just learned. You never throw the code away.",
+  "stages": [
+    {
+      "title": "Ask and calculate",
+      "phases": "Phase 1",
+      "goal": "Use variables, numbers, strings and user input to work out what is left of your money.",
+      "deliverables": [
+        "A budget-buddy folder created with npm init",
+        "prompt-sync installed as a dependency",
+        "Asks for your name, monthly income and three expenses",
+        "Prints a neat summary with the money left over, to two decimal places"
+      ],
+      "run": "cd ~/budget-buddy && node index.js"
+    },
+    {
+      "title": "Warnings and checks",
+      "phases": "Phase 2",
+      "goal": "Make the program react: warn when you overspend, and reject nonsense input.",
+      "deliverables": [
+        "Rejects amounts that are not numbers or are negative",
+        "Warns when expenses are more than income",
+        "Shows a status message (healthy / tight / overspent) based on what is left"
+      ],
+      "run": "node index.js"
+    },
+    {
+      "title": "Keep going until I quit",
+      "phases": "Phase 3",
+      "goal": "Replace the fixed three expenses with a loop, so you can add as many as you like.",
+      "deliverables": [
+        "A menu loop: add expense, show total, quit",
+        "Keeps a running total and a count",
+        "Tracks the biggest single expense",
+        "Keeps asking until the input is valid"
+      ],
+      "run": "node index.js"
+    },
+    {
+      "title": "Tidy it into functions",
+      "phases": "Phase 4",
+      "goal": "Break the growing program into small, named, reusable functions.",
+      "deliverables": [
+        "formatMoney, askForAmount, showMenu and statusFor functions",
+        "At least two arrow functions",
+        "The main loop reads almost like plain English"
+      ],
+      "run": "node index.js"
+    },
+    {
+      "title": "Remember every expense",
+      "phases": "Phase 5",
+      "goal": "Store the amounts in an array so you can list and analyse them.",
+      "deliverables": [
+        "Expenses stored in an array",
+        "A menu option that lists every expense with its number",
+        "Remove an expense by its number",
+        "Average and largest expense worked out with loops you wrote"
+      ],
+      "run": "node index.js"
+    },
+    {
+      "title": "Real records, saved to disk",
+      "phases": "Phase 6",
+      "goal": "Turn each expense into an object with a description, amount and category, and save them to a file.",
+      "deliverables": [
+        "Expenses are objects: { description, amount, category }",
+        "Totals per category",
+        "Data saved to budget.json and loaded when the program starts"
+      ],
+      "run": "node index.js && cat budget.json"
+    },
+    {
+      "title": "Reports",
+      "phases": "Phase 7",
+      "goal": "Use array methods to build useful reports in a few clear lines.",
+      "deliverables": [
+        "Filter expenses by category",
+        "Top 3 biggest expenses, sorted",
+        "Category totals using reduce",
+        "Search expenses by a word in the description"
+      ],
+      "run": "node index.js"
+    },
+    {
+      "title": "Finished and organised",
+      "phases": "Phase 8",
+      "goal": "Split the program into modules, fix any bugs, track it in Git, and write a README.",
+      "deliverables": [
+        "Code split into files: storage.js, money.js, reports.js, index.js",
+        "An npm start script",
+        "A Git repository with meaningful commits",
+        "A README explaining how to run it"
+      ],
+      "run": "npm start"
+    }
+  ]
+}

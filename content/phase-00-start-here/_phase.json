@@ -1,0 +1,6 @@
+{
+ "order": 0,
+ "title": "Start Here",
+ "blurb": "What programming actually is, how this course works, the map of what comes next, and getting your computer ready.",
+ "goal": "Explain what a program is, move around with the terminal, create a JavaScript project with npm init, and run your first program with node."
+}

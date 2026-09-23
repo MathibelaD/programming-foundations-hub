@@ -1,0 +1,6 @@
+{
+ "order": 1,
+ "title": "Storing Information",
+ "blurb": "Values, variables and data types: numbers, text, true/false. Also why computers are weird about decimals, and asking the user for input.",
+ "goal": "Store information in well-named variables, choose the right data type, convert between types, and write a program that asks questions and calculates answers."
+}

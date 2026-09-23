@@ -1,0 +1,6 @@
+{
+ "order": 5,
+ "title": "Lists of Things: Arrays",
+ "blurb": "Storing many values in one list, changing it, looping through it, and writing the classic list algorithms by hand.",
+ "goal": "Store and change lists of data, and write loops that sum, count, search, find the biggest, and build new lists."
+}

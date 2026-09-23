@@ -1,0 +1,6 @@
+{
+ "order": 3,
+ "title": "Repeating Things: Loops",
+ "blurb": "Why loops exist, while and for loops, the classic loop patterns, and menus that keep running until the user quits.",
+ "goal": "Pick the right loop for a job, trace a loop by hand, and use the counter, total, maximum and menu patterns."
+}

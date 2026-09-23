@@ -1,0 +1,6 @@
+{
+ "order": 7,
+ "title": "Functions as Values: Array Methods",
+ "blurb": "Now that you can write the loops yourself, meet the shortcuts: callbacks, forEach, map, filter, find, reduce and sort.",
+ "goal": "Explain which loop each array method replaces, and choose between a loop and a method on purpose."
+}
